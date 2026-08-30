@@ -1,9 +1,12 @@
 <?php
-/** pages/berita-detail.php — /berita/{slug} (router sets $_GET['slug']) */
+/**
+ * pages/berita-detail.php — /berita/{slug}
+ * Halaman Detail Artikel / Berita Sekolah
+ */
 $db   = getDB();
 $slug = $_GET['slug'] ?? '';
 
-$stmt = $db->prepare("SELECT n.*, c.name AS category_name, u.name AS author_name
+$stmt = $db->prepare("SELECT n.*, c.name AS category_name, c.slug AS category_slug, u.name AS author_name, u.photo AS author_photo
                        FROM news n
                        LEFT JOIN news_categories c ON c.id = n.category_id
                        LEFT JOIN users u ON u.id = n.author_id
@@ -16,12 +19,25 @@ if (!$article) {
     $pageTitle = 'Berita Tidak Ditemukan';
     require BASE_PATH . '/includes/header.php';
     require BASE_PATH . '/includes/navbar.php';
-    echo '<section class="section text-center"><div class="container"><h1 class="text-primary">404</h1><p class="section-subtitle mx-auto mb-4">Berita yang Anda cari tidak ditemukan.</p><a href="' . e(BASE_URL) . '/berita" class="btn btn-accent">Kembali ke Berita</a></div></section>';
+    ?>
+    <section class="section text-center py-5">
+      <div class="container my-5">
+        <div class="p-3 bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
+          <i class="bi bi-journal-x fs-1 text-muted"></i>
+        </div>
+        <h1 class="h3 fw-bold text-primary mb-2">Berita Tidak Ditemukan</h1>
+        <p class="text-muted small mx-auto mb-4" style="max-width: 460px;">Maaf, artikel atau berita yang Anda cari mungkin telah dihapus, diubah tautannya, atau belum dipublikasikan.</p>
+        <a href="<?= e(BASE_URL) ?>/berita" class="btn btn-accent px-4 fw-semibold">
+          <i class="bi bi-arrow-left me-1"></i> Kembali ke Berita
+        </a>
+      </div>
+    </section>
+    <?php
     require BASE_PATH . '/includes/footer.php';
     exit;
 }
 
-// Count a view once per browser session per article (simple, no extra table needed).
+// Count view per browser session
 $viewedKey = 'viewed_news_' . $article['id'];
 if (empty($_SESSION[$viewedKey])) {
     $db->prepare("UPDATE news SET views = views + 1 WHERE id = ?")->execute([$article['id']]);
@@ -29,9 +45,21 @@ if (empty($_SESSION[$viewedKey])) {
     $article['views']++;
 }
 
-$relatedStmt = $db->prepare("SELECT * FROM news WHERE category_id = ? AND id != ? AND status = 'publish' ORDER BY published_at DESC LIMIT 3");
-$relatedStmt->execute([$article['category_id'], $article['id']]);
+// Related News (from same category or latest other news)
+$relatedStmt = $db->prepare("
+    SELECT n.*, c.name AS category_name 
+    FROM news n 
+    LEFT JOIN news_categories c ON c.id = n.category_id 
+    WHERE (n.category_id = ? OR 1=1) AND n.id != ? AND n.status = 'publish' 
+    ORDER BY (n.category_id = ?) DESC, n.published_at DESC 
+    LIMIT 3
+");
+$relatedStmt->execute([$article['category_id'] ?: 0, $article['id'], $article['category_id'] ?: 0]);
 $related = $relatedStmt->fetchAll();
+
+// Estimate Reading Time (approx 200 words/min)
+$wordCount = str_word_count(strip_tags($article['content']));
+$readMinutes = max(1, (int) ceil($wordCount / 200));
 
 $pageTitle       = $article['title'];
 $pageDescription = $article['excerpt'] ?: excerpt($article['content'], 155);
@@ -43,53 +71,136 @@ require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
 ?>
 
+<!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="container pt-4">
-  <ol class="breadcrumb small">
-    <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/">Beranda</a></li>
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/"><i class="bi bi-house-door me-1"></i>Beranda</a></li>
     <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/berita">Berita</a></li>
-    <li class="breadcrumb-item active" aria-current="page"><?= e($article['title']) ?></li>
+    <?php if (!empty($article['category_name'])): ?>
+      <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/berita?category=<?= urlencode($article['category_slug']) ?>"><?= e($article['category_name']) ?></a></li>
+    <?php endif; ?>
+    <li class="breadcrumb-item active text-truncate" style="max-width: 250px;" aria-current="page"><?= e($article['title']) ?></li>
   </ol>
 </nav>
 
-<article class="section pt-3">
-  <div class="container" style="max-width: 860px;">
-    <?php if ($article['category_name']): ?><span class="berita-category-badge mb-3"><?= e($article['category_name']) ?></span><?php endif; ?>
-    <h1 class="section-title mb-3"><?= e($article['title']) ?></h1>
-    <div class="berita-meta mb-4">
-      <span><i class="bi bi-person"></i> <?= e($article['author_name'] ?? 'Admin') ?></span>
-      <span><i class="bi bi-calendar3"></i> <?= formatTanggalIndo($article['published_at']) ?></span>
-      <span><i class="bi bi-eye"></i> <?= (int) $article['views'] ?> dilihat</span>
+<article class="section pt-3 pb-5">
+  <div class="container" style="max-width: 880px;">
+    <!-- Category Badge -->
+    <?php if (!empty($article['category_name'])): ?>
+      <a href="<?= e(BASE_URL) ?>/berita?category=<?= urlencode($article['category_slug']) ?>" class="badge bg-primary text-white text-decoration-none px-3 py-2 rounded-pill fw-semibold mb-3 d-inline-block">
+        <i class="bi bi-tag-fill me-1"></i><?= e($article['category_name']) ?>
+      </a>
+    <?php endif; ?>
+
+    <!-- Title -->
+    <h1 class="h2 fw-bold text-primary mb-3" style="line-height: 1.35;"><?= e($article['title']) ?></h1>
+
+    <!-- Meta Info Bar -->
+    <div class="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 border">
+      <div class="d-flex align-items-center gap-2">
+        <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; overflow:hidden;">
+          <?php if (!empty($article['author_photo']) && file_exists(BASE_PATH . '/' . $article['author_photo'])): ?>
+            <img src="<?= e(BASE_URL . '/' . $article['author_photo']) ?>" class="w-100 h-100" style="object-fit:cover;" alt="">
+          <?php else: ?>
+            <i class="bi bi-person-fill fs-5"></i>
+          <?php endif; ?>
+        </div>
+        <div>
+          <div class="small fw-bold text-dark"><?= e($article['author_name'] ?? 'Administrator') ?></div>
+          <div class="small text-muted" style="font-size: 11.5px;">Penulis / Redaksi Sekolah</div>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-3 small text-muted">
+        <span><i class="bi bi-calendar3 me-1 text-primary"></i><?= formatTanggalIndo($article['published_at']) ?></span>
+        <span><i class="bi bi-clock me-1 text-primary"></i><?= $readMinutes ?> mnt baca</span>
+        <span><i class="bi bi-eye me-1 text-primary"></i><?= number_format($article['views']) ?> views</span>
+      </div>
     </div>
 
-    <img src="<?= e(BASE_URL . '/' . $article['featured_image']) ?>" alt="<?= e($article['title']) ?>" class="img-fluid rounded mb-4 w-100" style="max-height:420px; object-fit:cover;">
+    <!-- Featured Image -->
+    <?php if (!empty($article['featured_image']) && file_exists(BASE_PATH . '/' . $article['featured_image'])): ?>
+      <div class="position-relative rounded-4 overflow-hidden shadow-sm mb-4 border bg-light">
+        <img src="<?= e(BASE_URL . '/' . $article['featured_image']) ?>" alt="<?= e($article['title']) ?>" class="w-100" style="max-height: 480px; object-fit: cover;">
+      </div>
+    <?php endif; ?>
 
-    <div class="article-body" style="line-height:1.9;"><?= cleanHtml($article['content']) ?></div>
+    <!-- Article Content -->
+    <div class="article-body text-dark py-2" style="font-size: 1.05rem; line-height: 1.9;">
+      <?= cleanHtml($article['content']) ?>
+    </div>
 
-    <div class="d-flex align-items-center gap-2 mt-5 pt-4 border-top">
-      <span class="fw-semibold small text-muted me-2">Bagikan:</span>
-      <a class="btn btn-sm btn-outline-primary-custom" target="_blank" rel="noopener"
-         href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($shareUrl) ?>"><i class="bi bi-facebook"></i></a>
-      <a class="btn btn-sm btn-outline-primary-custom" target="_blank" rel="noopener"
-         href="https://twitter.com/intent/tweet?url=<?= urlencode($shareUrl) ?>&text=<?= urlencode($article['title']) ?>"><i class="bi bi-twitter-x"></i></a>
-      <a class="btn btn-sm btn-outline-primary-custom" target="_blank" rel="noopener"
-         href="https://wa.me/?text=<?= urlencode($article['title'] . ' - ' . $shareUrl) ?>"><i class="bi bi-whatsapp"></i></a>
+    <!-- Share Buttons Bar -->
+    <div class="p-3 p-md-4 rounded-4 bg-light border mt-5 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-share-fill text-primary"></i>
+        <span class="small fw-bold text-dark">Bagikan Artikel:</span>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-sm btn-success d-inline-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill fw-semibold" target="_blank" rel="noopener"
+           href="https://wa.me/?text=<?= urlencode($article['title'] . ' - ' . $shareUrl) ?>">
+          <i class="bi bi-whatsapp"></i> WhatsApp
+        </a>
+        <a class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill fw-semibold" target="_blank" rel="noopener"
+           href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($shareUrl) ?>">
+          <i class="bi bi-facebook"></i> Facebook
+        </a>
+        <a class="btn btn-sm btn-dark d-inline-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill fw-semibold" target="_blank" rel="noopener"
+           href="https://twitter.com/intent/tweet?url=<?= urlencode($shareUrl) ?>&text=<?= urlencode($article['title']) ?>">
+          <i class="bi bi-twitter-x"></i> X
+        </a>
+        <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill fw-semibold" id="copyLinkBtn">
+          <i class="bi bi-link-45deg"></i> <span id="copyText">Salin Tautan</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Back to News Button -->
+    <div class="mt-4 text-start">
+      <a href="<?= e(BASE_URL) ?>/berita" class="btn btn-outline-primary-custom btn-sm px-3">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Semua Berita
+      </a>
     </div>
   </div>
 </article>
 
+<!-- Related Articles Section -->
 <?php if (!empty($related)): ?>
-<section class="section section-alt pt-4">
-  <div class="container">
-    <h2 class="h5 text-primary mb-4">Berita Terkait</h2>
-    <div class="row g-4">
+<section class="section section-alt pt-5 pb-5">
+  <div class="container" style="max-width: 960px;">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h2 class="h5 fw-bold text-primary mb-0"><i class="bi bi-newspaper me-2"></i>Berita Terkait Lainnya</h2>
+      <a href="<?= e(BASE_URL) ?>/berita" class="small fw-semibold text-primary text-decoration-none">
+        Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="row g-4 reveal-group">
       <?php foreach ($related as $r): ?>
         <div class="col-md-4">
-          <div class="berita-card">
-            <img src="<?= e(BASE_URL . '/' . $r['featured_image']) ?>" alt="<?= e($r['title']) ?>" class="berita-card-img">
-            <div class="berita-card-body">
-              <div class="berita-meta"><i class="bi bi-calendar3"></i> <?= formatTanggalIndo($r['published_at']) ?></div>
-              <h3 class="berita-card-title"><?= e($r['title']) ?></h3>
-              <a href="<?= e(BASE_URL) ?>/berita/<?= e($r['slug']) ?>" class="fw-semibold small">Baca Selengkapnya <i class="bi bi-arrow-right"></i></a>
+          <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column hover-lift overflow-hidden bg-white">
+            <div class="position-relative" style="height: 160px; overflow:hidden;">
+              <a href="<?= e(BASE_URL) ?>/berita/<?= e($r['slug']) ?>">
+                <img src="<?= e(BASE_URL . '/' . $r['featured_image']) ?>" alt="<?= e($r['title']) ?>" class="w-100 h-100" style="object-fit: cover;">
+              </a>
+              <?php if (!empty($r['category_name'])): ?>
+                <span class="position-absolute top-0 start-0 m-2 badge bg-primary small" style="font-size: 11px;">
+                  <?= e($r['category_name']) ?>
+                </span>
+              <?php endif; ?>
+            </div>
+            <div class="card-body p-3 d-flex flex-column flex-grow-1">
+              <div class="small text-muted mb-1" style="font-size: 11px;">
+                <i class="bi bi-calendar3 me-1"></i><?= date('d/m/Y', strtotime($r['published_at'])) ?>
+              </div>
+              <h3 class="h6 fw-bold mb-2 flex-grow-1">
+                <a href="<?= e(BASE_URL) ?>/berita/<?= e($r['slug']) ?>" class="text-primary text-decoration-none hover-primary d-block" style="line-height:1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                  <?= e($r['title']) ?>
+                </a>
+              </h3>
+              <a href="<?= e(BASE_URL) ?>/berita/<?= e($r['slug']) ?>" class="small fw-semibold text-primary text-decoration-none mt-2">
+                Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -98,5 +209,23 @@ require BASE_PATH . '/includes/navbar.php';
   </div>
 </section>
 <?php endif; ?>
+
+<script>
+// Copy Link to Clipboard
+const copyBtn = document.getElementById('copyLinkBtn');
+const copyText = document.getElementById('copyText');
+if (copyBtn) {
+  copyBtn.addEventListener('click', function() {
+    navigator.clipboard.writeText('<?= e($shareUrl) ?>').then(function() {
+      copyText.textContent = 'Tersalin!';
+      copyBtn.classList.replace('btn-outline-secondary', 'btn-success');
+      setTimeout(function() {
+        copyText.textContent = 'Salin Tautan';
+        copyBtn.classList.replace('btn-success', 'btn-outline-secondary');
+      }, 2000);
+    });
+  });
+}
+</script>
 
 <?php require BASE_PATH . '/includes/footer.php'; ?>
