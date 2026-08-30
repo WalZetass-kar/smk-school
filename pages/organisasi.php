@@ -29,7 +29,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <!-- Header -->
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:740px;">
-      <span class="section-badge"><i class="bi bi-diagram-3-fill me-1"></i>Tata Kelola &amp; Manajemen</span>
       <h1 class="section-title mb-2"><?= e($org['title'] ?? 'Struktur Organisasi Sekolah') ?></h1>
       <p class="section-subtitle mx-auto"><?= e($org['description'] ?: ('Bagan pembagian tugas, wewenang, dan koordinasi struktural kepemimpinan di ' . ($profile['school_name'] ?? 'SMK'))) ?></p>
     </div>
@@ -72,9 +71,6 @@ require BASE_PATH . '/includes/navbar.php';
 
         <!-- 2. Rincian Hierarki Unsur Pimpinan Sekolah -->
         <div class="mb-5">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="section-badge mb-0"><i class="bi bi-person-lines-fill me-1"></i>Pimpinan &amp; Koordinator</span>
-          </div>
           <h2 class="h4 fw-bold text-primary mb-3">Unsur Manajemen &amp; Kepemimpinan</h2>
           <p class="text-muted small mb-4">Pembagian tugas dan wewenang operasional penjamin mutu pendidikan di sekolah.</p>
 

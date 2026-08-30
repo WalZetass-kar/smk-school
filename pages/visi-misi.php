@@ -40,7 +40,6 @@ foreach ($missionLines as $line) {
   <div class="container">
     <!-- Header -->
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:740px;">
-      <span class="section-badge"><i class="bi bi-bullseye me-1"></i>Arah &amp; Komitmen Sekolah</span>
       <h1 class="section-title mb-2">Visi, Misi &amp; Tujuan</h1>
       <p class="section-subtitle mx-auto">Landasan filosofis, arah strategis, dan komitmen mutu <strong><?= e($profile['school_name'] ?? 'SMK') ?></strong> dalam membina insan vokasi yang mandiri dan berkarakter unggul.</p>
     </div>
@@ -73,9 +72,6 @@ foreach ($missionLines as $line) {
 
         <!-- 2. MISI SEKOLAH (Interactive Numbered Cards Grid) -->
         <div class="mb-5">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="section-badge mb-0"><i class="bi bi-list-check me-1"></i>Langkah Strategis</span>
-          </div>
           <h2 class="h4 fw-bold text-primary mb-3">Misi Sekolah</h2>
           <p class="text-muted small mb-4">Upaya konkret dan terstruktur yang dilaksanakan secara berkelanjutan guna mewujudkan visi besar sekolah.</p>
 

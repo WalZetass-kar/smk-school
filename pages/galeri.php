@@ -178,7 +178,6 @@ $baseUrl = '/galeri' . ($category ? '?category=' . urlencode($category) : '');
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white p-4 p-md-5">
           <div class="row align-items-center g-4">
             <div class="col-lg-6">
-              <span class="section-badge"><i class="bi bi-play-circle-fill me-1"></i>Video Profil</span>
               <h2 class="h4 fw-bold text-primary mb-2"><?= e($profile['video_title'] ?: 'Video Profil & Fasilitas Sekolah') ?></h2>
               <p class="small text-muted mb-4" style="line-height:1.7;">
                 <?= e($profile['video_description'] ?: 'Saksikan tur visual mengenai sarana pembelajaran, laboratorium kejuruan, dan keseharian aktivitas siswa di kampus kami.') ?>

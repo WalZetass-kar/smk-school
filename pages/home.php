@@ -85,7 +85,6 @@ require BASE_PATH . '/includes/navbar.php';
           <div class="sambutan-quote-icon">
             <i class="bi bi-quote"></i>
           </div>
-          <span class="section-badge">Sambutan Resmi</span>
           <h2 class="section-title">Sambutan Kepala Sekolah</h2>
           <p class="text-muted fs-6 mb-4" style="line-height: 1.75;"><?= nl2br(e(mb_strimwidth($principal['content'], 0, 340, '...'))) ?></p>
           <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pt-2 border-top">
@@ -109,7 +108,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-lg-5 reveal-left">
-        <span class="section-badge">Tentang Kami</span>
         <h2 class="section-title">Mengenal <?= e($profile['school_name'] ?? '') ?></h2>
         <p class="section-subtitle mb-4"><?= e(mb_strimwidth($profile['description'] ?? '', 0, 240, '...')) ?></p>
         <a href="<?= e(BASE_URL) ?>/profil" class="btn btn-accent">
@@ -164,7 +162,6 @@ require BASE_PATH . '/includes/navbar.php';
 <section class="section">
   <div class="container">
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:640px;">
-      <span class="section-badge">Program Keahlian</span>
       <h2 class="section-title">Jurusan Unggulan</h2>
       <p class="section-subtitle mx-auto">Program keahlian terakreditasi yang siap mencetak lulusan terampil dan kompeten.</p>
     </div>
@@ -206,7 +203,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-lg-5 reveal-left">
-        <span class="section-badge" style="background: rgba(255,255,255,0.15); color: #fff;">Tour Fasilitas</span>
         <h2 class="section-title text-white"><?= e($videoTitle) ?></h2>
         <p class="text-white-50 mb-4" style="line-height: 1.7;"><?= nl2br(e($videoDesc)) ?></p>
         <div class="d-flex flex-column gap-3">
@@ -236,7 +232,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 gap-3 reveal-up">
       <div>
-        <span class="section-badge">Informasi &amp; Agenda</span>
         <h2 class="section-title mb-0">Berita Terbaru</h2>
       </div>
       <a href="<?= e(BASE_URL) ?>/berita" class="btn btn-outline-primary-custom">
@@ -274,7 +269,6 @@ require BASE_PATH . '/includes/navbar.php';
 <section class="section">
   <div class="container">
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:640px;">
-      <span class="section-badge">Alumni Berprestasi</span>
       <h2 class="section-title">Apa Kata Alumni?</h2>
       <p class="section-subtitle mx-auto">Kisah sukses dan pengalaman nyata lulusan kami yang telah berkiprah di dunia industri.</p>
     </div>
@@ -312,7 +306,6 @@ require BASE_PATH . '/includes/navbar.php';
 <section class="section section-alt overflow-hidden py-5">
   <div class="container">
     <div class="text-center mx-auto mb-4 reveal-up" style="max-width:680px;">
-      <span class="section-badge"><i class="bi bi-buildings me-1"></i>Dunia Usaha &amp; Industri</span>
       <h2 class="section-title mb-2">Mitra Kerja Sama Industri (DU/DI)</h2>
       <p class="section-subtitle mx-auto">Didukung oleh perusahaan terkemuka untuk magang siswa (PKL), sertifikasi keahlian, kelas industri, dan penyaluran kerja alumni.</p>
     </div>
@@ -339,7 +332,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 gap-3 reveal-up">
       <div>
-        <span class="section-badge">Dokumentasi</span>
         <h2 class="section-title mb-0">Galeri Kegiatan</h2>
       </div>
       <a href="<?= e(BASE_URL) ?>/galeri" class="btn btn-outline-primary-custom">

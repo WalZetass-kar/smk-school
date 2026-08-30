@@ -27,7 +27,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <!-- Header -->
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:740px;">
-      <span class="section-badge"><i class="bi bi-mortarboard me-1"></i>Pilihan Masa Depan</span>
       <h1 class="section-title mb-2">Program Keahlian (Jurusan)</h1>
       <p class="section-subtitle mx-auto">Kurikulum berbasis industri yang dirancang mencetak tenaga ahli terampil, siap kerja, siap kuliah, dan siap berwirausaha mandiri.</p>
     </div>

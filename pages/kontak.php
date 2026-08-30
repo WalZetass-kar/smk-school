@@ -79,7 +79,6 @@ require BASE_PATH . '/includes/navbar.php';
 <section class="section pt-3 pb-4">
   <div class="container">
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:720px;">
-      <span class="section-badge"><i class="bi bi-headset me-1"></i>Pusat Bantuan &amp; Informasi</span>
       <h1 class="section-title mb-2">Hubungi Kami</h1>
       <p class="section-subtitle mx-auto">Kami siap melayani kebutuhan informasi seputar pendaftaran PPDB, administrasi akademik, kerja sama industri (BKK), dan layanan sekolah lainnya.</p>
     </div>
@@ -310,8 +309,7 @@ require BASE_PATH . '/includes/navbar.php';
     <!-- FAQ Accordion (Tanya Jawab Umum) -->
     <div class="mt-5 pt-4 reveal-up">
       <div class="text-center mx-auto mb-4" style="max-width: 600px;">
-        <span class="section-badge"><i class="bi bi-question-circle me-1"></i>FAQ</span>
-        <h2 class="h4 fw-bold text-primary mb-1">Pertanyaan yang Sering Diajukan</h2>
+        <h2 class="h4 fw-bold text-primary mb-1">Pertanyaan yang Sering Diajukan (FAQ)</h2>
         <p class="text-muted small">Temukan jawaban cepat atas pertanyaan seputar layanan administrasi dan akademik sekolah.</p>
       </div>
 

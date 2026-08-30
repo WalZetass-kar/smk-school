@@ -28,7 +28,6 @@ require BASE_PATH . '/includes/navbar.php';
   <div class="container">
     <!-- Header -->
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:740px;">
-      <span class="section-badge"><i class="bi bi-clock-history me-1"></i>Rekam Jejak &amp; Dedikasi</span>
       <h1 class="section-title mb-2"><?= e($history['title'] ?? 'Sejarah & Perkembangan Sekolah') ?></h1>
       <p class="section-subtitle mx-auto">Menengok kembali perjalanan dedikasi <strong><?= e($profile['school_name'] ?? 'SMK') ?></strong> dalam mencetak generasi vokasi yang unggul, terampil, dan berakhlak mulia.</p>
     </div>
@@ -98,9 +97,6 @@ require BASE_PATH . '/includes/navbar.php';
 
         <!-- Historical Milestones (Linimasa Sejarah) -->
         <div class="mb-4">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="section-badge mb-0"><i class="bi bi-signpost-split me-1"></i>Milestones</span>
-          </div>
           <h2 class="h4 fw-bold text-primary mb-3">Linimasa Perkembangan Sekolah</h2>
           <p class="text-muted small mb-4">Tahapan fase penting dalam perjalanan transformasi mutu pendidikan kejuruan kami.</p>
 

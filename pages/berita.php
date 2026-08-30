@@ -101,7 +101,6 @@ $baseUrl = '/berita' . ($baseParams ? '?' . http_build_query($baseParams) : '');
   <div class="container">
     <!-- Header -->
     <div class="text-center mx-auto mb-4 reveal-up" style="max-width:700px;">
-      <span class="section-badge"><i class="bi bi-newspaper me-1"></i>Kabar &amp; Informasi Terkini</span>
       <h1 class="section-title mb-2">Berita &amp; Artikel Sekolah</h1>
       <p class="section-subtitle mx-auto">Ikuti update kegiatan akademik, pengumuman penting, inovasi jurusan, dan catatan prestasi civitas akademika.</p>
     </div>
