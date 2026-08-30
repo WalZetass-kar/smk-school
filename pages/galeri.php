@@ -55,7 +55,7 @@ $baseUrl = '/galeri' . ($category ? '?category=' . urlencode($category) : '');
 <nav aria-label="breadcrumb" class="container pt-4">
   <ol class="breadcrumb small mb-0">
     <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/"><i class="bi bi-house-door me-1"></i>Beranda</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Galeri &amp; Dokumentasi</li>
+    <li class="breadcrumb-item active" aria-current="page">Galeri Foto</li>
   </ol>
 </nav>
 
@@ -63,15 +63,14 @@ $baseUrl = '/galeri' . ($category ? '?category=' . urlencode($category) : '');
   <div class="container">
     <!-- Header -->
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:740px;">
-      <span class="section-badge"><i class="bi bi-camera-fill me-1"></i>Dokumentasi &amp; Aktivitas</span>
-      <h1 class="section-title mb-2">Galeri Foto &amp; Kegiatan</h1>
-      <p class="section-subtitle mx-auto">Kumpulan rekam jejak momen berharga, pembelajaran praktik kejuruan, perlombaan prestasi, dan kehidupan sosial siswa <strong><?= e($profile['school_name'] ?? 'SMK') ?></strong>.</p>
+      <h1 class="section-title mb-2">Galeri Foto</h1>
+      <p class="section-subtitle mx-auto">Kumpulan momen pembelajaran, praktik kejuruan, perlombaan prestasi, dan kegiatan siswa <strong><?= e($profile['school_name'] ?? 'SMK') ?></strong>.</p>
     </div>
 
     <!-- Category Filter Bar (Pills) -->
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-5 reveal-up">
       <a href="<?= e(BASE_URL) ?>/galeri" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-semibold <?= $category === '' ? 'btn-accent' : 'btn-outline-secondary' ?>">
-        Semua Dokumentasi <span class="badge bg-white text-dark ms-1"><?= (int) $totalRows ?></span>
+        Semua Foto <span class="badge bg-white text-dark ms-1"><?= (int) $totalRows ?></span>
       </a>
       <?php foreach ($categories as $c): ?>
         <a href="<?= e(BASE_URL) ?>/galeri?category=<?= urlencode($c['slug']) ?>" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-semibold <?= $category === $c['slug'] ? 'btn-accent' : 'btn-outline-secondary' ?>">
