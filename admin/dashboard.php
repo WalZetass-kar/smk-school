@@ -101,7 +101,7 @@ require __DIR__ . '/includes/topbar.php';
         <?php endif; ?>
       </div>
 
-      <h1 class="h3 fw-bold mb-1 text-white"><?= $greeting ?>, <?= e($_SESSION['admin_name'] ?? 'Admin') ?>! 👋</h1>
+      <h1 class="h3 fw-bold mb-1 text-white"><?= $greeting ?>, <?= e($_SESSION['admin_name'] ?? 'Admin') ?>! <i class="bi bi-person-check-fill ms-1 text-warning"></i></h1>
       <p class="text-white-50 small mb-0">
         Selamat datang di pusat kendali website <strong><?= e($profile['school_name'] ?? 'SMK') ?></strong>. Semua sistem berjalan normal.
       </p>
