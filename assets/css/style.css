@@ -90,6 +90,16 @@ img {
 .shadow-soft { box-shadow: var(--shadow-soft) !important; }
 .shadow-lift { box-shadow: var(--shadow-lift) !important; }
 
+/* ---- Standardized Icon Display ---- */
+.bi {
+    display: inline-block;
+    vertical-align: -0.125em;
+    line-height: 1;
+}
+.btn .bi {
+    vertical-align: -0.1em;
+}
+
 /* =========================================================
    Section Helpers & Headers
    ========================================================= */

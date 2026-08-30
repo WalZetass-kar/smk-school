@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Login Administrator — <?= e(getSchoolProfile()['school_name'] ?? 'SMK') ?></title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.min.css') ?>" rel="stylesheet">
-<link href="<?= e(ASSETS_URL . '/vendor/bootstrap-icons/bootstrap-icons.css') ?>" rel="stylesheet">
+<link href="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.min.css?v=5.3.3') ?>" rel="stylesheet">
+<link href="<?= e(ASSETS_URL . '/vendor/bootstrap-icons/bootstrap-icons.css?v=' . filemtime(BASE_PATH . '/assets/vendor/bootstrap-icons/bootstrap-icons.css')) ?>" rel="stylesheet">
 <link href="<?= e(ASSETS_URL . '/css/style.css') ?>" rel="stylesheet">
 <link href="<?= e(ASSETS_URL . '/css/admin.css') ?>" rel="stylesheet">
 </head>
