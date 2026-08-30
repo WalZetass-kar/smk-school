@@ -115,7 +115,7 @@ require BASE_PATH . '/includes/navbar.php';
       </div>
 
       <div class="col-lg-7">
-        <div class="jurusan-card p-4 p-md-5">
+        <div class="jurusan-card p-3 p-sm-4 p-md-5">
           <?php if ($errors): ?>
             <div class="alert alert-danger">
               <ul class="mb-0 ps-3">

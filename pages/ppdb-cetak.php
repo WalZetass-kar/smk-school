@@ -83,6 +83,26 @@ if (!$data) {
       height: 100%;
       object-fit: cover;
     }
+    @media (max-width: 575.98px) {
+      .print-card {
+        margin: 10px;
+        padding: 18px 14px;
+        border-radius: 8px;
+      }
+      .kop-logo {
+        width: 50px;
+        height: 50px;
+      }
+      .table-detail th {
+        width: 40%;
+        font-size: 12px;
+        padding: 4px 8px;
+      }
+      .table-detail td {
+        font-size: 12px;
+        padding: 4px 8px;
+      }
+    }
     @media print {
       body {
         background: #fff;

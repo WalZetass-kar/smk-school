@@ -203,11 +203,11 @@ require BASE_PATH . '/includes/navbar.php';
     <?php endif; ?>
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-      <div class="card-header bg-primary text-white py-3 px-4">
+      <div class="card-header bg-primary text-white py-3 px-3 px-sm-4">
         <h2 class="h6 mb-0 text-white"><i class="bi bi-file-earmark-person me-2"></i>Isi Data Calon Peserta Didik</h2>
       </div>
 
-      <div class="card-body p-4 p-md-5">
+      <div class="card-body p-3 p-sm-4 p-md-5">
         <form method="post" enctype="multipart/form-data">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
 

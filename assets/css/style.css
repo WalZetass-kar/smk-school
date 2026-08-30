@@ -1042,14 +1042,248 @@ img {
 .delay-3 { transition-delay: 0.24s; }
 .delay-4 { transition-delay: 0.32s; }
 
-/* Responsive tweaks */
-@media (max-width: 767.98px) {
-    :root { --section-spacing: 3.5rem; }
-    .section-title { font-size: 1.65rem; }
-    .hero-slide { min-height: 440px; text-align: center; }
-    .hero-slide .container { display: flex; flex-direction: column; align-items: center; }
-    .hero-slide h1 { font-size: 1.85rem; }
-    .btn-wa-float, .btn-back-to-top { width: 48px; height: 48px; }
-    .wa-widget-wrapper { bottom: 16px; right: 16px; }
-    .btn-back-to-top { bottom: 16px; left: 16px; }
+/* =========================================================
+   Mobile Precision & Deep Responsiveness Design System
+   ========================================================= */
+
+/* Global Mobile Fixes */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    -webkit-text-size-adjust: 100%;
 }
+
+/* Prevent iOS Auto-Zoom on Form Focus */
+@media (max-width: 767.98px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="search"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Responsive Touch Targets */
+button, .btn, .nav-link, .dropdown-item, .page-link {
+    touch-action: manipulation;
+}
+
+/* Responsive Section Spacing */
+@media (max-width: 991.98px) {
+    :root {
+        --section-spacing: 3.5rem;
+    }
+    .section-header {
+        margin-bottom: 2.25rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    :root {
+        --section-spacing: 2.75rem;
+    }
+    .section-title {
+        font-size: 1.55rem;
+        line-height: 1.25;
+    }
+    .section-subtitle {
+        font-size: 0.88rem;
+    }
+}
+
+/* =========================================================
+   Navbar & Mobile Menu Precision
+   ========================================================= */
+@media (max-width: 1199.98px) {
+    .navbar-smk .navbar-brand {
+        margin-right: auto;
+    }
+    .navbar-smk .navbar-brand-text {
+        font-size: 0.95rem;
+        max-width: 280px;
+    }
+    .navbar-smk .navbar-collapse {
+        background: #ffffff;
+        border-radius: var(--radius);
+        box-shadow: 0 16px 36px rgba(15, 44, 89, 0.14);
+        border: 1px solid var(--color-border);
+        padding: 1rem;
+        margin-top: 0.65rem;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .navbar-smk .nav-link {
+        padding: 0.7rem 0.85rem !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+    .navbar-smk .nav-link:last-child {
+        border-bottom: none;
+    }
+    .navbar-smk .dropdown-menu {
+        background-color: #f8fafc;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        margin: 0.35rem 0 0.5rem;
+        padding: 0.4rem;
+        box-shadow: none;
+    }
+    .navbar-smk .dropdown-item {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.9rem;
+    }
+    .navbar-smk .dropdown-item:hover {
+        transform: translateX(4px);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .top-announcement-bar {
+        height: 32px;
+        font-size: 0.72rem;
+    }
+    .announcement-badge {
+        font-size: 0.62rem;
+        padding: 0.15rem 0.4rem;
+    }
+    .navbar-smk.has-ticker {
+        top: 32px;
+    }
+    .navbar-spacer.has-ticker {
+        height: 94px;
+    }
+    .navbar-spacer {
+        height: 62px;
+    }
+    .navbar-smk .navbar-brand img {
+        height: 32px;
+    }
+    .navbar-smk .navbar-brand-text {
+        font-size: 0.86rem;
+        max-width: 175px;
+    }
+}
+
+@media (max-width: 375px) {
+    .navbar-smk .navbar-brand-text {
+        max-width: 140px;
+        font-size: 0.8rem;
+    }
+}
+
+/* =========================================================
+   Hero Slider Mobile Precision
+   ========================================================= */
+@media (max-width: 767.98px) {
+    .hero-slide {
+        min-height: 420px;
+        padding: 3.5rem 0 4rem;
+        text-align: center;
+    }
+    .hero-slide .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero-slide h1 {
+        font-size: 1.75rem;
+        line-height: 1.25;
+        margin-bottom: 0.85rem;
+    }
+    .hero-slide p {
+        font-size: 0.92rem;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+    }
+    .hero-slide .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    .hero-slider .carousel-control-prev,
+    .hero-slider .carousel-control-next {
+        display: none;
+    }
+    .hero-slider .carousel-indicators {
+        bottom: 0.85rem;
+    }
+}
+
+/* =========================================================
+   Cards, Grids & Sambutan Mobile Precision
+   ========================================================= */
+@media (max-width: 767.98px) {
+    .sambutan-card {
+        padding: 1.5rem 1.25rem;
+    }
+    .sambutan-photo-frame {
+        max-width: 220px;
+        margin: 0 auto 1.25rem;
+    }
+    .sambutan-photo-frame img {
+        height: 260px;
+    }
+    .sambutan-card .sambutan-quote-icon {
+        display: none;
+    }
+}
+
+/* Stat & Fact Cards */
+@media (max-width: 575.98px) {
+    .stats-counter {
+        padding: 1.25rem 0.85rem;
+    }
+    .stats-counter-number {
+        font-size: 1.75rem;
+    }
+    .stats-counter-label {
+        font-size: 0.8rem;
+    }
+    .profil-fact {
+        padding: 0.85rem 0;
+        gap: 0.75rem;
+    }
+    .profil-fact .bi {
+        font-size: 1.15rem;
+    }
+    .profil-fact-label {
+        font-size: 0.75rem;
+    }
+    .profil-fact-value {
+        font-size: 0.88rem;
+    }
+}
+
+/* Floating Widgets on Mobile */
+@media (max-width: 575.98px) {
+    .wa-widget-wrapper {
+        bottom: 14px;
+        right: 14px;
+    }
+    .btn-wa-float {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+    }
+    .wa-popup-card {
+        width: calc(100vw - 28px);
+        right: 0;
+        bottom: 60px;
+        max-height: 75vh;
+    }
+    .btn-back-to-top {
+        bottom: 14px;
+        left: 14px;
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+}
+
