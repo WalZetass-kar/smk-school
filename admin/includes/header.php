@@ -26,6 +26,6 @@ $adminPageTitle = $pageTitle ?? 'Dashboard';
 <link href="<?= e(ASSETS_URL . '/css/admin.css?v=' . filemtime(BASE_PATH . '/assets/css/admin.css')) ?>" rel="stylesheet">
 
 <!-- Local Summernote -->
-<link href="<?= e(ASSETS_URL . '/vendor/summernote/summernote-lite.min.css') ?>" rel="stylesheet">
+<link href="<?= e(ASSETS_URL . '/vendor/summernote/summernote-lite.min.css?v=' . filemtime(BASE_PATH . '/assets/vendor/summernote/summernote-lite.min.css')) ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
