@@ -59,38 +59,24 @@ function getSocialMedia(): array
 
 /**
  * Validate + move an uploaded image into /assets/uploads with a random filename.
- * Supports both:
- *   handleImageUpload($file, $error, $subDir)
- *   handleImageUpload($file, $subDir, $error)
- *   handleImageUpload($file, $error)
+ * Signature: handleImageUpload(array $file, ?string &$error = null, string $subDir = '')
  */
-function handleImageUpload(array $file, mixed &$arg2 = null, mixed &$arg3 = null): ?string
+function handleImageUpload(array $file, ?string &$error = null, string $subDir = ''): ?string
 {
-    $subDir = '';
-    $errorRef = null;
-
-    if (is_string($arg2)) {
-        $subDir = trim($arg2, '/');
-        $errorRef = &$arg3;
-    } else {
-        $errorRef = &$arg2;
-        if (is_string($arg3)) {
-            $subDir = trim($arg3, '/');
-        }
-    }
+    $subDir = trim($subDir, '/');
 
     if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-        $errorRef = 'Upload gagal atau tidak ada file yang dipilih.';
+        $error = 'Upload gagal atau tidak ada file yang dipilih.';
         return null;
     }
     if ($file['size'] > MAX_UPLOAD_SIZE) {
-        $errorRef = 'Ukuran file melebihi batas maksimal 2MB.';
+        $error = 'Ukuran file melebihi batas maksimal 2MB.';
         return null;
     }
 
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, ALLOWED_IMAGE_EXT, true)) {
-        $errorRef = 'Format file tidak diizinkan. Gunakan JPG, JPEG, PNG, atau WEBP.';
+        $error = 'Format file tidak diizinkan. Gunakan JPG, JPEG, PNG, atau WEBP.';
         return null;
     }
 
@@ -100,7 +86,7 @@ function handleImageUpload(array $file, mixed &$arg2 = null, mixed &$arg3 = null
     finfo_close($finfo);
     $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
     if (!in_array($mime, $allowedMime, true)) {
-        $errorRef = 'Isi file bukan gambar yang valid.';
+        $error = 'Isi file bukan gambar yang valid.';
         return null;
     }
 
@@ -113,7 +99,7 @@ function handleImageUpload(array $file, mixed &$arg2 = null, mixed &$arg3 = null
     $destination = $targetDir . '/' . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        $errorRef = 'Gagal menyimpan file ke server.';
+        $error = 'Gagal menyimpan file ke server.';
         return null;
     }
 

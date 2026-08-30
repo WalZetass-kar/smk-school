@@ -34,7 +34,7 @@ function navIsActive(string $needle, string $currentScript): bool
     <div class="nav-section-label">Website</div>
     <a class="nav-link <?= navIsActive('profile', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/profile/index.php" title="Pengaturan Website"><i class="bi bi-gear"></i> <span class="nav-text">Pengaturan Website</span></a>
     <a class="nav-link <?= navIsActive('banners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/banners/index.php" title="Banner"><i class="bi bi-images"></i> <span class="nav-text">Banner</span></a>
-    <a class="nav-link <?= navIsActive('statistics', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/statistics/index.php" title="Statistik"><i class="bi bi-bar-chart"></i> <span class="nav-text">Statistik</span></a>
+    <a class="nav-link <?= navIsActive('statistics', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/statistics/index.php" title="Statistik Sekolah (Jumlah Siswa, Guru, dll)"><i class="bi bi-bar-chart-line"></i> <span class="nav-text">Statistik Sekolah</span></a>
     <a class="nav-link <?= navIsActive('social-media', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/social-media/index.php" title="Social Media"><i class="bi bi-share"></i> <span class="nav-text">Social Media</span></a>
 
     <div class="nav-section-label">Profil</div>

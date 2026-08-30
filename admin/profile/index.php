@@ -40,12 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($_FILES['logo']['name'])) {
             $uploadError = null;
-            $path = handleImageUpload($_FILES['logo'], 'profile', $uploadError);
+            $path = handleImageUpload($_FILES['logo'], $uploadError, 'profile');
             if ($path) { $data['logo'] = $path; } else { $errors[] = 'Logo: ' . $uploadError; }
         }
         if (!empty($_FILES['favicon']['name'])) {
             $uploadError = null;
-            $path = handleImageUpload($_FILES['favicon'], 'profile', $uploadError);
+            $path = handleImageUpload($_FILES['favicon'], $uploadError, 'profile');
             if ($path) { $data['favicon'] = $path; } else { $errors[] = 'Favicon: ' . $uploadError; }
         }
 
@@ -85,6 +85,20 @@ require __DIR__ . '/../includes/topbar.php';
 <?php if ($errors): ?>
   <div class="alert alert-danger"><ul class="mb-0 ps-3"><?php foreach ($errors as $err): ?><li><?= e($err) ?></li><?php endforeach; ?></ul></div>
 <?php endif; ?>
+
+<!-- Quick Banner to Statistics -->
+<div class="alert bg-primary-subtle border border-primary-subtle rounded-3 d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 p-3">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi bi-bar-chart-line-fill text-primary fs-4"></i>
+    <div>
+      <strong class="text-primary d-block">Ingin mengubah angka jumlah siswa, guru, rombel, dll?</strong>
+      <span class="small text-muted">Jumlah Siswa, Guru &amp; Tendik, Rombel, Fasilitas, dan Alumni dapat diedit di menu Statistik Sekolah.</span>
+    </div>
+  </div>
+  <a href="<?= e(BASE_URL) ?>/admin/statistics/index.php" class="btn btn-sm btn-primary fw-semibold px-3">
+    <i class="bi bi-pencil-square me-1"></i> Edit Jumlah Siswa &amp; Guru
+  </a>
+</div>
 
 <div class="admin-card">
   <form method="post" enctype="multipart/form-data">

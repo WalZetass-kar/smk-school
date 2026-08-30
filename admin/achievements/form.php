@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $photoPath = $item['photo'] ?? null;
         if (!empty($_FILES['photo']['name'])) {
             $uploadError = null;
-            $uploaded = handleImageUpload($_FILES['photo'], 'prestasi', $uploadError);
+            $uploaded = handleImageUpload($_FILES['photo'], $uploadError, 'prestasi');
             if ($uploaded) {
                 if ($photoPath && file_exists(BASE_PATH . '/' . $photoPath)) {
                     @unlink(BASE_PATH . '/' . $photoPath);
