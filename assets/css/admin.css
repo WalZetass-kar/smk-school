@@ -1,10 +1,11 @@
 /* =========================================================
    Admin Dashboard Styles — SMK School CMS
-   Modern, Clean, Responsive Panel UI with Toggleable Sidebar
+   Modern, Clean, Responsive Panel UI with Mini Icon Sidebar Mode
    ========================================================= */
 
 :root {
     --admin-sidebar-width: 260px;
+    --admin-sidebar-collapsed-width: 72px;
     --color-primary: #0F2C59;
     --color-primary-dark: #081830;
     --color-secondary: #2563EB;
@@ -36,7 +37,7 @@ body.admin-body {
     right: 0;
     bottom: 0;
     background-color: rgba(8, 24, 48, 0.6);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(3px);
     z-index: 1025;
     opacity: 0;
     pointer-events: none;
@@ -55,26 +56,39 @@ body.admin-body {
     background: var(--color-primary-dark);
     color: rgba(255,255,255,0.85);
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1030;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+    transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 2px 0 14px rgba(0,0,0,0.18);
 }
 .admin-sidebar::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 .admin-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
     border-radius: 4px;
 }
 
 .admin-sidebar .sidebar-brand {
-    padding: 1.15rem 1.4rem;
+    padding: 1.15rem 1.25rem;
     font-family: 'Sora', sans-serif;
     font-weight: 700;
     font-size: 1.15rem;
     color: #ffffff;
     border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: padding 0.25s ease;
 }
+.admin-sidebar .sidebar-brand-title {
+    transition: opacity 0.2s ease;
+}
+.admin-sidebar .sidebar-toggle-btn {
+    border-radius: 8px;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+.admin-sidebar .sidebar-toggle-btn:hover {
+    background: rgba(255,255,255,0.12);
+}
+
 .admin-sidebar .nav-section-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
@@ -83,17 +97,19 @@ body.admin-body {
     letter-spacing: 0.08em;
     color: rgba(255,255,255,0.45);
     padding: 1.2rem 1.4rem 0.35rem;
+    transition: all 0.25s ease;
 }
 .admin-sidebar .nav-link {
     color: rgba(255,255,255,0.8);
-    padding: 0.6rem 1.4rem;
+    padding: 0.65rem 1.4rem;
     font-size: 0.92rem;
     font-weight: 500;
     border-left: 3px solid transparent;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    transition: all 0.15s ease;
+    gap: 0.85rem;
+    transition: background 0.15s ease, color 0.15s ease, padding 0.25s ease;
+    white-space: nowrap;
 }
 .admin-sidebar .nav-link:hover {
     background: rgba(255,255,255,0.08);
@@ -106,8 +122,8 @@ body.admin-body {
     font-weight: 600;
 }
 .admin-sidebar .nav-link i {
-    width: 20px;
-    font-size: 1.1rem;
+    width: 22px;
+    font-size: 1.15rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -139,26 +155,80 @@ body.admin-body {
     flex-grow: 1;
 }
 
-/* Desktop Collapsed State */
+/* =========================================================
+   Desktop Collapsed / Mini Sidebar (Icon-Only Mode: 72px)
+   ========================================================= */
 @media (min-width: 992px) {
     body.sidebar-collapsed .admin-sidebar {
-        transform: translateX(-100%);
+        width: var(--admin-sidebar-collapsed-width);
     }
     body.sidebar-collapsed .admin-content {
-        margin-left: 0;
+        margin-left: var(--admin-sidebar-collapsed-width);
+    }
+
+    /* Header brand in collapsed mini mode */
+    body.sidebar-collapsed .admin-sidebar .sidebar-brand {
+        padding: 1rem 0.5rem;
+        justify-content: center !important;
+    }
+    body.sidebar-collapsed .admin-sidebar .sidebar-brand-left {
+        display: none !important;
+    }
+    body.sidebar-collapsed .admin-sidebar .sidebar-toggle-btn {
+        margin: 0 auto;
+    }
+    body.sidebar-collapsed .admin-sidebar .sidebar-toggle-btn i {
+        color: var(--color-accent) !important;
+        font-size: 1.35rem !important;
+    }
+
+    /* Section labels become clean subtle divider lines */
+    body.sidebar-collapsed .admin-sidebar .nav-section-label {
+        font-size: 0;
+        height: 1px;
+        padding: 0;
+        margin: 0.85rem 0.85rem;
+        background: rgba(255, 255, 255, 0.12);
+        color: transparent;
+        overflow: hidden;
+    }
+
+    /* Nav links become centered icon buttons */
+    body.sidebar-collapsed .admin-sidebar .nav-link {
+        padding: 0.75rem 0;
+        justify-content: center;
+        text-align: center;
+        border-left: 3px solid transparent;
+        gap: 0;
+    }
+    body.sidebar-collapsed .admin-sidebar .nav-link .nav-text {
+        display: none !important;
+    }
+    body.sidebar-collapsed .admin-sidebar .nav-link i {
+        font-size: 1.3rem;
+        width: 100%;
+        margin: 0 auto;
+    }
+    body.sidebar-collapsed .admin-sidebar .nav-link.active {
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--color-accent);
+        border-left: 3px solid var(--color-accent);
     }
 }
 
-/* Mobile & Tablet State (< 992px) */
+/* =========================================================
+   Mobile & Tablet State (< 992px)
+   ========================================================= */
 @media (max-width: 991.98px) {
     .admin-sidebar {
         transform: translateX(-100%);
+        width: var(--admin-sidebar-width) !important;
     }
     .admin-sidebar.show {
         transform: translateX(0);
     }
     .admin-content {
-        margin-left: 0;
+        margin-left: 0 !important;
     }
 }
 
