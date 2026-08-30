@@ -108,12 +108,12 @@ $baseUrl = '/berita' . ($baseParams ? '?' . http_build_query($baseParams) : '');
     <!-- Category Filter Bar (Pills) -->
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 pb-2 border-bottom reveal-up">
       <div class="d-flex flex-wrap gap-2 align-items-center">
-        <a href="<?= e(BASE_URL) ?>/berita<?= $search ? '?search=' . urlencode($search) : '' ?>" class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold <?= $category === '' ? 'btn-accent' : 'btn-outline-secondary' ?>">
+        <a href="<?= e(BASE_URL) ?>/berita<?= $search ? '?search=' . urlencode($search) : '' ?>" class="filter-pill-btn <?= $category === '' ? 'active' : '' ?>">
           Semua Berita
         </a>
         <?php foreach ($categories as $c): ?>
           <?php $qs = array_filter(['search' => $search, 'category' => $c['slug']]); ?>
-          <a href="<?= e(BASE_URL) ?>/berita?<?= e(http_build_query($qs)) ?>" class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold <?= $category === $c['slug'] ? 'btn-accent' : 'btn-outline-secondary' ?>">
+          <a href="<?= e(BASE_URL) ?>/berita?<?= e(http_build_query($qs)) ?>" class="filter-pill-btn <?= $category === $c['slug'] ? 'active' : '' ?>">
             <?= e($c['name']) ?>
           </a>
         <?php endforeach; ?>

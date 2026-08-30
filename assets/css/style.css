@@ -147,11 +147,16 @@ img {
    ========================================================= */
 .btn-accent {
     background-color: var(--color-accent);
-    border-color: var(--color-accent);
+    border: 1.5px solid var(--color-accent);
     color: #ffffff;
     font-weight: 600;
     border-radius: var(--radius-sm);
     padding: 0.65rem 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    vertical-align: middle;
     transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.28);
 }
@@ -172,7 +177,12 @@ img {
     background-color: transparent;
     border-radius: var(--radius-sm);
     font-weight: 600;
-    padding: 0.6rem 1.35rem;
+    padding: 0.65rem 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    vertical-align: middle;
     transition: all 0.18s ease;
 }
 .btn-outline-primary-custom:hover, .btn-outline-primary-custom:focus {
@@ -181,6 +191,66 @@ img {
     color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(15, 44, 89, 0.2);
+}
+
+/* Consistent button sizes */
+.btn-sm.btn-accent,
+.btn-sm.btn-outline-primary-custom,
+.btn-sm.btn-outline-secondary {
+    padding: 0.38rem 0.95rem;
+    font-size: 0.84rem;
+    line-height: 1.4;
+    border-width: 1.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+/* =========================================================
+   Filter Tabs & Category Pills (Symmetrical Alignment)
+   ========================================================= */
+.filter-pills-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2.25rem;
+}
+
+.filter-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 1.25rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 9999px;
+    border: 1.5px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #475569;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.filter-pill-btn:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: #f8fafc;
+    transform: translateY(-1px);
+}
+
+.filter-pill-btn.active {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.32);
 }
 
 .form-control, .form-select {
