@@ -70,11 +70,11 @@ $baseUrl = '/galeri' . ($category ? '?category=' . urlencode($category) : '');
     <!-- Category Filter Bar (Pills) -->
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-5 reveal-up">
       <a href="<?= e(BASE_URL) ?>/galeri" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-semibold <?= $category === '' ? 'btn-accent' : 'btn-outline-secondary' ?>">
-        Semua Foto <span class="badge bg-white text-dark ms-1"><?= (int) $totalRows ?></span>
+        Semua Foto
       </a>
       <?php foreach ($categories as $c): ?>
         <a href="<?= e(BASE_URL) ?>/galeri?category=<?= urlencode($c['slug']) ?>" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-semibold <?= $category === $c['slug'] ? 'btn-accent' : 'btn-outline-secondary' ?>">
-          <?= e($c['name']) ?> <span class="badge bg-light text-dark ms-1"><?= (int) $c['count'] ?></span>
+          <?= e($c['name']) ?>
         </a>
       <?php endforeach; ?>
     </div>
