@@ -298,24 +298,41 @@ require BASE_PATH . '/includes/navbar.php';
 </section>
 
 <!-- ================= PARTNER & MITRA INDUSTRI ================= -->
-<section class="section section-alt">
+<?php if (!empty($partners)): ?>
+<?php
+  // Build continuous seamless loop for marquee
+  $marqueeList = $partners;
+  if (count($marqueeList) < 10) {
+      while (count($marqueeList) < 12) {
+          $marqueeList = array_merge($marqueeList, $partners);
+      }
+  }
+  $marqueeLoop = array_merge($marqueeList, $marqueeList);
+?>
+<section class="section section-alt overflow-hidden py-5">
   <div class="container">
-    <div class="text-center mx-auto mb-5 reveal-up" style="max-width:640px;">
-      <span class="section-badge">Dunia Usaha &amp; Industri</span>
-      <h2 class="section-title">Mitra &amp; Kerjasama Industri</h2>
-      <p class="section-subtitle mx-auto">Didukung oleh perusahaan-perusahaan terkemuka untuk magang, sertifikasi, dan rekrutmen kerja.</p>
+    <div class="text-center mx-auto mb-4 reveal-up" style="max-width:680px;">
+      <span class="section-badge"><i class="bi bi-buildings me-1"></i>Dunia Usaha &amp; Industri</span>
+      <h2 class="section-title mb-2">Mitra Kerja Sama Industri (DU/DI)</h2>
+      <p class="section-subtitle mx-auto">Didukung oleh perusahaan terkemuka untuk magang siswa (PKL), sertifikasi keahlian, kelas industri, dan penyaluran kerja alumni.</p>
     </div>
-    <div class="row g-4 justify-content-center reveal-group">
-      <?php foreach ($partners as $p): ?>
-        <div class="col-lg-2 col-md-3 col-6">
-          <a href="<?= e($p['website'] ?? '#') ?>" target="_blank" rel="noopener" class="partner-logo-box" title="<?= e($p['name']) ?>">
-            <img src="<?= e(BASE_URL . '/' . $p['logo']) ?>" alt="<?= e($p['name']) ?>">
-          </a>
-        </div>
+  </div>
+
+  <div class="partner-marquee-container reveal-fade">
+    <div class="partner-marquee-track">
+      <?php foreach ($marqueeLoop as $p): ?>
+        <a href="<?= !empty($p['website']) ? e($p['website']) : '#' ?>" <?= !empty($p['website']) ? 'target="_blank" rel="noopener"' : '' ?> class="partner-logo-box" title="<?= e($p['name']) ?><?= !empty($p['description']) ? ' — ' . e($p['description']) : '' ?>">
+          <?php if (!empty($p['logo']) && file_exists(BASE_PATH . '/' . $p['logo'])): ?>
+            <img src="<?= e(BASE_URL . '/' . $p['logo']) ?>" alt="<?= e($p['name']) ?>" loading="lazy">
+          <?php else: ?>
+            <span class="small fw-bold text-dark text-center px-2 text-truncate"><?= e($p['name']) ?></span>
+          <?php endif; ?>
+        </a>
       <?php endforeach; ?>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ================= GALERI ================= -->
 <section class="section">
