@@ -1,6 +1,6 @@
 /* =========================================================
    Admin Dashboard Styles — SMK School CMS
-   Modern, Clean, Responsive Panel UI
+   Modern, Clean, Responsive Panel UI with Toggleable Sidebar
    ========================================================= */
 
 :root {
@@ -25,6 +25,26 @@ body.admin-body {
     color: var(--color-text);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ---- Mobile Backdrop ---- */
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(8, 24, 48, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1025;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+.sidebar-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* ---- Sidebar ---- */
@@ -48,15 +68,12 @@ body.admin-body {
 }
 
 .admin-sidebar .sidebar-brand {
-    padding: 1.25rem 1.4rem;
+    padding: 1.15rem 1.4rem;
     font-family: 'Sora', sans-serif;
     font-weight: 700;
     font-size: 1.15rem;
     color: #ffffff;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
 }
 .admin-sidebar .nav-section-label {
     font-family: 'JetBrains Mono', monospace;
@@ -94,6 +111,7 @@ body.admin-body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 /* ---- Content area ---- */
@@ -102,6 +120,7 @@ body.admin-body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .admin-topbar {
     background: #ffffff;
@@ -111,16 +130,36 @@ body.admin-body {
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 1020;
 }
 .admin-main {
     padding: 1.85rem;
     flex-grow: 1;
 }
 
+/* Desktop Collapsed State */
+@media (min-width: 992px) {
+    body.sidebar-collapsed .admin-sidebar {
+        transform: translateX(-100%);
+    }
+    body.sidebar-collapsed .admin-content {
+        margin-left: 0;
+    }
+}
+
+/* Mobile & Tablet State (< 992px) */
 @media (max-width: 991.98px) {
-    .admin-sidebar { transform: translateX(-100%); }
-    .admin-sidebar.show { transform: translateX(0); }
-    .admin-content { margin-left: 0; }
+    .admin-sidebar {
+        transform: translateX(-100%);
+    }
+    .admin-sidebar.show {
+        transform: translateX(0);
+    }
+    .admin-content {
+        margin-left: 0;
+    }
 }
 
 /* ---- Cards & Stat Cards ---- */

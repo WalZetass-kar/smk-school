@@ -11,11 +11,12 @@ if (!empty($_SESSION['admin_id'])) {
     $currentUserPhoto = $uStmt->fetchColumn() ?: null;
 }
 ?>
-<div class="admin-content">
+<div class="admin-content" id="adminContent">
   <div class="admin-topbar">
     <div class="d-flex align-items-center gap-3">
-      <button class="btn btn-sm btn-outline-secondary d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('show')" title="Buka Menu">
-        <i class="bi bi-list fs-5"></i>
+      <!-- Universal Burger Menu Toggle Button -->
+      <button class="btn btn-sm btn-light border p-0 d-inline-flex align-items-center justify-content-center shadow-none rounded-3" id="sidebarToggleBtn" type="button" title="Buka / Tutup Sidebar" style="width:38px;height:38px;">
+        <i class="bi bi-list fs-4 text-primary"></i>
       </button>
       <h1 class="h5 mb-0 fw-bold text-primary"><?= e($pageTitle ?? 'Dashboard') ?></h1>
     </div>
