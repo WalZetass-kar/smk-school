@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/achievements/index.php
  * Daftar Prestasi Siswa & Sekolah

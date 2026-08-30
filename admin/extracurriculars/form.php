@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/extracurriculars/form.php
  * Tambah / Edit Ekstrakurikuler

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/search-api.php — /api/search?q=...
  * Live Global Search API across News, Majors, BKK, Ekskul, Downloads

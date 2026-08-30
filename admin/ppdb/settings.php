@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/ppdb/settings.php
  * Pengaturan PPDB Online (Tahun Ajaran, Tanggal, Buka/Tutup, Syarat)

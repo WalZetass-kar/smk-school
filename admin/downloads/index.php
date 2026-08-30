@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/downloads/index.php
  * Daftar Berkas & Dokumen Unduhan

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/bkk/index.php
  * Daftar Lowongan Kerja (Bursa Kerja Khusus)

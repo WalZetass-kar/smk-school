@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/bkk/form.php
  * Form Tambah / Edit Lowongan Kerja BKK

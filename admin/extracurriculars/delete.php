@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/extracurriculars/delete.php
  * Hapus Ekstrakurikuler (POST + CSRF)

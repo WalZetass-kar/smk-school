@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/achievements/form.php
  * Tambah / Edit Prestasi Siswa

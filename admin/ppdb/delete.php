@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/ppdb/delete.php
  * Hapus data pendaftar PPDB (POST only + CSRF)

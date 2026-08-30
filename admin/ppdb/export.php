@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/ppdb/export.php
  * Export Data Pendaftar PPDB ke CSV
