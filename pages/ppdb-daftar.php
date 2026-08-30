@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle       = 'Formulir Pendaftaran PPDB Online ' . e($settings['academic_year']);
+$pageTitle       = 'Formulir Pendaftaran PPDB Online ' . ($settings['academic_year'] ?? '');
 $pageDescription = 'Formulir Pendaftaran Siswa Baru ' . e($profile['school_name'] ?? '');
 $canonicalPath   = '/ppdb/daftar';
 

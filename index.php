@@ -48,7 +48,7 @@ if (isset($routes[$uri])) {
 }
 
 // Detail routes with a slug or ID
-if (preg_match('#^/jurusan/detail/([a-z0-9\-]+)$#', $uri, $m)) {
+if (preg_match('#^/jurusan/(?:detail/)?([a-z0-9\-]+)$#', $uri, $m)) {
     $_GET['slug'] = $m[1];
     require BASE_PATH . '/pages/jurusan-detail.php';
     exit;

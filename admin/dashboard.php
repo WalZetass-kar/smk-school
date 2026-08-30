@@ -75,7 +75,7 @@ require __DIR__ . '/includes/topbar.php';
   <canvas id="newsChart" height="90"></canvas>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="<?= e(ASSETS_URL . '/vendor/chartjs/chart.umd.min.js') ?>"></script>
 <script>
 new Chart(document.getElementById('newsChart'), {
   type: 'bar',

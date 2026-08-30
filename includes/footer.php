@@ -152,7 +152,7 @@ foreach ($socials as $s) {
     <i class="bi bi-arrow-up"></i>
   </button>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.bundle.min.js') ?>"></script>
   <script src="<?= e(ASSETS_URL . '/js/main.js') ?>"></script>
 </body>
 </html>

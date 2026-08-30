@@ -13,11 +13,19 @@ $adminPageTitle = $pageTitle ?? 'Dashboard';
 <meta name="robots" content="noindex, nofollow">
 <title><?= e($adminPageTitle) ?> — Admin SMK</title>
 
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<link href="<?= e(ASSETS_URL . '/css/style.css') ?>" rel="stylesheet">
-<link href="<?= e(ASSETS_URL . '/css/admin.css') ?>" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+
+<!-- Local Bootstrap 5.3 + Icons -->
+<link href="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.min.css') ?>" rel="stylesheet">
+<link href="<?= e(ASSETS_URL . '/vendor/bootstrap-icons/bootstrap-icons.css') ?>" rel="stylesheet">
+
+<!-- Site styles -->
+<link href="<?= e(ASSETS_URL . '/css/style.css?v=' . filemtime(BASE_PATH . '/assets/css/style.css')) ?>" rel="stylesheet">
+<link href="<?= e(ASSETS_URL . '/css/admin.css?v=' . filemtime(BASE_PATH . '/assets/css/admin.css')) ?>" rel="stylesheet">
+
+<!-- Local Summernote -->
+<link href="<?= e(ASSETS_URL . '/vendor/summernote/summernote-lite.min.css') ?>" rel="stylesheet">
 </head>
 <body class="admin-body">

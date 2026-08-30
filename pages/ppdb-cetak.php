@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/ppdb-cetak.php — /ppdb/cetak?no=...
  * Cetak Kartu Bukti Pendaftaran PPDB Resmi
@@ -28,8 +28,8 @@ if (!$data) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bukti Pendaftaran PPDB — <?= e($data['registration_no']) ?></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.min.css') ?>" rel="stylesheet">
+  <link href="<?= e(ASSETS_URL . '/vendor/bootstrap-icons/bootstrap-icons.css') ?>" rel="stylesheet">
   <style>
     body {
       background-color: #f8fafc;

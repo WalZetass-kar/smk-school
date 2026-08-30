@@ -59,22 +59,38 @@ function getSocialMedia(): array
 
 /**
  * Validate + move an uploaded image into /assets/uploads with a random filename.
- * Returns the stored relative path on success, or null on failure (check $error).
+ * Supports both:
+ *   handleImageUpload($file, $error, $subDir)
+ *   handleImageUpload($file, $subDir, $error)
+ *   handleImageUpload($file, $error)
  */
-function handleImageUpload(array $file, ?string &$error = null): ?string
+function handleImageUpload(array $file, mixed &$arg2 = null, mixed &$arg3 = null): ?string
 {
+    $subDir = '';
+    $errorRef = null;
+
+    if (is_string($arg2)) {
+        $subDir = trim($arg2, '/');
+        $errorRef = &$arg3;
+    } else {
+        $errorRef = &$arg2;
+        if (is_string($arg3)) {
+            $subDir = trim($arg3, '/');
+        }
+    }
+
     if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-        $error = 'Upload gagal atau tidak ada file yang dipilih.';
+        $errorRef = 'Upload gagal atau tidak ada file yang dipilih.';
         return null;
     }
     if ($file['size'] > MAX_UPLOAD_SIZE) {
-        $error = 'Ukuran file melebihi batas maksimal 2MB.';
+        $errorRef = 'Ukuran file melebihi batas maksimal 2MB.';
         return null;
     }
 
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, ALLOWED_IMAGE_EXT, true)) {
-        $error = 'Format file tidak diizinkan. Gunakan JPG, JPEG, PNG, atau WEBP.';
+        $errorRef = 'Format file tidak diizinkan. Gunakan JPG, JPEG, PNG, atau WEBP.';
         return null;
     }
 
@@ -84,23 +100,24 @@ function handleImageUpload(array $file, ?string &$error = null): ?string
     finfo_close($finfo);
     $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
     if (!in_array($mime, $allowedMime, true)) {
-        $error = 'Isi file bukan gambar yang valid.';
+        $errorRef = 'Isi file bukan gambar yang valid.';
         return null;
     }
 
-    if (!is_dir(UPLOADS_PATH)) {
-        mkdir(UPLOADS_PATH, 0755, true);
+    $targetDir = UPLOADS_PATH . ($subDir !== '' ? '/' . $subDir : '');
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
     }
 
     $filename = bin2hex(random_bytes(16)) . '.' . $ext;
-    $destination = UPLOADS_PATH . '/' . $filename;
+    $destination = $targetDir . '/' . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        $error = 'Gagal menyimpan file ke server.';
+        $errorRef = 'Gagal menyimpan file ke server.';
         return null;
     }
 
-    return 'assets/uploads/' . $filename;
+    return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $filename;
 }
 
 /** Generate (and remember) a CSRF token for the current session. */
