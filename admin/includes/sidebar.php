@@ -55,9 +55,9 @@ function navIsActive(string $needle, string $currentScript): bool
     <a class="nav-link <?= navIsActive('galleries', $currentScript) && !navIsActive('galleries/categories', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/galleries/index.php" title="Semua Galeri"><i class="bi bi-image"></i> <span class="nav-text">Semua Galeri</span></a>
     <a class="nav-link <?= navIsActive('galleries/categories', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/galleries/categories.php" title="Kategori Galeri"><i class="bi bi-tags"></i> <span class="nav-text">Kategori Galeri</span></a>
 
-    <div class="nav-section-label">Alumni &amp; Partner</div>
+    <div class="nav-section-label">Alumni &amp; Mitra</div>
     <a class="nav-link <?= navIsActive('alumni', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/alumni/index.php" title="Testimoni Alumni"><i class="bi bi-chat-quote"></i> <span class="nav-text">Testimoni Alumni</span></a>
-    <a class="nav-link <?= navIsActive('partners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/partners/index.php" title="Data Partner"><i class="bi bi-building"></i> <span class="nav-text">Data Partner</span></a>
+    <a class="nav-link <?= navIsActive('partners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/partners/index.php" title="Mitra Kerja Sama &amp; Industri (DU/DI)"><i class="bi bi-buildings"></i> <span class="nav-text">Mitra Kerja Sama</span></a>
 
     <div class="nav-section-label">Kesiswaan</div>
     <a class="nav-link <?= navIsActive('extracurriculars', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/extracurriculars/index.php" title="Ekstrakurikuler"><i class="bi bi-activity"></i> <span class="nav-text">Ekstrakurikuler</span></a>
