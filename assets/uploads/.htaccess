@@ -1,0 +1,9 @@
+# Defense in depth: this folder only ever holds user-uploaded images
+# (validated in includes/functions.php), but if a disguised file ever
+# lands here, it must never be executable as PHP.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phar)$">
+    Require all denied
+</FilesMatch>

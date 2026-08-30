@@ -1,0 +1,25 @@
+RewriteEngine On
+
+# Deny direct access to config/ and includes/ — they should only ever be
+# require()'d from PHP, never requested directly by a browser.
+RewriteRule ^config/ - [F,L]
+RewriteRule ^includes/ - [F,L]
+
+# Dynamic sitemap: /sitemap.xml -> sitemap.php (keeps berita/jurusan current).
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# Let real files/folders (assets, admin/*.php, robots.txt, etc.) pass through untouched.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Everything else goes through the front controller.
+RewriteRule ^ index.php [L]
+
+# Never allow the uploads folder to execute PHP (defense in depth against
+# a malicious file slipping past the upload validation in functions.php).
+<IfModule mod_php.c>
+    <Directory "assets/uploads">
+        php_flag engine off
+    </Directory>
+</IfModule>

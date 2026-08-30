@@ -1,0 +1,129 @@
+/* =========================================================
+   Admin dashboard styles — shares tokens with assets/css/style.css
+   ========================================================= */
+:root {
+    --admin-sidebar-width: 260px;
+}
+
+body.admin-body {
+    background-color: var(--color-bg);
+    font-family: var(--font-body);
+}
+
+/* ---- Sidebar ---- */
+.admin-sidebar {
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+    width: var(--admin-sidebar-width);
+    background: var(--color-primary-dark);
+    color: rgba(255,255,255,0.85);
+    overflow-y: auto;
+    z-index: 1030;
+    transition: transform 0.2s ease;
+}
+.admin-sidebar .sidebar-brand {
+    padding: 1.3rem 1.2rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.admin-sidebar .nav-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4);
+    padding: 1.1rem 1.2rem 0.4rem;
+}
+.admin-sidebar .nav-link {
+    color: rgba(255,255,255,0.8);
+    padding: 0.55rem 1.2rem;
+    font-size: 0.92rem;
+    border-left: 3px solid transparent;
+}
+.admin-sidebar .nav-link:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.admin-sidebar .nav-link.active {
+    background: rgba(242,153,74,0.14);
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+    font-weight: 600;
+}
+.admin-sidebar .nav-link i { width: 20px; display: inline-block; }
+
+/* ---- Content area ---- */
+.admin-content {
+    margin-left: var(--admin-sidebar-width);
+    min-height: 100vh;
+}
+.admin-topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.9rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.admin-main { padding: 1.75rem; }
+
+@media (max-width: 991.98px) {
+    .admin-sidebar { transform: translateX(-100%); }
+    .admin-sidebar.show { transform: translateX(0); }
+    .admin-content { margin-left: 0; }
+}
+
+/* ---- Cards / stats ---- */
+.stat-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1.4rem;
+    display: flex; align-items: center; gap: 1rem;
+}
+.stat-card .stat-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(15,44,89,0.08); color: var(--color-primary);
+    font-size: 1.4rem; flex-shrink: 0;
+}
+.stat-card .stat-value { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; color: var(--color-primary); line-height: 1; }
+.stat-card .stat-label { color: var(--color-text-muted); font-size: 0.85rem; }
+
+.admin-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+}
+
+.table-admin thead th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    border-bottom-width: 1px;
+    white-space: nowrap;
+}
+.table-admin td { vertical-align: middle; }
+.table-admin img.thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; }
+
+.badge-status-publish { background: #DCFCE7; color: #15803D; }
+.badge-status-draft { background: #FEF3C7; color: #B45309; }
+.badge-status-active { background: #DCFCE7; color: #15803D; }
+.badge-status-inactive { background: #F1F5F9; color: #64748B; }
+
+/* ---- Login page ---- */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--color-primary);
+    background-image: radial-gradient(circle at 15% 15%, rgba(91,141,190,0.35), transparent 45%);
+}
+.login-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lift);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+}
