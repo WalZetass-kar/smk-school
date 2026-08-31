@@ -1,7 +1,7 @@
 <?php
 /**
  * pages/ppdb-daftar.php — /ppdb/daftar
- * Formulir Pendaftaran Online PPDB
+ * Formulir Pendaftaran Online PPDB SMK
  */
 $db       = getDB();
 $profile  = getSchoolProfile();
@@ -9,10 +9,28 @@ $settings = getPpdbSettings();
 $majors   = $db->query("SELECT * FROM majors WHERE status = 1 ORDER BY id ASC")->fetchAll();
 
 if (empty($settings['is_open'])) {
-    $pageTitle = 'Pendaftaran Ditutup';
+    $pageTitle = 'Pendaftaran PPDB Ditutup';
     require BASE_PATH . '/includes/header.php';
     require BASE_PATH . '/includes/navbar.php';
-    echo '<section class="section text-center"><div class="container py-5"><h1 class="text-primary mb-3">Pendaftaran PPDB Ditutup</h1><p class="section-subtitle mx-auto mb-4">Mohon maaf, saat ini masa pendaftaran peserta didik baru belum dibuka atau telah berakhir.</p><a href="' . e(BASE_URL) . '/ppdb" class="btn btn-accent">Kembali ke Info PPDB</a></div></section>';
+    ?>
+    <section class="section text-center py-5">
+      <div class="container my-5">
+        <div class="p-3 bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
+          <i class="bi bi-lock-fill fs-1 text-muted"></i>
+        </div>
+        <h1 class="h3 fw-bold text-primary mb-2">Pendaftaran PPDB Ditutup</h1>
+        <p class="text-muted small mx-auto mb-4" style="max-width: 480px;">Mohon maaf, masa pendaftaran Penerimaan Peserta Didik Baru saat ini belum dibuka atau telah berakhir.</p>
+        <div class="d-flex justify-content-center gap-2">
+          <a href="<?= e(BASE_URL) ?>/ppdb" class="btn btn-accent px-4 fw-semibold">
+            <i class="bi bi-info-circle me-1"></i> Informasi Jadwal PPDB
+          </a>
+          <a href="<?= e(BASE_URL) ?>/ppdb/cek-status" class="btn btn-outline-primary-custom px-4 fw-semibold">
+            <i class="bi bi-search me-1"></i> Cek Status Pendaftaran
+          </a>
+        </div>
+      </div>
+    </section>
+    <?php
     require BASE_PATH . '/includes/footer.php';
     exit;
 }
@@ -42,7 +60,7 @@ $formData = [
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrfVerify($_POST['csrf_token'] ?? null)) {
-        $errors[] = 'Sesi form telah kedaluwarsa, silakan ulangi submit form.';
+        $errors[] = 'Sesi formulir telah kedaluwarsa, silakan coba kirim ulang formulir.';
     } else {
         $formData['full_name']       = trim($_POST['full_name'] ?? '');
         $formData['nisn']            = trim($_POST['nisn'] ?? '');
@@ -63,25 +81,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData['major_choice_1']  = (int) ($_POST['major_choice_1'] ?? 0);
         $formData['major_choice_2']  = (int) ($_POST['major_choice_2'] ?? 0) ?: null;
 
-        // Validasi wajib
+        // Validasi Wajib
         if ($formData['full_name'] === '')     { $errors[] = 'Nama lengkap calon siswa wajib diisi.'; }
-        if ($formData['nisn'] === '')          { $errors[] = 'NISN wajib diisi.'; }
-        if ($formData['nik'] === '')           { $errors[] = 'NIK wajib diisi.'; }
+        if ($formData['nisn'] === '')          { $errors[] = 'NISN (10 Digit) wajib diisi.'; }
+        if ($formData['nik'] === '')           { $errors[] = 'NIK (16 Digit) wajib diisi.'; }
         if ($formData['birth_place'] === '')   { $errors[] = 'Tempat lahir wajib diisi.'; }
         if ($formData['birth_date'] === '')    { $errors[] = 'Tanggal lahir wajib diisi.'; }
         if ($formData['address'] === '')       { $errors[] = 'Alamat tempat tinggal wajib diisi.'; }
-        if ($formData['phone'] === '')         { $errors[] = 'Nomor WhatsApp / HP calon siswa wajib diisi.'; }
-        if ($formData['school_origin'] === '') { $errors[] = 'Nama sekolah asal (SMP/MTs) wajib diisi.'; }
+        if ($formData['phone'] === '')         { $errors[] = 'Nomor WhatsApp / HP siswa wajib diisi.'; }
+        if ($formData['school_origin'] === '') { $errors[] = 'Nama SMP / MTs asal wajib diisi.'; }
         if ($formData['parent_name'] === '')   { $errors[] = 'Nama Orang Tua / Wali wajib diisi.'; }
-        if ($formData['parent_phone'] === '')  { $errors[] = 'Nomor HP/WA Orang Tua wajib diisi.'; }
-        if (!$formData['major_choice_1'])      { $errors[] = 'Pilihan Jurusan 1 wajib dipilih.'; }
+        if ($formData['parent_phone'] === '')  { $errors[] = 'Nomor WhatsApp / HP Orang Tua wajib diisi.'; }
+        if (!$formData['major_choice_1'])      { $errors[] = 'Pilihan Jurusan Utama wajib dipilih.'; }
 
         // Cek apakah NISN sudah pernah terdaftar
         if ($formData['nisn'] !== '') {
             $checkNisn = $db->prepare("SELECT id, registration_no FROM ppdb_registrations WHERE nisn = ?");
             $checkNisn->execute([$formData['nisn']]);
             if ($existing = $checkNisn->fetch()) {
-                $errors[] = 'NISN ' . e($formData['nisn']) . ' sudah terdaftar sebelumnya dengan Nomor Registrasi: ' . e($existing['registration_no']) . '. Silakan cek status pendaftaran Anda.';
+                $errors[] = 'NISN ' . e($formData['nisn']) . ' sudah terdaftar sebelumnya dengan Nomor Registrasi: ' . e($existing['registration_no']) . '. Silakan periksa status pendaftaran Anda di menu Cek Status.';
             }
         }
 
@@ -103,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['document_rapor']['name'])) {
             $err = null;
             $docRapor = handleDocumentUpload($_FILES['document_rapor'], $err);
-            if (!$docRapor) { $errors[] = 'Rapor/SKL: ' . $err; }
+            if (!$docRapor) { $errors[] = 'Rapor / SKL: ' . $err; }
         }
 
         if (empty($errors)) {
@@ -162,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $docRapor
             ]);
 
-            setFlash('success', 'Selamat! Pendaftaran Anda berhasil dikirim.');
+            setFlash('success', 'Selamat! Formulir pendaftaran Anda berhasil terkirim.');
             redirect(BASE_URL . '/ppdb/sukses?no=' . urlencode($regNo));
         }
     }
@@ -176,25 +194,58 @@ require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
 ?>
 
+<!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="container pt-4">
-  <ol class="breadcrumb small">
-    <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/">Beranda</a></li>
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/"><i class="bi bi-house-door me-1"></i>Beranda</a></li>
     <li class="breadcrumb-item"><a href="<?= e(BASE_URL) ?>/ppdb">PPDB</a></li>
     <li class="breadcrumb-item active" aria-current="page">Formulir Pendaftaran</li>
   </ol>
 </nav>
 
 <section class="section pt-3 pb-5">
-  <div class="container" style="max-width: 920px;">
-    <div class="text-center mb-4">
-      <h1 class="section-title mb-2">Pendaftaran Peserta Didik Baru</h1>
-      <p class="text-muted">Tahun Ajaran <?= e($settings['academic_year']) ?></p>
+  <div class="container" style="max-width: 960px;">
+    <!-- Page Header -->
+    <div class="text-center mx-auto mb-4 reveal-up" style="max-width: 740px;">
+      <h1 class="section-title mb-2">Formulir Pendaftaran Siswa Baru</h1>
+      <p class="section-subtitle mx-auto">Tahun Ajaran <?= e($settings['academic_year']) ?> — Lengkapi data calon siswa di bawah ini dengan teliti dan benar sesuai dokumen resmi.</p>
+    </div>
+
+    <!-- 5 Step Quick Tracker -->
+    <div class="row g-2 mb-4 d-none d-md-flex text-center small fw-semibold">
+      <div class="col">
+        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+          <span class="badge bg-primary rounded-circle">1</span> Jurusan
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+          <span class="badge bg-primary rounded-circle">2</span> Data Diri
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+          <span class="badge bg-primary rounded-circle">3</span> Asal Sekolah
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+          <span class="badge bg-primary rounded-circle">4</span> Orang Tua
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+          <span class="badge bg-primary rounded-circle">5</span> Berkas
+        </div>
+      </div>
     </div>
 
     <?php if ($errors): ?>
-      <div class="alert alert-danger shadow-sm mb-4">
-        <div class="fw-bold mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Harap periksa kesalahan berikut:</div>
-        <ul class="mb-0 ps-3">
+      <div class="alert alert-danger shadow-sm mb-4 rounded-4 border-0">
+        <div class="fw-bold mb-2 d-flex align-items-center gap-2">
+          <i class="bi bi-exclamation-triangle-fill fs-5"></i> Harap periksa kesalahan berikut:
+        </div>
+        <ul class="mb-0 ps-3 small">
           <?php foreach ($errors as $err): ?>
             <li><?= e($err) ?></li>
           <?php endforeach; ?>
@@ -202,24 +253,28 @@ require BASE_PATH . '/includes/navbar.php';
       </div>
     <?php endif; ?>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-      <div class="card-header bg-primary text-white py-3 px-3 px-sm-4">
-        <h2 class="h6 mb-0 text-white"><i class="bi bi-file-earmark-person me-2"></i>Isi Data Calon Peserta Didik</h2>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+      <div class="card-header bg-primary text-white py-3 px-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-file-earmark-person-fill fs-5 text-warning"></i>
+          <h2 class="h6 mb-0 text-white fw-bold">Data Calon Peserta Didik Baru</h2>
+        </div>
+        <span class="small text-white-50">Tanda bintang (<span class="text-danger fw-bold">*</span>) wajib diisi</span>
       </div>
 
       <div class="card-body p-3 p-sm-4 p-md-5">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="ppdbForm">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
 
           <!-- Bagian 1: Pilihan Jurusan -->
-          <div class="mb-4">
-            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3">
-              <i class="bi bi-mortarboard me-2"></i>1. Pilihan Program Keahlian (Jurusan)
+          <div class="mb-5">
+            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-mortarboard-fill text-accent"></i> 1. Pilihan Program Keahlian (Jurusan)
             </h3>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">Pilihan Jurusan 1 <span class="text-danger">*</span></label>
-                <select name="major_choice_1" class="form-select" required>
+                <label class="form-label small fw-semibold">Pilihan Jurusan Utama <span class="text-danger">*</span></label>
+                <select name="major_choice_1" class="form-select form-select-lg fs-6" required>
                   <option value="">— Pilih Jurusan Utama —</option>
                   <?php foreach ($majors as $m): ?>
                     <option value="<?= (int) $m['id'] ?>" <?= (int) $formData['major_choice_1'] === (int) $m['id'] ? 'selected' : '' ?>>
@@ -227,41 +282,44 @@ require BASE_PATH . '/includes/navbar.php';
                     </option>
                   <?php endforeach; ?>
                 </select>
+                <div class="form-text small text-muted">Jurusan prioritas yang paling diminati calon siswa.</div>
               </div>
 
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">Pilihan Jurusan 2 <span class="text-muted fw-normal">(Cadangan / Opsional)</span></label>
-                <select name="major_choice_2" class="form-select">
-                  <option value="">— Tanpa Pilihan Kedua —</option>
+                <label class="form-label small fw-semibold">Pilihan Jurusan Alternatif <span class="text-muted fw-normal">(Opsional)</span></label>
+                <select name="major_choice_2" class="form-select form-select-lg fs-6">
+                  <option value="">— Tanpa Pilihan Cadangan —</option>
                   <?php foreach ($majors as $m): ?>
                     <option value="<?= (int) $m['id'] ?>" <?= (int) $formData['major_choice_2'] === (int) $m['id'] ? 'selected' : '' ?>>
                       <?= e($m['name']) ?> (<?= e($m['code']) ?>)
                     </option>
                   <?php endforeach; ?>
                 </select>
+                <div class="form-text small text-muted">Pilihan kedua jika kuota jurusan utama telah terpenuhi.</div>
               </div>
             </div>
           </div>
 
-          <!-- Bagian 2: Data Diri Siswa -->
-          <div class="mb-4">
-            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3">
-              <i class="bi bi-person-vcard me-2"></i>2. Data Pribadi Calon Siswa
+          <!-- Bagian 2: Data Pribadi Siswa -->
+          <div class="mb-5">
+            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-person-vcard-fill text-accent"></i> 2. Data Pribadi Calon Siswa
             </h3>
             <div class="row g-3">
               <div class="col-md-12">
-                <label class="form-label small fw-semibold">Nama Lengkap (Sesuai Ijazah SMP/Akta) <span class="text-danger">*</span></label>
-                <input type="text" name="full_name" class="form-control" value="<?= e($formData['full_name']) ?>" required placeholder="Contoh: Muhammad Rizky Pratama">
+                <label class="form-label small fw-semibold">Nama Lengkap Siswa <span class="text-danger">*</span></label>
+                <input type="text" name="full_name" class="form-control" value="<?= e($formData['full_name']) ?>" required placeholder="Sesuai Akta Kelahiran / Ijazah SMP">
               </div>
 
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">NISN (10 Digit) <span class="text-danger">*</span></label>
-                <input type="text" name="nisn" class="form-control" value="<?= e($formData['nisn']) ?>" required maxlength="20" placeholder="Contoh: 0081234567">
+                <label class="form-label small fw-semibold">NISN (10 Digit Angka) <span class="text-danger">*</span></label>
+                <input type="text" name="nisn" class="form-control" value="<?= e($formData['nisn']) ?>" required maxlength="15" placeholder="Contoh: 0081234567">
+                <div class="form-text small text-muted">Nomor Induk Siswa Nasional dari sekolah asal.</div>
               </div>
 
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">NIK / No. KTP Siswa (16 Digit) <span class="text-danger">*</span></label>
-                <input type="text" name="nik" class="form-control" value="<?= e($formData['nik']) ?>" required maxlength="25" placeholder="Contoh: 1471012304080001">
+                <label class="form-label small fw-semibold">NIK Siswa (16 Digit KTP/KK) <span class="text-danger">*</span></label>
+                <input type="text" name="nik" class="form-control" value="<?= e($formData['nik']) ?>" required maxlength="20" placeholder="Nomor Induk Kependudukan di KK">
               </div>
 
               <div class="col-md-4">
@@ -274,7 +332,7 @@ require BASE_PATH . '/includes/navbar.php';
 
               <div class="col-md-4">
                 <label class="form-label small fw-semibold">Tempat Lahir <span class="text-danger">*</span></label>
-                <input type="text" name="birth_place" class="form-control" value="<?= e($formData['birth_place']) ?>" required placeholder="Contoh: Pekanbaru">
+                <input type="text" name="birth_place" class="form-control" value="<?= e($formData['birth_place']) ?>" required placeholder="Kota / Kabupaten Kelahiran">
               </div>
 
               <div class="col-md-4">
@@ -293,25 +351,25 @@ require BASE_PATH . '/includes/navbar.php';
 
               <div class="col-md-4">
                 <label class="form-label small fw-semibold">Nomor WhatsApp / HP Siswa <span class="text-danger">*</span></label>
-                <input type="tel" name="phone" class="form-control" value="<?= e($formData['phone']) ?>" required placeholder="Contoh: 081234567890">
+                <input type="tel" name="phone" class="form-control" value="<?= e($formData['phone']) ?>" required placeholder="08xxxxxxxxxx">
               </div>
 
               <div class="col-md-4">
-                <label class="form-label small fw-semibold">Email <span class="text-muted fw-normal">(Opsional)</span></label>
-                <input type="email" name="email" class="form-control" value="<?= e($formData['email']) ?>" placeholder="siswa@gmail.com">
+                <label class="form-label small fw-semibold">Alamat Email <span class="text-muted fw-normal">(Opsional)</span></label>
+                <input type="email" name="email" class="form-control" value="<?= e($formData['email']) ?>" placeholder="siswa@email.com">
               </div>
 
               <div class="col-12">
                 <label class="form-label small fw-semibold">Alamat Tempat Tinggal Lengkap <span class="text-danger">*</span></label>
-                <textarea name="address" rows="2" class="form-control" required placeholder="Jl. Nama Jalan No. RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"><?= e($formData['address']) ?></textarea>
+                <textarea name="address" rows="2" class="form-control" required placeholder="Jl. Nama Jalan No., RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"><?= e($formData['address']) ?></textarea>
               </div>
             </div>
           </div>
 
-          <!-- Bagian 3: Data Asal Sekolah -->
-          <div class="mb-4">
-            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3">
-              <i class="bi bi-building me-2"></i>3. Asal Sekolah & Nilai
+          <!-- Bagian 3: Asal Sekolah -->
+          <div class="mb-5">
+            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-buildings text-accent"></i> 3. Asal Sekolah &amp; Nilai Rapor
             </h3>
             <div class="row g-3">
               <div class="col-md-6">
@@ -325,16 +383,16 @@ require BASE_PATH . '/includes/navbar.php';
               </div>
 
               <div class="col-md-3">
-                <label class="form-label small fw-semibold">Rata-rata Nilai <span class="text-muted fw-normal">(Skala 100)</span></label>
-                <input type="number" step="0.01" name="average_score" class="form-control" value="<?= e($formData['average_score']) ?>" placeholder="mis. 85.50">
+                <label class="form-label small fw-semibold">Rata-rata Nilai Rapor <span class="text-muted fw-normal">(Skala 100)</span></label>
+                <input type="number" step="0.01" name="average_score" class="form-control" value="<?= e($formData['average_score']) ?>" placeholder="mis. 86.50">
               </div>
             </div>
           </div>
 
           <!-- Bagian 4: Data Orang Tua / Wali -->
-          <div class="mb-4">
-            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3">
-              <i class="bi bi-people me-2"></i>4. Data Orang Tua / Wali
+          <div class="mb-5">
+            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-people-fill text-accent"></i> 4. Data Orang Tua / Wali
             </h3>
             <div class="row g-3">
               <div class="col-md-4">
@@ -343,53 +401,99 @@ require BASE_PATH . '/includes/navbar.php';
               </div>
 
               <div class="col-md-4">
-                <label class="form-label small fw-semibold">Nomor WhatsApp / HP Orang Tua <span class="text-danger">*</span></label>
+                <label class="form-label small fw-semibold">Nomor WhatsApp Orang Tua <span class="text-danger">*</span></label>
                 <input type="tel" name="parent_phone" class="form-control" value="<?= e($formData['parent_phone']) ?>" required placeholder="08xxxxxxxxxx">
               </div>
 
               <div class="col-md-4">
                 <label class="form-label small fw-semibold">Pekerjaan Orang Tua</label>
-                <input type="text" name="parent_job" class="form-control" value="<?= e($formData['parent_job']) ?>" placeholder="PNS / Wiraswasta / Karyawan / dll.">
+                <input type="text" name="parent_job" class="form-control" value="<?= e($formData['parent_job']) ?>" placeholder="Wiraswasta / Karyawan / PNS / dll.">
               </div>
             </div>
           </div>
 
           <!-- Bagian 5: Upload Dokumen Persyaratan -->
           <div class="mb-4">
-            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3">
-              <i class="bi bi-cloud-arrow-up me-2"></i>5. Unggah Berkas Persyaratan <span class="text-muted fw-normal fs-7">(Maks. 4MB / file, format JPG, PNG, WEBP, atau PDF)</span>
+            <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-cloud-arrow-up-fill text-accent"></i> 5. Unggah Berkas Persyaratan
             </h3>
+            <p class="small text-muted mb-3">Format berkas yang didukung: JPG, PNG, WEBP, atau PDF (Maks. 4MB per berkas).</p>
+            
             <div class="row g-3">
+              <!-- Pas Foto -->
               <div class="col-md-4">
-                <label class="form-label small fw-semibold">Pas Foto 3x4 Terbaru</label>
-                <input type="file" name="document_photo" class="form-control" accept=".jpg,.jpeg,.png,.webp">
-                <div class="form-text small">Foto berseragam SMP/MTs latar merah/biru.</div>
+                <div class="card p-3 border rounded-3 bg-light h-100">
+                  <label class="form-label small fw-bold text-dark d-flex align-items-center gap-1.5">
+                    <i class="bi bi-camera text-primary"></i> Pas Foto 3x4
+                  </label>
+                  <input type="file" name="document_photo" class="form-control form-control-sm mb-2" accept=".jpg,.jpeg,.png,.webp" id="photoInput">
+                  <div class="form-text small" style="font-size:11px;">Foto berseragam SMP/MTs latar merah atau biru.</div>
+                </div>
               </div>
 
+              <!-- Kartu Keluarga -->
               <div class="col-md-4">
-                <label class="form-label small fw-semibold">Foto / Scan Kartu Keluarga (KK)</label>
-                <input type="file" name="document_kk" class="form-control" accept=".jpg,.jpeg,.png,.webp,.pdf">
-                <div class="form-text small">Pastikan NIK dan nama terbaca jelas.</div>
+                <div class="card p-3 border rounded-3 bg-light h-100">
+                  <label class="form-label small fw-bold text-dark d-flex align-items-center gap-1.5">
+                    <i class="bi bi-file-earmark-person text-primary"></i> Scan Kartu Keluarga (KK)
+                  </label>
+                  <input type="file" name="document_kk" class="form-control form-control-sm mb-2" accept=".jpg,.jpeg,.png,.webp,.pdf">
+                  <div class="form-text small" style="font-size:11px;">Pastikan NIK dan nama keluarga terbaca jelas.</div>
+                </div>
               </div>
 
+              <!-- Rapor / SKL -->
               <div class="col-md-4">
-                <label class="form-label small fw-semibold">Scan Rapor / SKL / Ijazah</label>
-                <input type="file" name="document_rapor" class="form-control" accept=".jpg,.jpeg,.png,.webp,.pdf">
-                <div class="form-text small">Surat Keterangan Lulus atau Ijazah SMP.</div>
+                <div class="card p-3 border rounded-3 bg-light h-100">
+                  <label class="form-label small fw-bold text-dark d-flex align-items-center gap-1.5">
+                    <i class="bi bi-file-earmark-ruled text-primary"></i> Scan Rapor / SKL / Ijazah
+                  </label>
+                  <input type="file" name="document_rapor" class="form-control form-control-sm mb-2" accept=".jpg,.jpeg,.png,.webp,.pdf">
+                  <div class="form-text small" style="font-size:11px;">Surat Keterangan Lulus atau Ijazah SMP.</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Tombol Kirim -->
-          <div class="pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <a href="<?= e(BASE_URL) ?>/ppdb" class="btn btn-outline-secondary px-4">
-              <i class="bi bi-arrow-left me-1"></i>Batal
+          <!-- Pernyataan Kebenaran Data -->
+          <div class="p-3 bg-light rounded-3 border mb-4">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="agreementCheck" required>
+              <label class="form-check-label small text-muted" for="agreementCheck">
+                Saya menyatakan bahwa seluruh data yang diisikan dalam formulir ini adalah benar, sah, dan dapat dipertanggungjawabkan sesuai dokumen aslinya.
+              </label>
+            </div>
+          </div>
+
+          <!-- Tombol Aksi Formulir -->
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 pt-2">
+            <a href="<?= e(BASE_URL) ?>/ppdb" class="btn btn-outline-secondary px-4 fw-semibold">
+              <i class="bi bi-arrow-left me-1"></i> Batal
             </a>
-            <button type="submit" class="btn btn-accent btn-lg px-5 shadow-sm">
-              <i class="bi bi-send-check me-2"></i>Kirim Pendaftaran
+            <button type="submit" class="btn btn-accent btn-lg px-5 fw-bold shadow-sm">
+              <i class="bi bi-send-check me-2"></i> Kirim Formulir Pendaftaran
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Help & Assistance Callout -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-light text-center border">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+        <i class="bi bi-headset fs-5 text-primary"></i>
+        <h3 class="h6 fw-bold text-primary mb-0">Butuh Bantuan Pengisian Formulir?</h3>
+      </div>
+      <p class="small text-muted mb-3 mx-auto" style="max-width:560px;">Jika Anda mengalami kendala teknis saat mengunggah berkas atau mengisi data, hubungi panitia PPDB kami:</p>
+      <div>
+        <?php if (!empty($profile['whatsapp_ppdb'])): ?>
+          <a href="https://wa.me/<?= e(preg_replace('/[^0-9]/', '', $profile['whatsapp_ppdb'])) ?>?text=<?= urlencode('Halo Panitia PPDB, saya butuh bantuan mengenai pengisian formulir pendaftaran.') ?>" target="_blank" rel="noopener" class="btn btn-sm btn-success px-3.5 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5">
+            <i class="bi bi-whatsapp"></i> Chat WhatsApp Panitia PPDB
+          </a>
+        <?php endif; ?>
+        <a href="<?= e(BASE_URL) ?>/ppdb/cek-status" class="btn btn-sm btn-outline-primary-custom px-3.5 py-1.5 fw-semibold ms-2">
+          <i class="bi bi-search me-1"></i> Cek Status Pendaftaran
+        </a>
       </div>
     </div>
   </div>
