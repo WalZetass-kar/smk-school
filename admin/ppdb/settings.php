@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../includes/auth.php';
 
 $db = getDB();
 $settings = $db->query("SELECT * FROM ppdb_settings ORDER BY id LIMIT 1")->fetch();
+$profile  = getSchoolProfile();
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $announcementDate  = trim($_POST['announcement_date'] ?? '') ?: null;
         $information       = trim($_POST['information'] ?? '');
         $contactPerson     = trim($_POST['contact_person'] ?? '');
+        $runningText       = trim($_POST['running_text'] ?? '');
+        $isTickerActive    = isset($_POST['is_running_text_active']) ? 1 : 0;
 
         if ($academicYear === '') {
             $errors[] = 'Tahun ajaran wajib diisi.';
@@ -42,7 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$academicYear, $isOpen, $startDate, $endDate, $announcementDate, $information, $contactPerson]);
             }
 
-            setFlash('success', 'Pengaturan PPDB berhasil disimpan.');
+            // Also update running announcement text in school profile
+            if (!empty($profile['id'])) {
+                $db->prepare("UPDATE school_profile SET running_text = ?, is_running_text_active = ? WHERE id = ?")
+                   ->execute([$runningText, $isTickerActive, $profile['id']]);
+            }
+
+            setFlash('success', 'Pengaturan PPDB & Teks Pengumuman Berjalan berhasil disimpan.');
             redirect(BASE_URL . '/admin/ppdb/settings.php');
         }
 
@@ -119,9 +128,27 @@ require __DIR__ . '/../includes/topbar.php';
         <input type="text" name="contact_person" class="form-control" value="<?= e($settings['contact_person'] ?? '') ?>" placeholder="Contoh: (0761) 123456 / 0812-3456-7890 (Pak Bambang)">
       </div>
 
+      <!-- Teks Pengumuman Berjalan (Running Text Navbar) -->
+      <div class="col-12 mt-4 pt-3 border-top">
+        <h2 class="h6 fw-bold text-primary mb-3"><i class="bi bi-megaphone-fill me-2 text-warning"></i>Teks Pengumuman Berjalan (Running Text Navbar)</h2>
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label small fw-semibold">Kalimat Pengumuman Berjalan</label>
+            <input type="text" name="running_text" class="form-control" value="<?= e($profile['running_text'] ?? '') ?>" placeholder="Contoh: Penerimaan Peserta Didik Baru (PPDB) Tahun Ajaran 2027/2028 Resmi Dibuka! Daftar secara online sekarang.">
+            <div class="form-text small text-muted">Teks ini akan berjalan otomatis di bilah paling atas (*top announcement bar*) website publik.</div>
+          </div>
+          <div class="col-md-4 d-flex align-items-center pt-md-4">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="rtSwitchPpdb" name="is_running_text_active" value="1" <?= !empty($profile['is_running_text_active']) ? 'checked' : '' ?>>
+              <label class="form-check-label small fw-semibold ms-1" for="rtSwitchPpdb">Aktifkan Running Text di Website</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="col-12 pt-3">
-        <button type="submit" class="btn btn-accent px-4">
-          <i class="bi bi-save me-1"></i>Simpan Pengaturan
+        <button type="submit" class="btn btn-accent px-4 py-2 fw-semibold">
+          <i class="bi bi-save me-1"></i>Simpan Pengaturan PPDB
         </button>
       </div>
     </div>
