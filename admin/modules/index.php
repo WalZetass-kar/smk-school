@@ -142,6 +142,26 @@ require __DIR__ . '/../includes/topbar.php';
   </div>
 </div>
 
+<?php
+$moduleIcons = [
+    'majors'           => 'bi-mortarboard',
+    'partners'         => 'bi-building-check',
+    'bkk'              => 'bi-briefcase',
+    'ppdb'             => 'bi-person-plus',
+    'graduations'      => 'bi-award',
+    'news'             => 'bi-newspaper',
+    'agendas'          => 'bi-calendar-event',
+    'galleries'        => 'bi-images',
+    'extracurriculars' => 'bi-trophy',
+    'achievements'     => 'bi-star',
+    'teachers'         => 'bi-people',
+    'organization'     => 'bi-diagram-3',
+    'history'          => 'bi-hourglass-split',
+    'downloads'        => 'bi-download',
+    'guestbook'        => 'bi-book-half',
+];
+?>
+
 <!-- Modules Grouped by Category -->
 <?php foreach ($categories as $catName => $catItems): ?>
   <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
@@ -154,20 +174,25 @@ require __DIR__ . '/../includes/topbar.php';
 
     <div class="row g-3">
       <?php foreach ($catItems as $m): ?>
+        <?php 
+          $modKey  = $m['module_key'] ?? '';
+          $modIcon = $moduleIcons[$modKey] ?? ($m['icon'] ?? 'bi-gear');
+          $modName = $m['name'] ?? ($m['module_name'] ?? ucfirst($modKey));
+        ?>
         <div class="col-lg-6">
-          <div class="p-3.5 p-3 rounded-3 border h-100 d-flex align-items-center justify-content-between gap-3 <?= $m['is_active'] ? 'bg-white shadow-xs' : 'bg-light bg-opacity-75' ?>" style="transition: all 0.2s ease;">
+          <div class="p-3 rounded-3 border h-100 d-flex align-items-center justify-content-between gap-3 <?= $m['is_active'] ? 'bg-white shadow-xs' : 'bg-light bg-opacity-75' ?>" style="transition: all 0.2s ease;">
             <div class="d-flex align-items-start gap-3">
               <div class="p-2.5 rounded-3 <?= $m['is_active'] ? 'bg-primary bg-opacity-10 text-primary' : 'bg-secondary bg-opacity-10 text-secondary' ?> fs-5 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
-                <i class="bi <?= e($m['icon'] ?: 'bi-gear') ?>"></i>
+                <i class="bi <?= e($modIcon) ?>"></i>
               </div>
               <div>
-                <div class="d-flex align-items-center gap-2 flex-wrap mb-0.5">
-                  <h4 class="h6 fw-bold mb-0 text-dark"><?= e($m['module_name']) ?></h4>
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                  <h4 class="h6 fw-bold mb-0 text-dark"><?= e($modName) ?></h4>
                   <?php if (!empty($m['target_levels'])): ?>
                     <span class="badge bg-light text-muted border" style="font-size: 10px;"><?= e($m['target_levels']) ?></span>
                   <?php endif; ?>
                 </div>
-                <p class="small text-muted mb-0" style="font-size: 12.5px; line-height: 1.45;"><?= e($m['description']) ?></p>
+                <p class="small text-muted mb-0" style="font-size: 12.5px; line-height: 1.45;"><?= e($m['description'] ?? '') ?></p>
               </div>
             </div>
 
