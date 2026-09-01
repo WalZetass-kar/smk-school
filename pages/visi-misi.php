@@ -53,7 +53,7 @@ foreach ($missionLines as $line) {
           <div class="card-body p-4 p-md-5 position-relative">
             <div class="d-flex align-items-center justify-content-between mb-3">
               <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold" style="font-size:12px;">
-                <i class="bi bi-stars me-1"></i> VISI UTAMA SEKOLAH
+                VISI UTAMA SEKOLAH
               </span>
               <i class="bi bi-quote fs-1 text-white-50 opacity-25"></i>
             </div>
