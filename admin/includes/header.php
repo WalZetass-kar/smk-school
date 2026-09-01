@@ -39,3 +39,4 @@ if (!headers_sent()) {
 <link href="<?= e(ASSETS_URL . '/vendor/summernote/summernote-lite.min.css?v=' . filemtime(BASE_PATH . '/assets/vendor/summernote/summernote-lite.min.css')) ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
+<div id="pageTopProgress"></div>

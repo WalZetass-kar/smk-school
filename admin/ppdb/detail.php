@@ -43,15 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         logActivity('UPDATE_PPDB_STATUS', 'ppdb', "Verifikasi status PPDB {$reg['full_name']} ({$reg['registration_no']}) diubah menjadi: $status");
 
+        $waFeedback = '';
         // Send WhatsApp notification if requested
         if ($sendWa && !empty($reg['phone'])) {
             $waSettings = getWAGatewaySettings();
             if (!empty($waSettings['is_active'])) {
                 $statusLabels = [
-                    'pending' => 'Pending (Menunggu Verifikasi)',
+                    'pending'  => 'Pending (Menunggu Verifikasi)',
                     'verified' => 'Terverifikasi (Lolos Berkas)',
                     'accepted' => 'Diterima',
-                    'reserve' => 'Cadangan',
+                    'reserve'  => 'Cadangan',
                     'rejected' => 'Ditolak'
                 ];
                 $statusIndo = $statusLabels[$status] ?? ucfirst($status);
@@ -67,11 +68,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $template
                 );
 
-                sendWhatsAppNotification($reg['phone'], $waMsg);
+                $waRes = sendWhatsAppNotification($reg['phone'], $waMsg);
+                if ($waRes['status']) {
+                    $waFeedback = ' dan notifikasi WhatsApp berhasil dikirim ke nomor siswa (' . e($reg['phone']) . ')';
+                } else {
+                    $waFeedback = ', namun pengiriman WA gagal: ' . e($waRes['message'] ?? 'Periksa API token');
+                }
             }
         }
 
-        setFlash('success', 'Status pendaftaran berhasil diperbarui.');
+        setFlash('success', 'Status pendaftaran berhasil diperbarui' . $waFeedback . '.');
         redirect(BASE_URL . '/admin/ppdb/detail.php?id=' . $id);
     }
 }
@@ -292,9 +298,28 @@ require __DIR__ . '/../includes/topbar.php';
           <div class="form-text small">Catatan ini akan dapat dilihat oleh calon siswa di menu Cek Status.</div>
         </div>
 
-        <button type="submit" class="btn btn-accent w-100 py-2 fw-semibold">
+        <!-- WhatsApp Notification Switch -->
+        <div class="mb-4 p-3 rounded-3 bg-light border">
+          <div class="form-check form-switch mb-1">
+            <input class="form-check-input" type="checkbox" role="switch" id="sendWaSwitch" name="send_wa" value="1" checked>
+            <label class="form-check-label small fw-semibold ms-1 text-dark" for="sendWaSwitch">
+              <i class="bi bi-whatsapp text-success me-1"></i> Kirim Notifikasi WA Otomatis
+            </label>
+          </div>
+          <div class="small text-muted" style="font-size: 11.5px; line-height: 1.4;">
+            Pesan status terbaru akan otomatis dikirimkan ke nomor WhatsApp siswa (<strong><?= e($reg['phone']) ?></strong>).
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent w-100 py-2.5 fw-semibold rounded-3 mb-2 shadow-xs">
           <i class="bi bi-save me-1"></i>Simpan Perubahan Status
         </button>
+
+        <?php if (!empty($reg['phone'])): ?>
+          <a href="https://wa.me/<?= formatWhatsAppNumber($reg['phone']) ?>?text=Halo%20<?= urlencode($reg['full_name']) ?>%2C%20kami%20dari%20Panitia%20PPDB%20<?= urlencode($profile['school_name'] ?? 'Sekolah') ?>%20ingin%20mengonfirmasi%20perihal%20pendaftaran%20Anda." target="_blank" rel="noopener" class="btn btn-outline-success w-100 py-2 fw-semibold rounded-3 btn-sm">
+            <i class="bi bi-chat-dots me-1"></i> Chat WhatsApp Siswa
+          </a>
+        <?php endif; ?>
       </form>
 
       <hr class="my-4">

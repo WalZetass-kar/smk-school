@@ -388,4 +388,67 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    /* ---- 8. Admin Sidebar Scroll Memory & Tab Persistence ---- */
+    const adminSidebarNav = document.querySelector('.admin-sidebar .sidebar-nav-scroll');
+    if (adminSidebarNav) {
+        // Restore scroll position immediately
+        const savedScroll = sessionStorage.getItem('admin_sidebar_scroll');
+        if (savedScroll !== null) {
+            adminSidebarNav.scrollTop = parseInt(savedScroll, 10);
+        }
+
+        // Save scroll position when scrolling
+        let scrollTimeout = null;
+        adminSidebarNav.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                sessionStorage.setItem('admin_sidebar_scroll', adminSidebarNav.scrollTop);
+            }, 40);
+        }, { passive: true });
+
+        // Save scroll position on any sidebar link click
+        adminSidebarNav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                sessionStorage.setItem('admin_sidebar_scroll', adminSidebarNav.scrollTop);
+            });
+        });
+
+        // Ensure active item is visible in viewport if it wasn't
+        const activeLink = adminSidebarNav.querySelector('.nav-link.active');
+        if (activeLink && savedScroll === null) {
+            const rect = activeLink.getBoundingClientRect();
+            const containerRect = adminSidebarNav.getBoundingClientRect();
+            if (rect.top < containerRect.top || rect.bottom > containerRect.bottom) {
+                activeLink.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+            }
+        }
+    }
+
+    /* ---- 9. Fast Page Transition Top Progress Indicator ---- */
+    const topProgressBar = document.getElementById('pageTopProgress');
+    if (topProgressBar) {
+        // Trigger on any admin internal navigation link
+        document.querySelectorAll('a[href]:not([target="_blank"]):not([data-bs-toggle]):not([data-confirm]):not([data-confirm-delete]):not([href^="#"]):not([href^="javascript:"])').forEach((a) => {
+            a.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey || e.shiftKey || a.download) return;
+                try {
+                    const url = new URL(a.href, window.location.href);
+                    if (url.origin === window.location.origin) {
+                        topProgressBar.style.opacity = '1';
+                        topProgressBar.style.width = '65%';
+                    }
+                } catch (_) {}
+            });
+        });
+
+        // Hide when page is ready
+        window.addEventListener('load', () => {
+            topProgressBar.style.width = '100%';
+            setTimeout(() => {
+                topProgressBar.style.opacity = '0';
+                setTimeout(() => { topProgressBar.style.width = '0%'; }, 300);
+            }, 150);
+        });
+    }
 });

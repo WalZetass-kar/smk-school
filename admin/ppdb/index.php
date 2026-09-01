@@ -169,7 +169,7 @@ require __DIR__ . '/../includes/topbar.php';
         $exportUrl = 'export.php' . (!empty($exportQuery) ? '?' . http_build_query($exportQuery) : '');
       ?>
       <a href="<?= e($exportUrl) ?>" class="btn btn-sm btn-success me-1">
-        <i class="bi bi-file-earmark-excel me-1"></i>Export Data (CSV)
+        <i class="bi bi-file-earmark-excel me-1"></i>Export Excel (.xls)
       </a>
       <a href="settings.php" class="btn btn-sm btn-outline-primary-custom">
         <i class="bi bi-sliders me-1"></i>Pengaturan PPDB
