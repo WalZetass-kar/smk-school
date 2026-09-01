@@ -45,13 +45,13 @@ require BASE_PATH . '/includes/navbar.php';
                 <div class="col-lg-8">
                   <h1><?= e($b['title']) ?></h1>
                   <p><?= e($b['description']) ?></p>
-                  <div class="d-flex flex-wrap gap-3 mt-4">
+                  <div class="hero-btn-group d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start align-items-center gap-3 mt-4">
                     <?php if (!empty($b['button_text'])): ?>
-                      <a href="<?= e(BASE_URL . $b['button_url']) ?>" class="btn btn-accent btn-lg px-4 fw-bold">
+                      <a href="<?= e(BASE_URL . $b['button_url']) ?>" class="btn btn-hero btn-hero-primary">
                         <?= e($b['button_text']) ?> <i class="bi bi-arrow-right ms-1"></i>
                       </a>
                     <?php endif; ?>
-                    <a href="<?= e(BASE_URL) ?>/ppdb/daftar" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+                    <a href="<?= e(BASE_URL) ?>/ppdb/daftar" class="btn btn-hero btn-hero-outline">
                       Daftar PPDB <i class="bi bi-mortarboard ms-1"></i>
                     </a>
                   </div>

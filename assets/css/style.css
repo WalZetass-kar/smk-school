@@ -489,6 +489,54 @@ img {
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
+.hero-btn-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+.btn-hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.75rem 1.6rem;
+    min-height: 48px;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+.btn-hero-primary {
+    background-color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+.btn-hero-primary:hover, .btn-hero-primary:focus {
+    background-color: var(--color-accent-dark);
+    border-color: var(--color-accent-dark);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45);
+}
+.btn-hero-outline {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    color: #ffffff;
+    backdrop-filter: blur(4px);
+}
+.btn-hero-outline:hover, .btn-hero-outline:focus {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
 .hero-slider .carousel-indicators {
     bottom: 1.5rem;
     margin-bottom: 0;
@@ -1350,19 +1398,31 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
     .navbar-spacer {
         height: 62px;
     }
+    .navbar-smk .navbar-brand {
+        max-width: calc(100vw - 110px);
+        margin-right: 0.35rem;
+    }
     .navbar-smk .navbar-brand img {
         height: 32px;
+        width: auto;
+        flex-shrink: 0;
     }
     .navbar-smk .navbar-brand-text {
-        font-size: 0.86rem;
-        max-width: 175px;
+        font-size: 0.84rem;
+        max-width: calc(100vw - 160px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
 @media (max-width: 375px) {
+    .navbar-smk .navbar-brand {
+        max-width: calc(100vw - 100px);
+    }
     .navbar-smk .navbar-brand-text {
-        max-width: 140px;
-        font-size: 0.8rem;
+        max-width: calc(100vw - 145px);
+        font-size: 0.78rem;
     }
 }
 
@@ -1371,28 +1431,58 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
    ========================================================= */
 @media (max-width: 767.98px) {
     .hero-slide {
-        min-height: 420px;
-        padding: 3.5rem 0 4rem;
+        min-height: 440px;
+        padding: 3.5rem 0 4.5rem;
         text-align: center;
     }
     .hero-slide .container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .hero-slide .row {
+        width: 100%;
+        justify-content: center;
+        margin: 0;
+    }
+    .hero-slide .row > [class*="col-"] {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     .hero-slide h1 {
-        font-size: 1.75rem;
+        font-size: clamp(1.6rem, 5.5vw, 2.1rem);
         line-height: 1.25;
-        margin-bottom: 0.85rem;
+        margin: 0 auto 0.85rem;
+        max-width: 100%;
+        text-align: center;
     }
     .hero-slide p {
-        font-size: 0.92rem;
+        font-size: 0.95rem;
         line-height: 1.5;
-        margin-bottom: 1.25rem;
+        margin: 0 auto 1.5rem;
+        max-width: 92%;
+        text-align: center;
     }
-    .hero-slide .btn {
+    .hero-btn-group {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         width: 100%;
-        max-width: 280px;
+        max-width: 320px;
+        margin: 0 auto;
+        gap: 0.75rem;
+    }
+    .btn-hero {
+        width: 100%;
+        max-width: 100%;
+        min-height: 48px;
+        font-size: 0.95rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
     }
     .hero-slider .carousel-control-prev,
     .hero-slider .carousel-control-next {
