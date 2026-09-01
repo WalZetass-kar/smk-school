@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/whatsapp/index.php
  * Pengaturan WhatsApp Gateway & Template Notifikasi Otomatis
@@ -132,30 +132,38 @@ require __DIR__ . '/../includes/topbar.php';
 
           <!-- Template 1: PPDB Success Template -->
           <div class="col-12 pt-3 border-top">
-            <label class="form-label small fw-bold text-dark d-flex align-items-center justify-content-between">
-              <span><i class="bi bi-chat-left-dots me-1 text-primary"></i> Template: Konfirmasi Pendaftaran PPDB Baru</span>
-              <span class="badge bg-light text-muted border">Otomatis saat submit form</span>
-            </label>
-            <textarea name="ppdb_success_template" rows="4" class="form-control font-monospace small"><?= e($settings['ppdb_success_template'] ?? '') ?></textarea>
-            <div class="form-text small text-muted">
-              Tag yang dapat digunakan: <code>{nama_siswa}</code>, <code>{no_registrasi}</code>, <code>{nama_sekolah}</code>, <code>{pilihan_jurusan}</code>, <code>{link_cetak}</code>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label small fw-bold text-dark mb-0">
+                <i class="bi bi-chat-left-dots-fill me-1 text-primary"></i> Template: Konfirmasi Pendaftaran PPDB Baru
+              </label>
+              <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-primary small" id="resetTpl1Btn">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Pulihkan Template Standar
+              </button>
+            </div>
+            <textarea name="ppdb_success_template" id="tpl1Input" rows="9" class="form-control font-monospace small" style="line-height: 1.5;"><?= e($settings['ppdb_success_template'] ?? '') ?></textarea>
+            <div class="form-text small text-muted mt-1.5">
+              Tag otomatis: <code>{nama_siswa}</code>, <code>{no_registrasi}</code>, <code>{nama_sekolah}</code>, <code>{pilihan_jurusan}</code>, <code>{link_cetak}</code>, <code>{link_cek}</code>
             </div>
           </div>
 
           <!-- Template 2: PPDB Status Change Template -->
           <div class="col-12 pt-3 border-top">
-            <label class="form-label small fw-bold text-dark d-flex align-items-center justify-content-between">
-              <span><i class="bi bi-patch-check me-1 text-success"></i> Template: Pembaruan Status Verifikasi PPDB</span>
-              <span class="badge bg-light text-muted border">Saat admin ubah status</span>
-            </label>
-            <textarea name="ppdb_status_template" rows="4" class="form-control font-monospace small"><?= e($settings['ppdb_status_template'] ?? '') ?></textarea>
-            <div class="form-text small text-muted">
-              Tag yang dapat digunakan: <code>{nama_siswa}</code>, <code>{no_registrasi}</code>, <code>{nama_sekolah}</code>, <code>{status_baru}</code>, <code>{catatan}</code>, <code>{link_cek}</code>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label small fw-bold text-dark mb-0">
+                <i class="bi bi-patch-check-fill me-1 text-success"></i> Template: Pembaruan Status Verifikasi PPDB
+              </label>
+              <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-primary small" id="resetTpl2Btn">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Pulihkan Template Standar
+              </button>
+            </div>
+            <textarea name="ppdb_status_template" id="tpl2Input" rows="9" class="form-control font-monospace small" style="line-height: 1.5;"><?= e($settings['ppdb_status_template'] ?? '') ?></textarea>
+            <div class="form-text small text-muted mt-1.5">
+              Tag otomatis: <code>{nama_siswa}</code>, <code>{no_registrasi}</code>, <code>{nama_sekolah}</code>, <code>{status_baru}</code>, <code>{catatan}</code>, <code>{link_cek}</code>
             </div>
           </div>
 
           <div class="col-12 pt-3">
-            <button type="submit" class="btn btn-accent px-4 py-2 fw-semibold">
+            <button type="submit" class="btn btn-accent px-4 py-2.5 fw-semibold shadow-xs">
               <i class="bi bi-save me-1"></i> Simpan Konfigurasi WhatsApp
             </button>
           </div>
@@ -218,6 +226,68 @@ document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
       icon.className = isPass ? 'bi bi-eye-slash' : 'bi bi-eye';
     }
   });
+});
+
+const defaultTpl1 = `🎓 *KONFIRMASI PENDAFTARAN PPDB ONLINE*
+*{nama_sekolah}*
+━━━━━━━━━━━━━━━━━━━━━━━
+
+Halo, *{nama_siswa}*! 👋
+Terima kasih telah melakukan pendaftaran online di *{nama_sekolah}*. Formulir dan berkas Anda telah berhasil kami terima ke dalam sistem panitia.
+
+📌 *RINCIAN PENDAFTARAN:*
+• *No. Registrasi* : \`{no_registrasi}\`
+• *Nama Calon Siswa*: *{nama_siswa}*
+• *Pilihan Jurusan*: *{pilihan_jurusan}*
+• *Waktu Submit*   : Terdata di Sistem PPDB
+
+📄 *KARTU BUKTI PENDAFTARAN:*
+Silakan unduh dan cetak kartu bukti pendaftaran resmi ber-QR Code Anda di:
+🔗 {link_cetak}
+
+🔍 *CEK STATUS BERKAS:*
+Pantau perkembangan verifikasi berkas & pengumuman kelulusan di:
+🔗 {link_cek}
+
+⚠️ *CATATAN PENTING:*
+1. Simpan pesan ini dan catat Nomor Registrasi Anda dengan baik.
+2. Bawa kartu bukti pendaftaran beserta berkas asli (SKL/Ijazah, KK, Akta Kelahiran) pada saat verifikasi fisik ke sekolah.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+_Pesan otomatis dikirim oleh Layanan Notifikasi PPDB {nama_sekolah}._`;
+
+const defaultTpl2 = `📢 *PEMBARUAN STATUS VERIFIKASI PPDB*
+*{nama_sekolah}*
+━━━━━━━━━━━━━━━━━━━━━━━
+
+Yth. *{nama_siswa}* (No. Reg: \`{no_registrasi}\`),
+
+Panitia PPDB *{nama_sekolah}* telah meninjau berkas pendaftaran Anda dengan hasil pembaruan sebagai berikut:
+
+📋 *STATUS PENDAFTARAN SAAT INI:*
+👉 *【 {status_baru} 】*
+
+💬 *CATATAN / INSTRUKSI PANITIA:*
+_{catatan}_
+
+🔗 *INFORMASI DETAIL & TAHAP SELANJUTNYA:*
+Silakan akses tautan portal resmi untuk informasi selengkapnya:
+👉 {link_cek}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+_Simpan nomor registrasi Anda dan selalu pantau pengumuman resmi di portal PPDB._
+
+Salam hangat,
+*Panitia PPDB {nama_sekolah}*`;
+
+document.getElementById('resetTpl1Btn')?.addEventListener('click', () => {
+  const el = document.getElementById('tpl1Input');
+  if (el) el.value = defaultTpl1;
+});
+
+document.getElementById('resetTpl2Btn')?.addEventListener('click', () => {
+  const el = document.getElementById('tpl2Input');
+  if (el) el.value = defaultTpl2;
 });
 </script>
 
