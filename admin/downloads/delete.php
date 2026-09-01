@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/downloads/delete.php
  * Hapus Dokumen Unduhan (POST + CSRF)

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/achievements/delete.php
  * Hapus Prestasi Siswa (POST + CSRF)

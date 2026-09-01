@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/ppdb/detail.php?id=...
  * Detail Pendaftar & Form Verifikasi Status
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Detail Pendaftar — ' . e($reg['registration_no']);
+$pageTitle = 'Detail Pendaftar — ' . ($reg['registration_no'] ?? '');
 require __DIR__ . '/../includes/header.php';
 require __DIR__ . '/../includes/sidebar.php';
 require __DIR__ . '/../includes/topbar.php';

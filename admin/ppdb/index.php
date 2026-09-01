@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/ppdb/index.php
  * Manajemen Data Pendaftar PPDB Online

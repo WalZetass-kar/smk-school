@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/bkk/delete.php
  * Hapus Lowongan Kerja BKK (POST + CSRF)

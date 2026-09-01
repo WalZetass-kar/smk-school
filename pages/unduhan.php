@@ -116,8 +116,8 @@ require BASE_PATH . '/includes/navbar.php';
                   </div>
                 </div>
 
-                <div class="col-md-auto text-md-end">
-                  <a href="<?= e(BASE_URL) ?>/unduhan/download/<?= (int) $d['id'] ?>" class="btn btn-primary px-4 fw-semibold" target="_blank">
+                <div class="col-12 col-md-auto text-md-end">
+                  <a href="<?= e(BASE_URL) ?>/unduhan/download/<?= (int) $d['id'] ?>" class="btn btn-primary w-100 w-md-auto px-4 fw-semibold" target="_blank">
                     <i class="bi bi-download me-1"></i>Unduh Berkas
                   </a>
                 </div>

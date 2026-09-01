@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/ppdb-sukses.php — /ppdb/sukses
  * Halaman Konfirmasi Pendaftaran Berhasil

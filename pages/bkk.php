@@ -114,7 +114,7 @@ $baseUrl = '/bkk' . ($baseParams ? '?' . http_build_query($baseParams) : '');
             };
           ?>
           <div class="col-lg-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column hover-lift p-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column hover-lift p-3 p-sm-4">
               <div class="d-flex align-items-start gap-3 mb-3">
                 <div class="img-skeleton-wrapper rounded p-2 bg-light d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; flex-shrink: 0;">
                   <?php if (!empty($j['company_logo'])): ?>

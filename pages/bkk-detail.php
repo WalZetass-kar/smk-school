@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/bkk-detail.php — /bkk/{slug}
  * Detail Lowongan Kerja / Magang

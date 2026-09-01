@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/extracurriculars/form.php
  * Tambah / Edit Ekstrakurikuler
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $imagePath = $item['image'] ?? null;
         if (!empty($_FILES['image']['name'])) {
             $uploadError = null;
-            $uploaded = handleImageUpload($_FILES['image'], 'ekskul', $uploadError);
+            $uploaded = handleImageUpload($_FILES['image'], $uploadError, 'ekskul');
             if ($uploaded) {
                 if ($imagePath && file_exists(BASE_PATH . '/' . $imagePath)) {
                     @unlink(BASE_PATH . '/' . $imagePath);

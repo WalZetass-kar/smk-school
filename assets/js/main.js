@@ -1,6 +1,6 @@
 /**
  * main.js — public site behaviour & interactive UI.
- * Scroll Animations, Skeleton Loading, Top Progress Bar & Micro-interactions.
+ * Scroll Animations, Sticky Navbar, Live Global Search, WhatsApp Widget.
  */
 
 // Top page loading bar progress simulation
@@ -9,7 +9,7 @@
     bar.id = 'page-progress-bar';
     document.documentElement.appendChild(bar);
 
-    let progress = 10;
+    let progress = 15;
     bar.style.width = progress + '%';
 
     const timer = setInterval(() => {
@@ -17,18 +17,18 @@
             progress += Math.random() * 15;
             bar.style.width = Math.min(progress, 85) + '%';
         }
-    }, 150);
+    }, 120);
 
     window.addEventListener('load', () => {
         clearInterval(timer);
         bar.style.width = '100%';
         setTimeout(() => {
             bar.style.opacity = '0';
-            setTimeout(() => bar.remove(), 400);
-        }, 200);
+            setTimeout(() => bar.remove(), 350);
+        }, 150);
     });
 
-    // Simulate progress bar on link clicks
+    // Simulate progress bar on internal link clicks
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (!link || link.target === '_blank' || link.getAttribute('href')?.startsWith('#') || link.getAttribute('href')?.startsWith('javascript:')) return;
@@ -43,9 +43,11 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* ---- 1. Scroll Reveal Animations (IntersectionObserver) ---- */
-    const revealElements = document.querySelectorAll('.reveal, .reveal-up, .reveal-left, .reveal-right, .reveal-zoom, .reveal-fade');
-    if (revealElements.length && 'IntersectionObserver' in window) {
+    /* ---- 1. Safe Scroll Reveal Animations ---- */
+    if ('IntersectionObserver' in window) {
+        document.documentElement.classList.add('js-anim');
+        const revealElements = document.querySelectorAll('.reveal, .reveal-up, .reveal-left, .reveal-right, .reveal-zoom, .reveal-fade');
+        
         const revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -54,90 +56,67 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }, {
-            threshold: 0.12,
-            rootMargin: '0px 0px -40px 0px'
+            threshold: 0.08,
+            rootMargin: '0px 0px -20px 0px'
         });
 
-        revealElements.forEach((el) => revealObserver.observe(el));
-    } else {
-        // Fallback if IntersectionObserver is not supported
-        revealElements.forEach((el) => el.classList.add('is-revealed'));
+        revealElements.forEach((el) => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight) {
+                // Immediately reveal items visible above the fold
+                el.classList.add('is-revealed');
+            } else {
+                revealObserver.observe(el);
+            }
+        });
+
+        // Stagger cascade for .reveal-group children
+        document.querySelectorAll('.reveal-group').forEach((group) => {
+            const children = Array.from(group.children);
+            children.forEach((child, index) => {
+                if (!child.classList.contains('reveal') && !child.classList.contains('reveal-up')) {
+                    child.classList.add('reveal-up');
+                }
+                const delayClass = `delay-${Math.min((index % 4) + 1, 4)}`;
+                child.classList.add(delayClass);
+                
+                const rect = child.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    child.classList.add('is-revealed');
+                } else {
+                    revealObserver.observe(child);
+                }
+            });
+        });
     }
 
-    // Auto stagger cascade for .reveal-group children
-    document.querySelectorAll('.reveal-group').forEach((group) => {
-        const children = group.children;
-        Array.from(children).forEach((child, index) => {
-            if (!child.classList.contains('reveal') && !child.classList.contains('reveal-up')) {
-                child.classList.add('reveal-up');
-            }
-            const delayClass = `delay-${Math.min((index % 6) + 1, 6)}`;
-            child.classList.add(delayClass);
-            if ('IntersectionObserver' in window) {
-                const obs = new IntersectionObserver((entries, observer) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-revealed');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                obs.observe(child);
-            } else {
-                child.classList.add('is-revealed');
-            }
-        });
-    });
-
-    /* ---- 2. Progressive Image Skeleton Loading ---- */
-    const lazyImages = document.querySelectorAll('img');
-    lazyImages.forEach((img) => {
-        img.classList.add('lazy-fade');
-        if (img.complete) {
-            img.classList.add('is-loaded');
-            const wrapper = img.closest('.img-skeleton-wrapper');
-            if (wrapper) wrapper.classList.add('loaded');
-        } else {
-            img.addEventListener('load', function () {
-                img.classList.add('is-loaded');
-                const wrapper = img.closest('.img-skeleton-wrapper');
-                if (wrapper) wrapper.classList.add('loaded');
-            });
-            img.addEventListener('error', function () {
-                img.classList.add('is-loaded');
-                const wrapper = img.closest('.img-skeleton-wrapper');
-                if (wrapper) wrapper.classList.add('loaded');
-            });
-        }
-    });
-
-    /* ---- 3. Sticky navbar on scroll ---- */
+    /* ---- 2. Sticky navbar on scroll ---- */
     const navbar = document.querySelector('.navbar-smk');
     if (navbar) {
         const toggleSticky = () => {
-            navbar.classList.toggle('is-sticky', window.scrollY > 40);
+            navbar.classList.toggle('is-sticky', window.scrollY > 30);
         };
         toggleSticky();
         window.addEventListener('scroll', toggleSticky, { passive: true });
     }
 
-    /* ---- 4. Back-to-top button ---- */
+    /* ---- 3. Back-to-top button ---- */
     const backToTop = document.querySelector('.btn-back-to-top');
     if (backToTop) {
         window.addEventListener('scroll', () => {
-            backToTop.classList.toggle('show', window.scrollY > 400);
+            backToTop.classList.toggle('show', window.scrollY > 350);
         }, { passive: true });
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
-    /* ---- 5. Statistik counter animation (triggered upon scroll into view) ---- */
+    /* ---- 4. Counter animation for statistics ---- */
     const statValues = document.querySelectorAll('[data-counter-target]');
     if (statValues.length) {
         const animateCounter = (el) => {
             const target = parseInt(el.dataset.counterTarget, 10) || 0;
-            const duration = 1400;
+            const duration = 1200;
             const start = performance.now();
             const step = (now) => {
                 const progress = Math.min((now - start) / duration, 1);
@@ -152,19 +131,23 @@ document.addEventListener('DOMContentLoaded', function () {
             requestAnimationFrame(step);
         };
 
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 });
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
 
-        statValues.forEach((el) => observer.observe(el));
+            statValues.forEach((el) => observer.observe(el));
+        } else {
+            statValues.forEach((el) => animateCounter(el));
+        }
     }
 
-    /* ---- 6. Simple image preview before upload (used on admin CRUD forms) ---- */
+    /* ---- 5. Admin Form Helpers ---- */
     document.querySelectorAll('input[type="file"][data-preview]').forEach((input) => {
         input.addEventListener('change', function () {
             const previewEl = document.querySelector(this.dataset.preview);
@@ -178,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ---- 7. Delete confirmation (admin CRUD) ---- */
     document.querySelectorAll('[data-confirm-delete]').forEach((form) => {
         form.addEventListener('submit', (e) => {
             const msg = form.dataset.confirmDelete || 'Yakin ingin menghapus data ini?';
@@ -186,11 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Ensure pure light theme
-    localStorage.removeItem('smk_theme');
-    document.documentElement.removeAttribute('data-theme');
-
-    /* ---- 8. Global Live Search (Modal + Keyboard Shortcut Ctrl+K) ---- */
+    /* ---- 6. Global Live Search (Modal + Keyboard Shortcut Ctrl+K) ---- */
     const searchModalEl = document.getElementById('globalSearchModal');
     const searchInput = document.getElementById('globalSearchInput');
     const searchResultsList = document.getElementById('searchResultsList');
@@ -230,7 +208,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (searchSpinner) searchSpinner.classList.remove('d-none');
             if (searchEmptyMessage) searchEmptyMessage.classList.add('d-none');
 
-            fetch(`${window.location.origin}/api/search?q=${encodeURIComponent(query)}`)
+            // Find base URL from canonical or current path
+            const baseCanonical = document.querySelector('link[rel="canonical"]')?.getAttribute('href') || '/';
+            const baseOrigin = window.location.origin;
+
+            fetch(`/api/search?q=${encodeURIComponent(query)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (searchSpinner) searchSpinner.classList.add('d-none');
@@ -246,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data.results.forEach(item => {
                         const itemEl = document.createElement('a');
                         itemEl.href = item.url;
-                        itemEl.className = 'wa-contact-item hover-lift text-decoration-none';
+                        itemEl.className = 'wa-contact-item hover-lift text-decoration-none mb-2';
                         itemEl.innerHTML = `
                             <div class="wa-contact-icon ${item.badge}">
                                 <i class="bi ${item.icon}"></i>
@@ -282,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ---- 10. Multi-CS WhatsApp Floating Widget Toggle ---- */
+    /* ---- 7. Multi-CS WhatsApp Floating Widget Toggle ---- */
     const waToggleBtn = document.getElementById('waToggleBtn');
     const waPopupCard = document.getElementById('waPopupCard');
     const waCloseBtn = document.getElementById('waCloseBtn');
@@ -300,7 +282,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Close when clicking outside
         document.addEventListener('click', (e) => {
             if (!waPopupCard.contains(e.target) && !waToggleBtn.contains(e.target)) {
                 waPopupCard.classList.add('d-none');
@@ -308,5 +289,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-

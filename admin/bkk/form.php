@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/bkk/form.php
  * Form Tambah / Edit Lowongan Kerja BKK
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $logoPath = $job['company_logo'] ?? null;
         if (!empty($_FILES['company_logo']['name'])) {
             $uploadError = null;
-            $uploaded = handleImageUpload($_FILES['company_logo'], 'bkk', $uploadError);
+            $uploaded = handleImageUpload($_FILES['company_logo'], $uploadError, 'bkk');
             if ($uploaded) {
                 if ($logoPath && file_exists(BASE_PATH . '/' . $logoPath)) {
                     @unlink(BASE_PATH . '/' . $logoPath);

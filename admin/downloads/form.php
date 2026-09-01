@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/downloads/form.php
  * Upload / Edit Dokumen Unduhan

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/unduhan-download.php — /unduhan/download/{id}
  * Handler pengunduhan berkas & increment counter download
@@ -29,7 +29,8 @@ if (file_exists($filePath) && is_file($filePath)) {
 
     header('Content-Description: File Transfer');
     header('Content-Type: ' . $mime);
-    header('Content-Disposition: attachment; filename="' . addslashes($doc['title'] . '.' . $doc['file_ext']) . '"');
+    $safeName = preg_replace('/[^a-zA-Z0-9_\-\. ]/', '', $doc['title']) ?: 'dokumen';
+    header('Content-Disposition: attachment; filename="' . $safeName . '.' . $doc['file_ext'] . '"');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');

@@ -59,10 +59,12 @@ function getSocialMedia(): array
 
 /**
  * Validate + move an uploaded image into /assets/uploads with a random filename.
- * Returns the stored relative path on success, or null on failure (check $error).
+ * Signature: handleImageUpload(array $file, ?string &$error = null, string $subDir = '')
  */
-function handleImageUpload(array $file, ?string &$error = null): ?string
+function handleImageUpload(array $file, ?string &$error = null, string $subDir = ''): ?string
 {
+    $subDir = trim($subDir, '/');
+
     if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
         $error = 'Upload gagal atau tidak ada file yang dipilih.';
         return null;
@@ -88,19 +90,20 @@ function handleImageUpload(array $file, ?string &$error = null): ?string
         return null;
     }
 
-    if (!is_dir(UPLOADS_PATH)) {
-        mkdir(UPLOADS_PATH, 0755, true);
+    $targetDir = UPLOADS_PATH . ($subDir !== '' ? '/' . $subDir : '');
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
     }
 
     $filename = bin2hex(random_bytes(16)) . '.' . $ext;
-    $destination = UPLOADS_PATH . '/' . $filename;
+    $destination = $targetDir . '/' . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $destination)) {
         $error = 'Gagal menyimpan file ke server.';
         return null;
     }
 
-    return 'assets/uploads/' . $filename;
+    return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $filename;
 }
 
 /** Generate (and remember) a CSRF token for the current session. */

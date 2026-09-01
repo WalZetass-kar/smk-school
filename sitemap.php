@@ -30,7 +30,7 @@ $urls = [
 ];
 
 foreach ($db->query("SELECT slug, updated_at FROM majors WHERE status = 1") as $m) {
-    $urls[] = ['loc' => '/jurusan/detail/' . $m['slug'], 'priority' => '0.7', 'lastmod' => $m['updated_at']];
+    $urls[] = ['loc' => '/jurusan/' . $m['slug'], 'priority' => '0.7', 'lastmod' => $m['updated_at']];
 }
 foreach ($db->query("SELECT slug, updated_at FROM news WHERE status = 'publish'") as $n) {
     $urls[] = ['loc' => '/berita/' . $n['slug'], 'priority' => '0.6', 'lastmod' => $n['updated_at']];
