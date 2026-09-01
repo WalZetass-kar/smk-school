@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $status = $_POST['status'] ?? 'pending';
         $notes  = trim($_POST['notes'] ?? '');
+        $sendWa = isset($_POST['send_wa']) ? 1 : 0;
 
         if (!in_array($status, ['pending','verified','accepted','rejected','reserve'], true)) {
             $status = 'pending';
@@ -41,6 +42,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $update->execute([$status, $notes, $id]);
 
         logActivity('UPDATE_PPDB_STATUS', 'ppdb', "Verifikasi status PPDB {$reg['full_name']} ({$reg['registration_no']}) diubah menjadi: $status");
+
+        // Send WhatsApp notification if requested
+        if ($sendWa && !empty($reg['phone'])) {
+            $waSettings = getWAGatewaySettings();
+            if (!empty($waSettings['is_active'])) {
+                $statusLabels = [
+                    'pending' => 'Pending (Menunggu Verifikasi)',
+                    'verified' => 'Terverifikasi (Lolos Berkas)',
+                    'accepted' => 'Diterima',
+                    'reserve' => 'Cadangan',
+                    'rejected' => 'Ditolak'
+                ];
+                $statusIndo = $statusLabels[$status] ?? ucfirst($status);
+                $schoolProfile = getSchoolProfile();
+                $schoolTitle = $schoolProfile['school_name'] ?? 'Sekolah';
+                $checkUrl = BASE_URL . '/ppdb/cek-status?reg=' . urlencode($reg['registration_no']);
+
+                $template = !empty($waSettings['ppdb_status_template']) ? $waSettings['ppdb_status_template'] : "Halo *{nama_siswa}* (No: *{no_registrasi}*),\nStatus pendaftaran PPDB Anda di *{nama_sekolah}* saat ini: *{status_baru}*.\nCatatan: {catatan}\nCek: {link_cek}";
+
+                $waMsg = str_replace(
+                    ['{nama_siswa}', '{no_registrasi}', '{nama_sekolah}', '{status_baru}', '{catatan}', '{link_cek}'],
+                    [$reg['full_name'], $reg['registration_no'], $schoolTitle, $statusIndo, $notes ?: '-', $checkUrl],
+                    $template
+                );
+
+                sendWhatsAppNotification($reg['phone'], $waMsg);
+            }
+        }
 
         setFlash('success', 'Status pendaftaran berhasil diperbarui.');
         redirect(BASE_URL . '/admin/ppdb/detail.php?id=' . $id);

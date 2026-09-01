@@ -687,3 +687,97 @@ function getAllSiteModules(): array
         return [];
     }
 }
+
+/**
+ * Retrieve WhatsApp Gateway settings.
+ */
+function getWAGatewaySettings(): array
+{
+    try {
+        $db = getDB();
+        $row = $db->query("SELECT * FROM wa_gateway_settings WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return $row;
+        }
+    } catch (Throwable) {}
+
+    return [
+        'id' => 1,
+        'provider' => 'fonnte',
+        'api_token' => '',
+        'api_endpoint' => 'https://api.fonnte.com/send',
+        'is_active' => 0,
+        'ppdb_success_template' => '',
+        'ppdb_status_template' => ''
+    ];
+}
+
+/**
+ * Format phone number to standard international WhatsApp format (e.g. 0812 -> 62812).
+ */
+function formatWhatsAppNumber(string $phone): string
+{
+    $clean = preg_replace('/[^0-9]/', '', $phone);
+    if (str_starts_with($clean, '0')) {
+        $clean = '62' . substr($clean, 1);
+    } elseif (str_starts_with($clean, '8')) {
+        $clean = '62' . $clean;
+    }
+    return $clean;
+}
+
+/**
+ * Send WhatsApp Notification via Gateway API (Fonnte / Wablas / Custom API).
+ */
+function sendWhatsAppNotification(string $targetPhone, string $message): array
+{
+    $settings = getWAGatewaySettings();
+    if (empty($settings['is_active']) || empty($settings['api_token'])) {
+        return ['status' => false, 'message' => 'WhatsApp Gateway is inactive or API Token is not configured.'];
+    }
+
+    $formattedPhone = formatWhatsAppNumber($targetPhone);
+    if (strlen($formattedPhone) < 9) {
+        return ['status' => false, 'message' => 'Nomor WhatsApp tidak valid.'];
+    }
+
+    $endpoint = !empty($settings['api_endpoint']) ? $settings['api_endpoint'] : 'https://api.fonnte.com/send';
+    $token = $settings['api_token'];
+
+    try {
+        $payload = [
+            'target' => $formattedPhone,
+            'message' => $message,
+            'countryCode' => '62'
+        ];
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $endpoint,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: $token",
+                "User-Agent: SMK-School-CMS/2.0"
+            ],
+            CURLOPT_TIMEOUT => 8,
+            CURLOPT_SSL_VERIFYPEER => false
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError) {
+            error_log("WA Gateway Error ($targetPhone): " . $curlError);
+            return ['status' => false, 'message' => $curlError];
+        }
+
+        return ['status' => ($httpCode >= 200 && $httpCode < 300), 'response' => $response, 'http_code' => $httpCode];
+    } catch (Throwable $e) {
+        error_log("WA Gateway Exception: " . $e->getMessage());
+        return ['status' => false, 'message' => $e->getMessage()];
+    }
+}

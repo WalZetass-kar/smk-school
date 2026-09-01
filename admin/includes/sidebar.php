@@ -74,9 +74,10 @@ function navIsActive(string $needle, string $currentScript): bool
       <div class="nav-section-label">Unduhan</div>
       <a class="nav-link <?= navIsActive('downloads', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/downloads/index.php" title="Pusat Unduhan"><i class="bi bi-download"></i> <span class="nav-text">Pusat Unduhan</span></a>
 
-      <div class="nav-section-label">PPDB Online</div>
+      <div class="nav-section-label">PPDB &amp; Notifikasi</div>
       <a class="nav-link <?= navIsActive('ppdb/index', $currentScript) || (navIsActive('ppdb', $currentScript) && !navIsActive('ppdb/settings', $currentScript) && !navIsActive('ppdb/detail', $currentScript)) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/ppdb/index.php" title="Data Pendaftar PPDB"><i class="bi bi-person-lines-fill"></i> <span class="nav-text">Data Pendaftar</span></a>
       <a class="nav-link <?= navIsActive('ppdb/settings', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/ppdb/settings.php" title="Pengaturan PPDB"><i class="bi bi-sliders"></i> <span class="nav-text">Pengaturan PPDB</span></a>
+      <a class="nav-link <?= navIsActive('whatsapp', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/whatsapp/index.php" title="WhatsApp Gateway"><i class="bi bi-whatsapp text-success"></i> <span class="nav-text">WhatsApp Gateway</span></a>
 
       <div class="nav-section-label">Kelulusan &amp; Agenda</div>
       <a class="nav-link <?= navIsActive('graduations', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/graduations/index.php" title="Kelulusan (SKL Online)"><i class="bi bi-mortarboard-fill"></i> <span class="nav-text">Kelulusan (SKL)</span></a>

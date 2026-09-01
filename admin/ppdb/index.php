@@ -164,7 +164,11 @@ require __DIR__ . '/../includes/topbar.php';
     </div>
 
     <div class="col-md-5 text-md-end">
-      <a href="export.php" class="btn btn-sm btn-success me-1">
+      <?php
+        $exportQuery = array_filter(['status' => $statusFilter, 'major_id' => $majorFilter ?: null, 'q' => $search ?: null]);
+        $exportUrl = 'export.php' . (!empty($exportQuery) ? '?' . http_build_query($exportQuery) : '');
+      ?>
+      <a href="<?= e($exportUrl) ?>" class="btn btn-sm btn-success me-1">
         <i class="bi bi-file-earmark-excel me-1"></i>Export Data (CSV)
       </a>
       <a href="settings.php" class="btn btn-sm btn-outline-primary-custom">

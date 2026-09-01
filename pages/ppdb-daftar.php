@@ -198,6 +198,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             recordRateLimitAttempt($rateKey, 3600);
             logActivity('PPDB_REGISTER', 'ppdb', 'Pendaftaran PPDB Baru: ' . $formData['full_name'] . ' (No: ' . $regNo . ', NISN: ' . $formData['nisn'] . ')');
 
+            // Send automated WhatsApp confirmation notification if gateway is active
+            try {
+                $waSettings = getWAGatewaySettings();
+                if (!empty($waSettings['is_active']) && !empty($formData['phone'])) {
+                    $majorChoiceName = '-';
+                    if (!empty($formData['major_choice_1'])) {
+                        $mStmt = $db->prepare("SELECT name FROM majors WHERE id = ?");
+                        $mStmt->execute([(int)$formData['major_choice_1']]);
+                        $majorChoiceName = $mStmt->fetchColumn() ?: '-';
+                    }
+                    $schoolTitle = $profile['school_name'] ?? 'Sekolah';
+                    $printUrl = BASE_URL . '/ppdb/cetak?reg=' . urlencode($regNo);
+                    $checkUrl = BASE_URL . '/ppdb/cek-status?reg=' . urlencode($regNo);
+
+                    $template = !empty($waSettings['ppdb_success_template']) ? $waSettings['ppdb_success_template'] : "Halo *{nama_siswa}*, pendaftaran Anda di *{nama_sekolah}* telah berhasil.\nNo: *{no_registrasi}*\nCetak: {link_cetak}";
+
+                    $waMsg = str_replace(
+                        ['{nama_siswa}', '{no_registrasi}', '{nama_sekolah}', '{pilihan_jurusan}', '{link_cetak}', '{link_cek}'],
+                        [$formData['full_name'], $regNo, $schoolTitle, $majorChoiceName, $printUrl, $checkUrl],
+                        $template
+                    );
+
+                    sendWhatsAppNotification($formData['phone'], $waMsg);
+                }
+            } catch (Throwable $e) {
+                error_log('PPDB WA Notification Error: ' . $e->getMessage());
+            }
+
             setFlash('success', 'Selamat! Formulir pendaftaran Anda berhasil terkirim.');
             redirect(BASE_URL . '/ppdb/sukses?no=' . urlencode($regNo));
         }
