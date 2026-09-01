@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data['academic_year'], $data['announcement_date'], $data['is_active'], 
             $data['header_info'], $data['signature_city'], $data['signature_date']
         ]);
+        logActivity('UPDATE_GRADUATION_SETTINGS', 'graduations', "Memperbarui jadwal & pengaturan kelulusan TA {$data['academic_year']}");
         setFlash('success', 'Pengaturan kelulusan berhasil disimpan.');
         redirect(BASE_URL . '/admin/graduations/settings.php');
     }

@@ -82,8 +82,8 @@ function navIsActive(string $needle, string $currentScript): bool
     <a class="nav-link <?= navIsActive('contacts', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/contacts/index.php" title="Pesan Masuk"><i class="bi bi-envelope"></i> <span class="nav-text">Pesan Masuk</span></a>
 
     <div class="nav-section-label">Sistem &amp; Akun</div>
-    <?php if (isSuperAdmin()): ?>
     <a class="nav-link <?= navIsActive('activity-logs', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/activity-logs/index.php" title="Audit Log Aktivitas"><i class="bi bi-shield-lock-fill"></i> <span class="nav-text">Audit Log Aktivitas</span></a>
+    <?php if (isSuperAdmin()): ?>
     <a class="nav-link <?= navIsActive('users', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/users/index.php" title="Manajemen Admin"><i class="bi bi-people-fill"></i> <span class="nav-text">Manajemen Admin</span></a>
     <a class="nav-link" href="<?= e(BASE_URL) ?>/admin/backup.php" title="Backup Database"><i class="bi bi-database-down"></i> <span class="nav-text">Backup Database</span></a>
     <?php endif; ?>

@@ -38,9 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($item) {
                 $db->prepare("UPDATE banners SET title=?, description=?, image=?, button_text=?, button_url=?, sort_order=?, status=? WHERE id=?")
                    ->execute([$title, $description, $image, $buttonText, $buttonUrl, $sortOrder, $status, $item['id']]);
+                logActivity('UPDATE_BANNER', 'banners', "Memperbarui banner: $title");
             } else {
                 $db->prepare("INSERT INTO banners (title, description, image, button_text, button_url, sort_order, status) VALUES (?,?,?,?,?,?,?)")
                    ->execute([$title, $description, $image, $buttonText, $buttonUrl, $sortOrder, $status]);
+                logActivity('CREATE_BANNER', 'banners', "Menambahkan banner baru: $title");
             }
             setFlash('success', 'Banner berhasil disimpan.');
             redirect(BASE_URL . '/admin/banners/index.php');

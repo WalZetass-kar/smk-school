@@ -22,10 +22,12 @@ $stmt = $db->prepare("SELECT image FROM extracurriculars WHERE id = ?");
 $stmt->execute([$id]);
 $img = $stmt->fetchColumn();
 
+$name = $db->query("SELECT name FROM extracurriculars WHERE id = $id")->fetchColumn() ?: "ID #$id";
 if ($img && file_exists(BASE_PATH . '/' . $img)) {
     @unlink(BASE_PATH . '/' . $img);
 }
 
 $db->prepare("DELETE FROM extracurriculars WHERE id = ?")->execute([$id]);
+logActivity('DELETE_EKSKUL', 'extracurriculars', "Menghapus ekstrakurikuler: $name (ID: $id)");
 setFlash('success', 'Data ekstrakurikuler berhasil dihapus.');
 redirect(BASE_URL . '/admin/extracurriculars/index.php');

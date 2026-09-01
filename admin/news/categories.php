@@ -12,9 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Sesi form tidak valid, silakan coba lagi.';
     } elseif (($_POST['action'] ?? '') === 'delete') {
         $delId = (int) ($_POST['id'] ?? 0);
+        $catName = $db->query("SELECT name FROM news_categories WHERE id = $delId")->fetchColumn() ?: "ID #$delId";
         // Detach news from the deleted category instead of blocking the delete.
         $db->prepare("UPDATE news SET category_id = NULL WHERE category_id = ?")->execute([$delId]);
         $db->prepare("DELETE FROM news_categories WHERE id = ?")->execute([$delId]);
+        logActivity('DELETE_NEWS_CATEGORY', 'news', "Menghapus kategori berita: $catName (ID: $delId)");
         setFlash('success', 'Kategori berhasil dihapus.');
         redirect(BASE_URL . '/admin/news/categories.php');
     } else {
@@ -33,9 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             if ($id) {
                 $db->prepare("UPDATE news_categories SET name=?, slug=? WHERE id=?")->execute([$name, $slug, $id]);
+                logActivity('UPDATE_NEWS_CATEGORY', 'news', "Memperbarui kategori berita: $name");
                 setFlash('success', 'Kategori berhasil diperbarui.');
             } else {
                 $db->prepare("INSERT INTO news_categories (name, slug) VALUES (?,?)")->execute([$name, $slug]);
+                logActivity('CREATE_NEWS_CATEGORY', 'news', "Menambahkan kategori berita baru: $name");
                 setFlash('success', 'Kategori berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/news/categories.php');

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/graduations/delete.php
  * Hapus Data Siswa Kelulusan
@@ -12,8 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = (int)($_POST['id'] ?? 0);
         if ($id > 0) {
             $db = getDB();
+            $studentName = $db->query("SELECT student_name FROM graduations WHERE id = $id")->fetchColumn() ?: "ID #$id";
             $stmt = $db->prepare("DELETE FROM graduations WHERE id = ?");
             $stmt->execute([$id]);
+            logActivity('DELETE_GRADUATION', 'graduations', "Menghapus data siswa kelulusan: $studentName (ID: $id)");
             setFlash('success', 'Data siswa berhasil dihapus.');
         }
     }

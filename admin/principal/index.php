@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $db->prepare("INSERT INTO principal_message (principal_name, position, photo, content) VALUES (?,?,?,?)");
                 $stmt->execute([$name, $position, $photo, $content]);
             }
+            logActivity('UPDATE_PRINCIPAL_MESSAGE', 'profile', "Memperbarui sambutan kepala sekolah: $name");
             setFlash('success', 'Sambutan kepala sekolah berhasil disimpan.');
             redirect(BASE_URL . '/admin/principal/index.php');
         }

@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ");
                 $stmt->execute(array_values($data));
             }
+            logActivity('UPDATE_WEBSITE_SETTINGS', 'profile', 'Memperbarui profil sekolah dan pengaturan website (' . $data['school_name'] . ')');
             setFlash('success', 'Pengaturan website berhasil disimpan.');
             redirect(BASE_URL . '/admin/profile/index.php');
         }

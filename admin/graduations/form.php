@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $old['birth_date'] ?: null, $old['major_name'], $old['average_score'], 
                 $old['status'], $old['remarks'], $id
             ]);
+            logActivity('UPDATE_GRADUATION', 'graduations', "Memperbarui data siswa kelulusan: {$old['student_name']} (NISN: {$old['nisn']})");
             setFlash('success', 'Data siswa berhasil diperbarui.');
         } else {
             $stmt = $db->prepare("
@@ -95,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $old['birth_date'] ?: null, $old['major_name'], $old['average_score'], 
                 $old['status'], $old['remarks']
             ]);
+            logActivity('CREATE_GRADUATION', 'graduations', "Menambahkan data siswa kelulusan baru: {$old['student_name']} (NISN: {$old['nisn']})");
             setFlash('success', 'Data siswa berhasil ditambahkan.');
         }
         redirect(BASE_URL . '/admin/graduations/index.php');

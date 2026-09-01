@@ -12,8 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Sesi form tidak valid, silakan coba lagi.';
     } elseif (($_POST['action'] ?? '') === 'delete') {
         $delId = (int) ($_POST['id'] ?? 0);
+        $catName = $db->query("SELECT name FROM gallery_categories WHERE id = $delId")->fetchColumn() ?: "ID #$delId";
         $db->prepare("UPDATE galleries SET category_id = NULL WHERE category_id = ?")->execute([$delId]);
         $db->prepare("DELETE FROM gallery_categories WHERE id = ?")->execute([$delId]);
+        logActivity('DELETE_GALLERY_CATEGORY', 'galleries', "Menghapus kategori galeri: $catName (ID: $delId)");
         setFlash('success', 'Kategori berhasil dihapus.');
         redirect(BASE_URL . '/admin/galleries/categories.php');
     } else {
@@ -32,9 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             if ($id) {
                 $db->prepare("UPDATE gallery_categories SET name=?, slug=? WHERE id=?")->execute([$name, $slug, $id]);
+                logActivity('UPDATE_GALLERY_CATEGORY', 'galleries', "Memperbarui kategori galeri: $name");
                 setFlash('success', 'Kategori berhasil diperbarui.');
             } else {
                 $db->prepare("INSERT INTO gallery_categories (name, slug) VALUES (?,?)")->execute([$name, $slug]);
+                logActivity('CREATE_GALLERY_CATEGORY', 'galleries', "Menambahkan kategori galeri baru: $name");
                 setFlash('success', 'Kategori berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/galleries/categories.php');

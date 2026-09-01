@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = ?
                 ");
                 $stmt->execute([$title, $category, $filePath, $fileSize, $fileExt, $description, $id]);
+                logActivity('UPDATE_DOWNLOAD', 'downloads', "Memperbarui dokumen unduhan: $title ($category)");
                 setFlash('success', 'Dokumen berhasil diperbarui.');
             } else {
                 $stmt = $db->prepare("
@@ -82,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([$title, $category, $filePath, $fileSize, $fileExt, $description]);
+                logActivity('CREATE_DOWNLOAD', 'downloads', "Menambahkan dokumen unduhan baru: $title ($category)");
                 setFlash('success', 'Dokumen baru berhasil diunggah.');
             }
             redirect(BASE_URL . '/admin/downloads/index.php');

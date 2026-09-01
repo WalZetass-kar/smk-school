@@ -36,9 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($item) {
                 $db->prepare("UPDATE galleries SET category_id=?, title=?, description=?, image=? WHERE id=?")
                    ->execute([$categoryId, $title, $description, $image, $item['id']]);
+                logActivity('UPDATE_GALLERY', 'galleries', "Memperbarui foto galeri: $title");
             } else {
                 $db->prepare("INSERT INTO galleries (category_id, title, description, image) VALUES (?,?,?,?)")
                    ->execute([$categoryId, $title, $description, $image]);
+                logActivity('CREATE_GALLERY', 'galleries', "Menambahkan foto galeri baru: $title");
             }
             setFlash('success', 'Foto berhasil disimpan.');
             redirect(BASE_URL . '/admin/galleries/index.php');

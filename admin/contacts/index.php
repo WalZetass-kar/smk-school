@@ -12,10 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id     = (int) ($_POST['id'] ?? 0);
     $action = $_POST['action'] ?? '';
     if ($id && $action === 'delete') {
+        $contactName = $db->query("SELECT name FROM contacts WHERE id = $id")->fetchColumn() ?: "ID #$id";
         $db->prepare("DELETE FROM contacts WHERE id = ?")->execute([$id]);
+        logActivity('DELETE_CONTACT_MESSAGE', 'contacts', "Menghapus pesan kontak masuk dari: $contactName (ID: $id)");
         setFlash('success', 'Pesan berhasil dihapus.');
     } elseif ($id && $action === 'mark_read') {
         $db->prepare("UPDATE contacts SET is_read = 1 WHERE id = ?")->execute([$id]);
+        logActivity('READ_CONTACT_MESSAGE', 'contacts', "Menandai pesan kontak telah dibaca (ID: $id)");
         setFlash('success', 'Pesan ditandai sudah dibaca.');
     }
     redirect(BASE_URL . '/admin/contacts/index.php');

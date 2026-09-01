@@ -41,9 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($teacher) {
                 $db->prepare("UPDATE teachers SET name=?, nip=?, nuptk=?, photo=?, subject=?, education=?, position=?, category=?, status=?, description=? WHERE id=?")
                    ->execute([$name, $nip, $nuptk, $photo, $subject, $education, $position, $category, $status, $description, $teacher['id']]);
+                logActivity('UPDATE_TEACHER', 'teachers', "Memperbarui data guru/tendik: $name ($category)");
             } else {
                 $db->prepare("INSERT INTO teachers (name, nip, nuptk, photo, subject, education, position, category, status, description) VALUES (?,?,?,?,?,?,?,?,?,?)")
                    ->execute([$name, $nip, $nuptk, $photo, $subject, $education, $position, $category, $status, $description]);
+                logActivity('CREATE_TEACHER', 'teachers', "Menambahkan data guru/tendik baru: $name ($category)");
             }
             setFlash('success', 'Data berhasil disimpan.');
             redirect(BASE_URL . '/admin/teachers/index.php');

@@ -28,9 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($item) {
                 $db->prepare("UPDATE social_media SET platform=?, url=?, icon=?, status=? WHERE id=?")
                    ->execute([$platform, $url, $icon, $status, $item['id']]);
+                logActivity('UPDATE_SOCIAL_MEDIA', 'social_media', "Memperbarui media sosial: $platform");
             } else {
                 $db->prepare("INSERT INTO social_media (platform, url, icon, status) VALUES (?,?,?,?)")
                    ->execute([$platform, $url, $icon, $status]);
+                logActivity('CREATE_SOCIAL_MEDIA', 'social_media', "Menambahkan media sosial baru: $platform");
             }
             setFlash('success', 'Tautan berhasil disimpan.');
             redirect(BASE_URL . '/admin/social-media/index.php');

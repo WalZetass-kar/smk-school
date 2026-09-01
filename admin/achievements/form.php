@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = ?
                 ");
                 $stmt->execute([$title, $slug, $studentName, $competitionName, $level, $rankPosition, $year, $photoPath, $description, $id]);
+                logActivity('UPDATE_ACHIEVEMENT', 'achievements', "Memperbarui data prestasi: $title ($studentName)");
                 setFlash('success', 'Data prestasi berhasil diperbarui.');
             } else {
                 $stmt = $db->prepare("SELECT COUNT(*) FROM achievements WHERE slug = ?");
@@ -78,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([$title, $slug, $studentName, $competitionName, $level, $rankPosition, $year, $photoPath, $description]);
+                logActivity('CREATE_ACHIEVEMENT', 'achievements', "Menambahkan data prestasi baru: $title ($studentName)");
                 setFlash('success', 'Prestasi baru berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/achievements/index.php');

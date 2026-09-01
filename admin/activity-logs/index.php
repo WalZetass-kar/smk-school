@@ -1,14 +1,14 @@
 ﻿<?php
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
-requireSuperAdmin();
+requireAuth();
 
 $db = getDB();
 
 $moduleFilter = trim($_GET['module'] ?? '');
 $search       = trim($_GET['q'] ?? '');
 $page         = max(1, (int)($_GET['page'] ?? 1));
-$perPage      = 25;
+$perPage      = 20;
 $offset       = ($page - 1) * $perPage;
 
 $where = [];
@@ -33,7 +33,7 @@ $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 $countStmt = $db->prepare("SELECT COUNT(*) FROM activity_logs $whereSql");
 $countStmt->execute($params);
 $total = (int)$countStmt->fetchColumn();
-$totalPages = ceil($total / $perPage);
+$totalPages = max(1, (int)ceil($total / $perPage));
 
 $query = "SELECT * FROM activity_logs $whereSql ORDER BY id DESC LIMIT $perPage OFFSET $offset";
 $stmt = $db->prepare($query);
@@ -42,6 +42,12 @@ $logs = $stmt->fetchAll();
 
 // Distinct modules for filter
 $modules = $db->query("SELECT DISTINCT module FROM activity_logs ORDER BY module ASC")->fetchAll(PDO::FETCH_COLUMN);
+
+// Quick Statistics
+$totalAll      = (int)$db->query("SELECT COUNT(*) FROM activity_logs")->fetchColumn();
+$totalToday    = (int)$db->query("SELECT COUNT(*) FROM activity_logs WHERE DATE(created_at) = CURDATE()")->fetchColumn();
+$totalAuth     = (int)$db->query("SELECT COUNT(*) FROM activity_logs WHERE module = 'auth'")->fetchColumn();
+$totalContent  = (int)$db->query("SELECT COUNT(*) FROM activity_logs WHERE action LIKE '%CREATE%' OR action LIKE '%UPDATE%' OR action LIKE '%DELETE%'")->fetchColumn();
 
 $pageTitle = 'Audit Trail & Log Aktivitas Admin';
 require __DIR__ . '/../includes/header.php';
@@ -56,25 +62,78 @@ require __DIR__ . '/../includes/topbar.php';
     <h1 class="h4 fw-bold text-primary mb-1">
       <i class="bi bi-shield-lock-fill text-accent me-1"></i> Audit Trail &amp; Log Aktivitas
     </h1>
-    <p class="text-muted small mb-0">Catatan riwayat lengkap keamanan, autentikasi, dan perubahan data oleh administrator.</p>
+    <p class="text-muted small mb-0">Catatan riwayat rekam jejak autentikasi, modifikasi konten, dan keamanan administrator sekolah.</p>
   </div>
-  <div>
-    <form method="post" action="<?= e(BASE_URL) ?>/admin/activity-logs/delete.php" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas? Aksi ini tidak dapat dibatalkan.');" class="d-inline">
-      <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
-      <button type="submit" class="btn btn-sm btn-outline-danger">
-        <i class="bi bi-trash3 me-1"></i> Bersihkan Semua Log
-      </button>
-    </form>
+  <div class="d-flex gap-2">
+    <?php if (isSuperAdmin()): ?>
+      <a href="<?= e(BASE_URL) ?>/admin/activity-logs/export.php<?= ($moduleFilter || $search) ? '?' . http_build_query(array_filter(['module' => $moduleFilter, 'q' => $search])) : '' ?>" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-file-earmark-arrow-down me-1"></i> Export CSV
+      </a>
+      <form method="post" action="<?= e(BASE_URL) ?>/admin/activity-logs/delete.php" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas? Aksi ini permanen dan tidak dapat dibatalkan.');" class="d-inline">
+        <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+        <button type="submit" class="btn btn-sm btn-outline-danger">
+          <i class="bi bi-trash3 me-1"></i> Bersihkan Log
+        </button>
+      </form>
+    <?php endif; ?>
+  </div>
+</div>
+
+<!-- Summary Metric Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="admin-card p-3 d-flex align-items-center gap-3">
+      <div class="p-2 rounded bg-primary-subtle text-primary fs-4 d-flex align-items-center justify-content-center" style="width:46px; height:46px;">
+        <i class="bi bi-journal-text"></i>
+      </div>
+      <div>
+        <div class="text-muted small">Total Catatan</div>
+        <div class="h5 fw-bold mb-0 text-dark"><?= number_format($totalAll, 0, ',', '.') ?></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="admin-card p-3 d-flex align-items-center gap-3">
+      <div class="p-2 rounded bg-success-subtle text-success fs-4 d-flex align-items-center justify-content-center" style="width:46px; height:46px;">
+        <i class="bi bi-calendar-check"></i>
+      </div>
+      <div>
+        <div class="text-muted small">Aktivitas Hari Ini</div>
+        <div class="h5 fw-bold mb-0 text-dark"><?= number_format($totalToday, 0, ',', '.') ?></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="admin-card p-3 d-flex align-items-center gap-3">
+      <div class="p-2 rounded bg-info-subtle text-info fs-4 d-flex align-items-center justify-content-center" style="width:46px; height:46px;">
+        <i class="bi bi-key-fill"></i>
+      </div>
+      <div>
+        <div class="text-muted small">Sesi Login / Auth</div>
+        <div class="h5 fw-bold mb-0 text-dark"><?= number_format($totalAuth, 0, ',', '.') ?></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="admin-card p-3 d-flex align-items-center gap-3">
+      <div class="p-2 rounded bg-warning-subtle text-warning fs-4 d-flex align-items-center justify-content-center" style="width:46px; height:46px;">
+        <i class="bi bi-pencil-square"></i>
+      </div>
+      <div>
+        <div class="text-muted small">Perubahan Data</div>
+        <div class="h5 fw-bold mb-0 text-dark"><?= number_format($totalContent, 0, ',', '.') ?></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Filter Bar -->
 <div class="admin-card p-3 mb-4">
   <form method="get" class="row g-2 align-items-center">
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="input-group input-group-sm">
         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-        <input type="text" name="q" class="form-control" placeholder="Cari user, aksi, IP, atau detail..." value="<?= e($search) ?>">
+        <input type="text" name="q" class="form-control" placeholder="Cari nama admin, aksi, IP, atau keterangan..." value="<?= e($search) ?>">
       </div>
     </div>
     <div class="col-md-3">
@@ -85,30 +144,27 @@ require __DIR__ . '/../includes/topbar.php';
         <?php endforeach; ?>
       </select>
     </div>
-    <div class="col-md-3 d-flex gap-2">
-      <button type="submit" class="btn btn-sm btn-primary fw-semibold"><i class="bi bi-filter me-1"></i> Filter</button>
+    <div class="col-md-4 d-flex justify-content-md-end gap-2">
+      <button type="submit" class="btn btn-sm btn-primary fw-semibold"><i class="bi bi-filter me-1"></i> Saring Data</button>
       <?php if ($search !== '' || $moduleFilter !== ''): ?>
         <a href="<?= e(BASE_URL) ?>/admin/activity-logs/index.php" class="btn btn-sm btn-light border">Reset</a>
       <?php endif; ?>
-    </div>
-    <div class="col-md-2 text-md-end text-muted small">
-      Total: <strong><?= number_format($total, 0, ',', '.') ?></strong> catatan
     </div>
   </form>
 </div>
 
 <!-- Log Table -->
-<div class="admin-card p-0 overflow-hidden">
+<div class="admin-card p-0 overflow-hidden mb-4">
   <div class="table-responsive">
-    <table class="table table-admin table-hover align-middle mb-0" style="font-size:0.87rem;">
+    <table class="table table-admin table-hover align-middle mb-0" style="font-size:0.875rem;">
       <thead class="table-light">
         <tr>
-          <th style="width:170px;">Waktu (WIB)</th>
-          <th style="width:140px;">Pengguna</th>
-          <th style="width:110px;">Modul</th>
-          <th style="width:160px;">Aksi</th>
+          <th style="width:165px;">Waktu (WIB)</th>
+          <th style="width:150px;">Pengguna</th>
+          <th style="width:105px;">Modul</th>
+          <th style="width:170px;">Aksi</th>
           <th>Detail Informasi</th>
-          <th style="width:120px;">IP Address</th>
+          <th style="width:125px;">IP Address</th>
         </tr>
       </thead>
       <tbody>
@@ -128,10 +184,10 @@ require __DIR__ . '/../includes/topbar.php';
               </td>
               <td>
                 <div class="fw-bold text-dark"><?= e($l['user_name']) ?></div>
-                <span class="badge bg-light text-dark border" style="font-size:0.7rem;"><?= e($l['user_role']) ?></span>
+                <span class="badge bg-light text-secondary border" style="font-size:0.68rem;"><?= e($l['user_role'] ?: 'Guest') ?></span>
               </td>
               <td>
-                <span class="badge bg-secondary text-uppercase fw-semibold" style="font-size:0.72rem;"><?= e($l['module']) ?></span>
+                <span class="badge bg-light text-dark border text-uppercase fw-semibold" style="font-size:0.72rem;"><?= e($l['module']) ?></span>
               </td>
               <td>
                 <span class="badge <?= $actionBadge ?> px-2 py-1" style="font-size:0.75rem;">
@@ -155,7 +211,7 @@ require __DIR__ . '/../includes/topbar.php';
           <tr>
             <td colspan="6" class="text-center py-5 text-muted">
               <i class="bi bi-shield-check fs-1 text-muted d-block mb-2"></i>
-              Belum ada log aktivitas yang tercatat.
+              Belum ada data log aktivitas yang sesuai dengan kriteria pencarian.
             </td>
           </tr>
         <?php endif; ?>
@@ -165,12 +221,10 @@ require __DIR__ . '/../includes/topbar.php';
 </div>
 
 <?php if ($totalPages > 1): ?>
-  <div class="mt-4">
+  <div class="mb-4">
     <?php
-      $paginationBase = BASE_URL . '/admin/activity-logs/index.php?' . http_build_query([
-          'q' => $search,
-          'module' => $moduleFilter
-      ]);
+      $queryParams = array_filter(['q' => $search, 'module' => $moduleFilter]);
+      $paginationBase = BASE_URL . '/admin/activity-logs/index.php' . (!empty($queryParams) ? '?' . http_build_query($queryParams) : '');
       echo renderPagination($page, $totalPages, $paginationBase);
     ?>
   </div>

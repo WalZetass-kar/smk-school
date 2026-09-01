@@ -22,10 +22,12 @@ $stmt = $db->prepare("SELECT file_path FROM downloads WHERE id = ?");
 $stmt->execute([$id]);
 $path = $stmt->fetchColumn();
 
+$title = $db->query("SELECT title FROM downloads WHERE id = $id")->fetchColumn() ?: "ID #$id";
 if ($path && file_exists(BASE_PATH . '/' . $path)) {
     @unlink(BASE_PATH . '/' . $path);
 }
 
 $db->prepare("DELETE FROM downloads WHERE id = ?")->execute([$id]);
+logActivity('DELETE_DOWNLOAD', 'downloads', "Menghapus dokumen unduhan: $title (ID: $id)");
 setFlash('success', 'Dokumen unduhan berhasil dihapus.');
 redirect(BASE_URL . '/admin/downloads/index.php');

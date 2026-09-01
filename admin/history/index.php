@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $db->prepare("INSERT INTO history (title, content) VALUES (?,?)")->execute([$title, $content]);
             }
+            logActivity('UPDATE_HISTORY', 'profile', "Memperbarui sejarah sekolah ($title)");
             setFlash('success', 'Sejarah berhasil disimpan.');
             redirect(BASE_URL . '/admin/history/index.php');
         }

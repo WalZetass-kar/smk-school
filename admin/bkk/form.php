@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $location, $salary, $description, $requirements, $applyUrl,
                     $deadline, $status, $id
                 ]);
+                logActivity('UPDATE_BKK_JOB', 'bkk', "Memperbarui lowongan BKK: $title ($companyName)");
                 setFlash('success', 'Lowongan pekerjaan berhasil diperbarui.');
             } else {
                 $stmt = $db->prepare("SELECT COUNT(*) FROM bkk_jobs WHERE slug = ?");
@@ -90,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $location, $salary, $description, $requirements, $applyUrl,
                     $deadline, $status
                 ]);
+                logActivity('CREATE_BKK_JOB', 'bkk', "Menambahkan lowongan BKK baru: $title ($companyName)");
                 setFlash('success', 'Lowongan pekerjaan baru berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/bkk/index.php');

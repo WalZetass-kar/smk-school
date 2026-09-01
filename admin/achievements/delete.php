@@ -22,10 +22,12 @@ $stmt = $db->prepare("SELECT photo FROM achievements WHERE id = ?");
 $stmt->execute([$id]);
 $photo = $stmt->fetchColumn();
 
+$title = $db->query("SELECT title FROM achievements WHERE id = $id")->fetchColumn() ?: "ID #$id";
 if ($photo && file_exists(BASE_PATH . '/' . $photo)) {
     @unlink(BASE_PATH . '/' . $photo);
 }
 
 $db->prepare("DELETE FROM achievements WHERE id = ?")->execute([$id]);
+logActivity('DELETE_ACHIEVEMENT', 'achievements', "Menghapus data prestasi: $title (ID: $id)");
 setFlash('success', 'Data prestasi siswa berhasil dihapus.');
 redirect(BASE_URL . '/admin/achievements/index.php');

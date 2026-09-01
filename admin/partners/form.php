@@ -52,10 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($item) {
                 $db->prepare("UPDATE partners SET name=?, logo=?, website=?, description=?, status=?, sort_order=? WHERE id=?")
                    ->execute([$name, $logo, $website, $description, $status, $sortOrder, $item['id']]);
+                logActivity('UPDATE_PARTNER', 'partners', "Memperbarui mitra kerja sama: $name");
                 setFlash('success', 'Data mitra kerja sama "' . e($name) . '" berhasil diperbarui.');
             } else {
                 $db->prepare("INSERT INTO partners (name, logo, website, description, status, sort_order) VALUES (?,?,?,?,?,?)")
                    ->execute([$name, $logo, $website, $description, $status, $sortOrder]);
+                logActivity('CREATE_PARTNER', 'partners', "Menambahkan mitra kerja sama baru: $name");
                 setFlash('success', 'Mitra kerja sama baru "' . e($name) . '" berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/partners/index.php');

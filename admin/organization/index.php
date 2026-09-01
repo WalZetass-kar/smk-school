@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $db->prepare("INSERT INTO organization (title, image, description) VALUES (?,?,?)")->execute([$title, $image, $description]);
             }
+            logActivity('UPDATE_ORGANIZATION', 'profile', "Memperbarui bagan struktur organisasi ($title)");
             setFlash('success', 'Struktur organisasi berhasil disimpan.');
             redirect(BASE_URL . '/admin/organization/index.php');
         }

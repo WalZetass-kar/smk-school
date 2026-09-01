@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    ->execute([$runningText, $isTickerActive, $profile['id']]);
             }
 
+            logActivity('UPDATE_PPDB_SETTINGS', 'ppdb', "Memperbarui jadwal & pengaturan PPDB online TA $academicYear");
             setFlash('success', 'Pengaturan PPDB & Teks Pengumuman Berjalan berhasil disimpan.');
             redirect(BASE_URL . '/admin/ppdb/settings.php');
         }

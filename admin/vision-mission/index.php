@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $db->prepare("INSERT INTO vision_mission (vision, mission, goals) VALUES (?,?,?)")->execute([$vision, $mission, $goals]);
             }
+            logActivity('UPDATE_VISION_MISSION', 'profile', 'Memperbarui visi, misi, dan tujuan sekolah');
             setFlash('success', 'Visi & misi berhasil disimpan.');
             redirect(BASE_URL . '/admin/vision-mission/index.php');
         }

@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = ?
                 ");
                 $stmt->execute([$name, $slug, $category, $icon, $imagePath, $schedule, $coachName, $description, $status, $id]);
+                logActivity('UPDATE_EKSKUL', 'extracurriculars', "Memperbarui data ekstrakurikuler: $name");
                 setFlash('success', 'Ekstrakurikuler berhasil diperbarui.');
             } else {
                 $stmt = $db->prepare("SELECT COUNT(*) FROM extracurriculars WHERE slug = ?");
@@ -76,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([$name, $slug, $category, $icon, $imagePath, $schedule, $coachName, $description, $status]);
+                logActivity('CREATE_EKSKUL', 'extracurriculars', "Menambahkan ekstrakurikuler baru: $name");
                 setFlash('success', 'Ekstrakurikuler baru berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/extracurriculars/index.php');

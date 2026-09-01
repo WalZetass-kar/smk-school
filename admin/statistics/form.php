@@ -34,10 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($item) {
                 $db->prepare("UPDATE statistics SET title=?, value=?, icon=?, sort_order=?, status=? WHERE id=?")
                    ->execute([$title, $value, $icon, $sortOrder, $status, $item['id']]);
+                logActivity('UPDATE_STATISTIC', 'statistics', "Memperbarui statistik: $title ($value)");
                 setFlash('success', 'Data statistik "' . e($title) . '" berhasil diperbarui.');
             } else {
                 $db->prepare("INSERT INTO statistics (title, value, icon, sort_order, status) VALUES (?,?,?,?,?)")
                    ->execute([$title, $value, $icon, $sortOrder, $status]);
+                logActivity('CREATE_STATISTIC', 'statistics', "Menambahkan statistik baru: $title ($value)");
                 setFlash('success', 'Data statistik baru "' . e($title) . '" berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/statistics/index.php');

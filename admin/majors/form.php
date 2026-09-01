@@ -51,9 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($major) {
                 $db->prepare("UPDATE majors SET name=?, slug=?, code=?, image=?, short_description=?, description=?, competency=?, career=?, facilities=?, status=? WHERE id=?")
                    ->execute([$name, $slug, $code, $image, $shortDescription, $description, $competency, $career, $facilities, $status, $major['id']]);
+                logActivity('UPDATE_MAJOR', 'majors', "Memperbarui program keahlian (jurusan): $name ($code)");
             } else {
                 $db->prepare("INSERT INTO majors (name, slug, code, image, short_description, description, competency, career, facilities, status) VALUES (?,?,?,?,?,?,?,?,?,?)")
                    ->execute([$name, $slug, $code, $image, $shortDescription, $description, $competency, $career, $facilities, $status]);
+                logActivity('CREATE_MAJOR', 'majors', "Menambahkan program keahlian (jurusan) baru: $name ($code)");
             }
             setFlash('success', 'Jurusan berhasil disimpan.');
             redirect(BASE_URL . '/admin/majors/index.php');
