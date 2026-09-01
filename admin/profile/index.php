@@ -192,10 +192,12 @@ require __DIR__ . '/../includes/topbar.php';
     </div>
 
     <h2 class="h6 fw-bold text-primary mb-3 pb-2 border-bottom"><i class="bi bi-image me-1"></i>Peta &amp; Logo</h2>
-    <div class="row g-3">
       <div class="col-12">
-        <label class="form-label small fw-semibold">URL Google Maps (embed)</label>
-        <input type="text" name="map_url" class="form-control" value="<?= e($profile['map_url'] ?? '') ?>">
+        <label class="form-label small fw-semibold">URL / Link Google Maps Lokasi Sekolah</label>
+        <input type="text" name="map_url" class="form-control" value="<?= e($profile['map_url'] ?? '') ?>" placeholder="Contoh: https://maps.app.goo.gl/... atau link embed Google Maps">
+        <div class="form-text small text-muted">
+          <i class="bi bi-info-circle me-1"></i>Bisa berupa link Share Google Maps (contoh: <code>https://maps.app.goo.gl/...</code>), link alamat di browser, ataupun kode <code>&lt;iframe src="..."&gt;</code>. Sistem akan otomatis mengubahnya menjadi peta interaktif.
+        </div>
       </div>
       <div class="col-md-6">
         <label class="form-label small fw-semibold">Logo Sekolah</label>

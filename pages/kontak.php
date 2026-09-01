@@ -200,16 +200,20 @@ require BASE_PATH . '/includes/navbar.php';
         <?php endif; ?>
 
         <!-- Google Maps Embed -->
-        <?php if (!empty($profile['map_url'])): ?>
+        <?php
+          $embedMapUrl = getGoogleMapsEmbedUrl($profile['map_url'] ?? '', ($profile['school_name'] ?? '') . ' ' . ($profile['address'] ?? ''));
+          $openMapUrl  = !empty($profile['map_url']) ? $profile['map_url'] : ('https://www.google.com/maps/search/?api=1&query=' . urlencode(($profile['school_name'] ?? '') . ' ' . ($profile['address'] ?? '')));
+        ?>
+        <?php if (!empty($embedMapUrl)): ?>
           <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white p-3">
             <div class="d-flex justify-content-between align-items-center mb-2 px-1">
               <h2 class="h6 fw-bold text-primary mb-0"><i class="bi bi-map me-1 text-danger"></i>Lokasi di Peta</h2>
-              <a href="<?= e($profile['map_url']) ?>" target="_blank" rel="noopener" class="small text-decoration-none text-primary fw-medium">
+              <a href="<?= e($openMapUrl) ?>" target="_blank" rel="noopener" class="small text-decoration-none text-primary fw-medium">
                 Buka Peta Penuh <i class="bi bi-box-arrow-up-right ms-1"></i>
               </a>
             </div>
-            <div class="ratio ratio-16x9 rounded-3 overflow-hidden border">
-              <iframe src="<?= e($profile['map_url']) ?>" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Peta Lokasi <?= e($profile['school_name'] ?? 'Sekolah') ?>"></iframe>
+            <div class="ratio ratio-16x9 rounded-3 overflow-hidden border bg-light">
+              <iframe src="<?= e($embedMapUrl) ?>" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Peta Lokasi <?= e($profile['school_name'] ?? 'Sekolah') ?>"></iframe>
             </div>
           </div>
         <?php endif; ?>

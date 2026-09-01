@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * functions.php
  * Small, reusable helpers shared across the whole site.
@@ -577,3 +577,78 @@ function getYouTubeEmbedUrl(?string $url): ?string
     }
     return $url;
 }
+
+/**
+ * Convert any Google Maps link (share shortlink, place URL, coordinates, full iframe tag, or plain address)
+ * into a valid, responsive embed URL for <iframe> embedding.
+ */
+function getGoogleMapsEmbedUrl(?string $input, ?string $fallbackQuery = null): string
+{
+    $input = trim((string)$input);
+    if ($input === '') {
+        if ($fallbackQuery) {
+            return 'https://maps.google.com/maps?q=' . urlencode($fallbackQuery) . '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+        }
+        return '';
+    }
+
+    // 1. If input is a complete <iframe> tag, extract the src attribute
+    if (preg_match('/<iframe[^>]+src=["\']([^"\']+)["\']/i', $input, $matches)) {
+        $input = htmlspecialchars_decode($matches[1]);
+    }
+
+    // 2. If it is already a valid Google Maps embed URL
+    if (str_contains($input, '/maps/embed') || (str_contains($input, 'maps.google.com') && str_contains($input, 'output=embed'))) {
+        return $input;
+    }
+
+    // 3. If it's a short URL (maps.app.goo.gl or goo.gl/maps), resolve it to extract coordinates/place
+    if (preg_match('#(?:maps\.app\.goo\.gl|goo\.gl/maps)/([a-zA-Z0-9_-]+)#i', $input)) {
+        try {
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'GET',
+                    'follow_location' => 0,
+                    'timeout' => 3,
+                    'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                ]
+            ]);
+            $headers = @get_headers($input, true, $context);
+            if (!empty($headers['Location'])) {
+                $resolved = is_array($headers['Location']) ? end($headers['Location']) : $headers['Location'];
+                if ($resolved) {
+                    $input = $resolved;
+                }
+            }
+        } catch (Throwable) {}
+    }
+
+    // 4. If it has coordinates like /@lat,lng or place/Name/@lat,lng
+    if (preg_match('#@(-?\d+\.\d+),(-?\d+\.\d+)#i', $input, $matches)) {
+        $lat = $matches[1];
+        $lng = $matches[2];
+        return 'https://maps.google.com/maps?q=' . urlencode("$lat,$lng") . '&t=&z=16&ie=UTF8&iwloc=&output=embed';
+    }
+
+    // 5. If it is a /maps/place/Place+Name/... URL
+    if (preg_match('#/maps/place/([^/@?]+)#i', $input, $matches)) {
+        $placeName = urldecode(str_replace('+', ' ', $matches[1]));
+        return 'https://maps.google.com/maps?q=' . urlencode($placeName) . '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+    }
+
+    // 6. If it has query parameter ?q=...
+    if (preg_match('#[?&]q=([^&]+)#i', $input, $matches)) {
+        $query = urldecode($matches[1]);
+        return 'https://maps.google.com/maps?q=' . urlencode($query) . '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+    }
+
+    // 7. If it's plain text address, use it as search query
+    if (!str_starts_with($input, 'http')) {
+        return 'https://maps.google.com/maps?q=' . urlencode($input) . '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+    }
+
+    // 8. Fallback
+    $q = $fallbackQuery ?: 'SMK';
+    return 'https://maps.google.com/maps?q=' . urlencode($q) . '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+}
+
