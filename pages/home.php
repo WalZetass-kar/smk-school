@@ -29,6 +29,7 @@ require BASE_PATH . '/includes/navbar.php';
 <?= flashMessage() ?>
 
 <!-- ================= HERO / BANNER SLIDER ================= -->
+<?php if (!empty($banners)): ?>
 <section class="hero-slider <?= !empty($hasTicker) ? 'has-ticker-offset' : '' ?>">
   <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
     <div class="carousel-indicators">
@@ -70,6 +71,7 @@ require BASE_PATH . '/includes/navbar.php';
     </button>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ================= SAMBUTAN KEPALA SEKOLAH ================= -->
 <?php if ($principal): ?>
