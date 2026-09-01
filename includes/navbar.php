@@ -39,43 +39,65 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav ms-auto align-items-xl-center">
         <li class="nav-item"><a class="nav-link<?= navActive('/', $currentPath) ?>" href="<?= e(BASE_URL) ?>/">Beranda</a></li>
+        
+        <!-- Profil Dropdown -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="<?= e(BASE_URL) ?>/profil" id="profilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profil</a>
+          <a class="nav-link dropdown-toggle<?= str_starts_with($currentPath, '/profil') ? ' active' : '' ?>" href="<?= e(BASE_URL) ?>/profil" id="profilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profil</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="profilDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/sambutan"><i class="bi bi-person-badge me-2 text-primary"></i>Sambutan Kepala Sekolah</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/sejarah"><i class="bi bi-clock-history me-2 text-primary"></i>Sejarah</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/sejarah"><i class="bi bi-clock-history me-2 text-primary"></i>Sejarah Sekolah</a></li>
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/visi-misi"><i class="bi bi-bullseye me-2 text-primary"></i>Visi &amp; Misi</a></li>
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/struktur-organisasi"><i class="bi bi-diagram-3 me-2 text-primary"></i>Struktur Organisasi</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/guru-tendik"><i class="bi bi-people me-2 text-primary"></i>Guru &amp; Tendik</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/profil/guru-tendik"><i class="bi bi-people me-2 text-primary"></i>Guru &amp; Tenaga Pendidik</a></li>
           </ul>
         </li>
-        <li class="nav-item"><a class="nav-link<?= navActive('/jurusan', $currentPath) ?>" href="<?= e(BASE_URL) ?>/jurusan">Jurusan</a></li>
+
+        <!-- Akademik Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle<?= $currentPath === '/jurusan' || $currentPath === '/agenda' || $currentPath === '/unduhan' ? ' active' : '' ?>" href="#" id="akademikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Akademik</a>
+          <ul class="dropdown-menu shadow-sm" aria-labelledby="akademikDropdown">
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/jurusan"><i class="bi bi-mortarboard me-2 text-primary"></i>Program Keahlian (Jurusan)</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/agenda"><i class="bi bi-calendar-event me-2 text-success"></i>Agenda &amp; Kalender Kegiatan</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/unduhan"><i class="bi bi-download me-2 text-secondary"></i>Pusat Unduhan Dokumen</a></li>
+          </ul>
+        </li>
+
+        <!-- Kesiswaan Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $currentPath === '/ekstrakurikuler' || $currentPath === '/prestasi' || $currentPath === '/kelulusan' ? ' active' : '' ?>" href="#" id="kesiswaanDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kesiswaan</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kesiswaanDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ekstrakurikuler"><i class="bi bi-activity me-2 text-primary"></i>Ekstrakurikuler</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-warning"></i>Prestasi Siswa</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-warning"></i>Prestasi Siswa (Hall of Fame)</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kelulusan"><i class="bi bi-mortarboard-fill me-2 text-success"></i>Pengumuman Kelulusan (SKL)</a></li>
           </ul>
         </li>
-        <li class="nav-item"><a class="nav-link<?= navActive('/agenda', $currentPath) ?>" href="<?= e(BASE_URL) ?>/agenda">Agenda</a></li>
-        <li class="nav-item"><a class="nav-link<?= navActive('/berita', $currentPath) ?>" href="<?= e(BASE_URL) ?>/berita">Berita</a></li>
-        <li class="nav-item"><a class="nav-link<?= str_starts_with($currentPath, '/bkk') ? ' active' : '' ?>" href="<?= e(BASE_URL) ?>/bkk">BKK</a></li>
-        <li class="nav-item"><a class="nav-link<?= navActive('/galeri', $currentPath) ?>" href="<?= e(BASE_URL) ?>/galeri">Galeri</a></li>
-        <li class="nav-item"><a class="nav-link<?= navActive('/unduhan', $currentPath) ?>" href="<?= e(BASE_URL) ?>/unduhan">Unduhan</a></li>
+
+        <!-- Informasi Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle<?= $currentPath === '/berita' || $currentPath === '/galeri' || str_starts_with($currentPath, '/bkk') ? ' active' : '' ?>" href="#" id="informasiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Informasi</a>
+          <ul class="dropdown-menu shadow-sm" aria-labelledby="informasiDropdown">
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/berita"><i class="bi bi-newspaper me-2 text-primary"></i>Berita &amp; Artikel</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/galeri"><i class="bi bi-images me-2 text-info"></i>Galeri Foto &amp; Kegiatan</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/bkk"><i class="bi bi-briefcase me-2 text-warning"></i>Bursa Kerja Khusus (BKK)</a></li>
+          </ul>
+        </li>
+
+        <!-- PPDB Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= str_starts_with($currentPath, '/ppdb') ? ' active' : '' ?>" href="<?= e(BASE_URL) ?>/ppdb" id="ppdbDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">PPDB</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="ppdbDropdown">
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb"><i class="bi bi-info-circle me-2 text-primary"></i>Informasi PPDB</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb/daftar"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Formulir Pendaftaran</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb"><i class="bi bi-info-circle me-2 text-primary"></i>Informasi &amp; Alur PPDB</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb/daftar"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Formulir Pendaftaran Online</a></li>
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb/cek-status"><i class="bi bi-search me-2 text-primary"></i>Cek Status Pendaftaran</a></li>
           </ul>
         </li>
+
+        <!-- Kontak Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $currentPath === '/kontak' || $currentPath === '/buku-tamu' ? ' active' : '' ?>" href="#" id="kontakDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kontak</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kontakDropdown">
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kontak"><i class="bi bi-telephone me-2 text-primary"></i>Kontak Sekolah</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kontak"><i class="bi bi-telephone me-2 text-primary"></i>Kontak &amp; Lokasi Sekolah</a></li>
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/buku-tamu"><i class="bi bi-book-half me-2 text-success"></i>Buku Tamu Digital</a></li>
           </ul>
         </li>

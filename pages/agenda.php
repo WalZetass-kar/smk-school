@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/agenda.php
  * Kalender & Agenda Kegiatan Sekolah
@@ -43,8 +43,6 @@ $pageTitle = 'Agenda & Kalender Kegiatan Sekolah';
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
 ?>
-
-<div class="navbar-spacer <?= (!empty($profile['is_running_text_active']) && !empty($profile['running_text'])) ? 'has-ticker' : '' ?>"></div>
 
 <section class="section py-5">
   <div class="container">

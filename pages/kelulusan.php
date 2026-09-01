@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/kelulusan.php
  * Pengumuman Kelulusan Siswa Online & Validasi SKL
@@ -42,8 +42,6 @@ $pageTitle = 'Pengumuman Kelulusan Siswa Online Tahun Ajaran ' . $settings['acad
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
 ?>
-
-<div class="navbar-spacer <?= (!empty($profile['is_running_text_active']) && !empty($profile['running_text'])) ? 'has-ticker' : '' ?>"></div>
 
 <section class="section py-5">
   <div class="container">

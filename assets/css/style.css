@@ -344,12 +344,14 @@ img {
 .navbar-smk .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
     padding: 0;
-    margin-right: 1.5rem;
+    margin-right: 1.25rem;
+    max-width: 320px;
+    flex-shrink: 0;
 }
 .navbar-smk .navbar-brand img {
-    height: 42px;
+    height: 40px;
     width: auto;
     object-fit: contain;
     flex-shrink: 0;
@@ -358,17 +360,23 @@ img {
     font-family: var(--font-display);
     font-weight: 700;
     color: var(--color-primary);
-    line-height: 1.2;
-    font-size: 0.98rem;
+    line-height: 1.18;
+    font-size: 0.95rem;
     letter-spacing: -0.01em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .navbar-smk .nav-link {
     color: var(--color-text);
     font-weight: 600;
-    font-size: 0.92rem;
-    padding: 0.45rem 0.7rem !important;
+    font-size: 0.91rem;
+    padding: 0.45rem 0.65rem !important;
     border-radius: var(--radius-xs);
+    white-space: nowrap;
     transition: color 0.15s ease, background-color 0.15s ease;
 }
 .navbar-smk .nav-link:hover,
@@ -1260,16 +1268,32 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
     }
 }
 
+/* Desktop Medium Laptops (1200px - 1399px) */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .navbar-smk .navbar-brand {
+        max-width: 250px;
+        margin-right: 0.65rem;
+    }
+    .navbar-smk .navbar-brand-text {
+        font-size: 0.88rem;
+    }
+    .navbar-smk .nav-link {
+        font-size: 0.88rem;
+        padding: 0.4rem 0.5rem !important;
+    }
+}
+
 /* =========================================================
    Navbar & Mobile Menu Precision
    ========================================================= */
 @media (max-width: 1199.98px) {
     .navbar-smk .navbar-brand {
+        max-width: calc(100vw - 160px);
         margin-right: auto;
     }
     .navbar-smk .navbar-brand-text {
-        font-size: 0.95rem;
-        max-width: 280px;
+        font-size: 0.9rem;
+        max-width: 100%;
     }
     .navbar-smk .navbar-collapse {
         background: #ffffff;
