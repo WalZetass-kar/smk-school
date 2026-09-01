@@ -52,38 +52,63 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
           </ul>
         </li>
 
-        <!-- Akademik Dropdown -->
+        <!-- Akademik Dropdown (Only if at least one submodule is active) -->
+        <?php if (isModuleActive('majors') || isModuleActive('agendas') || isModuleActive('downloads')): ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $currentPath === '/jurusan' || $currentPath === '/agenda' || $currentPath === '/unduhan' ? ' active' : '' ?>" href="#" id="akademikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Akademik</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="akademikDropdown">
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/jurusan"><i class="bi bi-mortarboard me-2 text-primary"></i>Program Keahlian (Jurusan)</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/agenda"><i class="bi bi-calendar-event me-2 text-primary"></i>Agenda &amp; Kalender Kegiatan</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/unduhan"><i class="bi bi-download me-2 text-primary"></i>Pusat Unduhan Dokumen</a></li>
+            <?php if (isModuleActive('majors')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/jurusan"><i class="bi bi-mortarboard me-2 text-primary"></i>Program Keahlian (Jurusan)</a></li>
+            <?php endif; ?>
+            <?php if (isModuleActive('agendas')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/agenda"><i class="bi bi-calendar-event me-2 text-primary"></i>Agenda &amp; Kalender Kegiatan</a></li>
+            <?php endif; ?>
+            <?php if (isModuleActive('downloads')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/unduhan"><i class="bi bi-download me-2 text-primary"></i>Pusat Unduhan Dokumen</a></li>
+            <?php endif; ?>
           </ul>
         </li>
+        <?php endif; ?>
 
-        <!-- Kesiswaan Dropdown -->
+        <!-- Kesiswaan Dropdown (Only if at least one submodule is active) -->
+        <?php if (isModuleActive('extracurriculars') || isModuleActive('prestasi') || isModuleActive('kelulusan')): ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $currentPath === '/ekstrakurikuler' || $currentPath === '/prestasi' || $currentPath === '/kelulusan' ? ' active' : '' ?>" href="#" id="kesiswaanDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kesiswaan</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kesiswaanDropdown">
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ekstrakurikuler"><i class="bi bi-activity me-2 text-primary"></i>Ekstrakurikuler</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-primary"></i>Prestasi Siswa (Hall of Fame)</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kelulusan"><i class="bi bi-mortarboard-fill me-2 text-primary"></i>Pengumuman Kelulusan (SKL)</a></li>
+            <?php if (isModuleActive('extracurriculars')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ekstrakurikuler"><i class="bi bi-activity me-2 text-primary"></i>Ekstrakurikuler</a></li>
+            <?php endif; ?>
+            <?php if (isModuleActive('prestasi')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-primary"></i>Prestasi Siswa (Hall of Fame)</a></li>
+            <?php endif; ?>
+            <?php if (isModuleActive('kelulusan')): ?>
+              <?php if (isModuleActive('extracurriculars') || isModuleActive('prestasi')): ?><li><hr class="dropdown-divider"></li><?php endif; ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kelulusan"><i class="bi bi-mortarboard-fill me-2 text-primary"></i>Pengumuman Kelulusan (SKL)</a></li>
+            <?php endif; ?>
           </ul>
         </li>
+        <?php endif; ?>
 
-        <!-- Informasi Dropdown -->
+        <!-- Informasi Dropdown (Only if at least one submodule is active) -->
+        <?php if (isModuleActive('news') || isModuleActive('galleries') || isModuleActive('bkk')): ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $currentPath === '/berita' || $currentPath === '/galeri' || str_starts_with($currentPath, '/bkk') ? ' active' : '' ?>" href="#" id="informasiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Informasi</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="informasiDropdown">
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/berita"><i class="bi bi-newspaper me-2 text-primary"></i>Berita &amp; Artikel</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/galeri"><i class="bi bi-images me-2 text-primary"></i>Galeri Foto &amp; Kegiatan</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/bkk"><i class="bi bi-briefcase me-2 text-primary"></i>Bursa Kerja Khusus (BKK)</a></li>
+            <?php if (isModuleActive('news')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/berita"><i class="bi bi-newspaper me-2 text-primary"></i>Berita &amp; Artikel</a></li>
+            <?php endif; ?>
+            <?php if (isModuleActive('galleries')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/galeri"><i class="bi bi-images me-2 text-primary"></i>Galeri Foto &amp; Kegiatan</a></li>
+            <?php endif; ?>
+            <?php if (isModuleActive('bkk')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/bkk"><i class="bi bi-briefcase me-2 text-primary"></i>Bursa Kerja Khusus (BKK)</a></li>
+            <?php endif; ?>
           </ul>
         </li>
+        <?php endif; ?>
 
-        <!-- PPDB Dropdown -->
+        <!-- PPDB Dropdown (Only if PPDB module is active) -->
+        <?php if (isModuleActive('ppdb')): ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= str_starts_with($currentPath, '/ppdb') ? ' active' : '' ?>" href="<?= e(BASE_URL) ?>/ppdb" id="ppdbDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">PPDB</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="ppdbDropdown">
@@ -92,13 +117,16 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb/cek-status"><i class="bi bi-search me-2 text-primary"></i>Cek Status Pendaftaran</a></li>
           </ul>
         </li>
+        <?php endif; ?>
 
         <!-- Kontak Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $currentPath === '/kontak' || $currentPath === '/buku-tamu' ? ' active' : '' ?>" href="#" id="kontakDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kontak</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kontakDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kontak"><i class="bi bi-telephone me-2 text-primary"></i>Kontak &amp; Lokasi Sekolah</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/buku-tamu"><i class="bi bi-book-half me-2 text-primary"></i>Buku Tamu Digital</a></li>
+            <?php if (isModuleActive('guestbook')): ?>
+              <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/buku-tamu"><i class="bi bi-book-half me-2 text-primary"></i>Buku Tamu Digital</a></li>
+            <?php endif; ?>
           </ul>
         </li>
         
@@ -109,11 +137,13 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
           </button>
         </li>
 
+        <?php if (isModuleActive('ppdb')): ?>
         <li class="nav-item ms-xl-3 mt-2 mt-xl-0">
           <a class="btn btn-sm btn-accent text-nowrap px-3 py-2 fw-bold d-inline-flex align-items-center gap-1" href="<?= e(BASE_URL) ?>/ppdb/daftar">
             <i class="bi bi-mortarboard-fill"></i> Daftar PPDB
           </a>
         </li>
+        <?php endif; ?>
       </ul>
     </div>
   </div>

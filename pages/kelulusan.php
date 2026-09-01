@@ -6,6 +6,11 @@
 require_once __DIR__ . '/../config/config.php';
 $db = getDB();
 
+if (!isModuleActive('kelulusan')) {
+    setFlash('info', 'Portal Pengumuman Kelulusan (SKL) saat ini sedang dinonaktifkan.');
+    redirect(BASE_URL . '/');
+}
+
 $settings = $db->query("SELECT * FROM graduation_settings WHERE id = 1")->fetch() ?: [
     'academic_year'     => '2026/2027',
     'announcement_date' => date('Y-m-d H:i:s'),

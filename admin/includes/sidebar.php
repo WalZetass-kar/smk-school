@@ -31,9 +31,10 @@ function navIsActive(string $needle, string $currentScript): bool
       <i class="bi bi-grid-1x2"></i> <span class="nav-text">Dashboard</span>
     </a>
 
-    <div class="nav-section-label">Website</div>
-    <a class="nav-link <?= navIsActive('profile', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/profile/index.php" title="Pengaturan Website"><i class="bi bi-gear"></i> <span class="nav-text">Pengaturan Website</span></a>
-    <a class="nav-link <?= navIsActive('banners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/banners/index.php" title="Banner"><i class="bi bi-images"></i> <span class="nav-text">Banner</span></a>
+    <div class="nav-section-label">Website &amp; Fitur</div>
+    <a class="nav-link <?= navIsActive('modules', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/modules/index.php" title="Fitur & Modul Halaman"><i class="bi bi-sliders2-vertical text-warning"></i> <span class="nav-text">Fitur &amp; Modul (ON/OFF)</span></a>
+    <a class="nav-link <?= navIsActive('profile', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/profile/index.php" title="Identitas & Profil Website"><i class="bi bi-gear"></i> <span class="nav-text">Identitas Sekolah</span></a>
+    <a class="nav-link <?= navIsActive('banners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/banners/index.php" title="Banner Slider"><i class="bi bi-images"></i> <span class="nav-text">Banner Slider</span></a>
     <a class="nav-link <?= navIsActive('statistics', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/statistics/index.php" title="Statistik Sekolah (Jumlah Siswa, Guru, dll)"><i class="bi bi-bar-chart-line"></i> <span class="nav-text">Statistik Sekolah</span></a>
     <a class="nav-link <?= navIsActive('social-media', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/social-media/index.php" title="Social Media"><i class="bi bi-share"></i> <span class="nav-text">Social Media</span></a>
 

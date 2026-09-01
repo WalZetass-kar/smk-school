@@ -162,6 +162,7 @@ require BASE_PATH . '/includes/navbar.php';
 </section>
 
 <!-- ================= JURUSAN ================= -->
+<?php if (isModuleActive('majors') && !empty($majors)): ?>
 <section class="section">
   <div class="container">
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:640px;">
@@ -189,9 +190,10 @@ require BASE_PATH . '/includes/navbar.php';
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ================= VIDEO PROFIL SEKOLAH ================= -->
-<?php if (!empty($profile['video_profile_url'])): ?>
+<?php if (isModuleActive('video_profile') && !empty($profile['video_profile_url'])): ?>
 <?php 
   $embedUrl = getYouTubeEmbedUrl($profile['video_profile_url']); 
   $videoTitle = !empty($profile['video_title']) ? $profile['video_title'] : 'Video Profil & Lingkungan Sekolah';
@@ -230,8 +232,8 @@ require BASE_PATH . '/includes/navbar.php';
 </section>
 <?php endif; ?>
 
-<?php if (!empty($upcomingAgendas)): ?>
 <!-- ================= AGENDA KEGIATAN TERDEKAT ================= -->
+<?php if (isModuleActive('agendas') && !empty($upcomingAgendas)): ?>
 <section class="section">
   <div class="container">
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end mb-4 gap-3 text-center text-sm-start reveal-up">
@@ -273,6 +275,7 @@ require BASE_PATH . '/includes/navbar.php';
 <?php endif; ?>
 
 <!-- ================= BERITA TERBARU ================= -->
+<?php if (isModuleActive('news') && !empty($news)): ?>
 <section class="section section-alt">
   <div class="container">
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end mb-5 gap-3 text-center text-sm-start reveal-up">
@@ -309,8 +312,10 @@ require BASE_PATH . '/includes/navbar.php';
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ================= TESTIMONI ALUMNI ================= -->
+<?php if (isModuleActive('testimonials') && !empty($testimonials)): ?>
 <section class="section">
   <div class="container">
     <div class="text-center mx-auto mb-5 reveal-up" style="max-width:640px;">
@@ -335,9 +340,10 @@ require BASE_PATH . '/includes/navbar.php';
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ================= PARTNER & MITRA INDUSTRI ================= -->
-<?php if (!empty($partners)): ?>
+<?php if (isModuleActive('partners') && !empty($partners)): ?>
 <?php
   // Build continuous seamless loop for marquee
   $marqueeList = $partners;
@@ -373,6 +379,7 @@ require BASE_PATH . '/includes/navbar.php';
 <?php endif; ?>
 
 <!-- ================= GALERI ================= -->
+<?php if (isModuleActive('galleries') && !empty($galleries)): ?>
 <section class="section">
   <div class="container">
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end mb-5 gap-3 text-center text-sm-start reveal-up">
@@ -395,8 +402,10 @@ require BASE_PATH . '/includes/navbar.php';
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ================= STATISTIK ================= -->
+<?php if (isModuleActive('statistics') && !empty($stats)): ?>
 <section class="section statistik-section">
   <div class="container">
     <div class="row g-4 text-center reveal-group">
@@ -412,5 +421,6 @@ require BASE_PATH . '/includes/navbar.php';
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <?php require BASE_PATH . '/includes/footer.php'; ?>

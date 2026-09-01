@@ -652,3 +652,38 @@ function getGoogleMapsEmbedUrl(?string $input, ?string $fallbackQuery = null): s
     return 'https://maps.google.com/maps?q=' . urlencode($q) . '&t=&z=15&ie=UTF8&iwloc=&output=embed';
 }
 
+/**
+ * Check if a site module / page feature is currently active.
+ * Uses in-memory caching to ensure only 1 query per HTTP request.
+ */
+function isModuleActive(string $moduleKey): bool
+{
+    static $moduleCache = null;
+    if ($moduleCache === null) {
+        $moduleCache = [];
+        try {
+            $db = getDB();
+            $rows = $db->query("SELECT module_key, is_active FROM site_modules")->fetchAll(PDO::FETCH_KEY_PAIR);
+            if (is_array($rows)) {
+                $moduleCache = array_map('intval', $rows);
+            }
+        } catch (Throwable $e) {
+            return true;
+        }
+    }
+
+    return !isset($moduleCache[$moduleKey]) || $moduleCache[$moduleKey] === 1;
+}
+
+/**
+ * Get all site modules ordered by sort_order.
+ */
+function getAllSiteModules(): array
+{
+    try {
+        $db = getDB();
+        return $db->query("SELECT * FROM site_modules ORDER BY sort_order ASC, id ASC")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Throwable) {
+        return [];
+    }
+}

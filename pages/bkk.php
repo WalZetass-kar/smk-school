@@ -6,6 +6,11 @@
 $db = getDB();
 $profile = getSchoolProfile();
 
+if (!isModuleActive('bkk')) {
+    setFlash('info', 'Layanan Bursa Kerja Khusus (BKK) saat ini sedang dinonaktifkan.');
+    redirect(BASE_URL . '/');
+}
+
 $typeFilter = $_GET['type'] ?? '';
 $search     = trim($_GET['search'] ?? '');
 $page       = max(1, (int)($_GET['page'] ?? 1));
