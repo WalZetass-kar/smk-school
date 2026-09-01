@@ -131,7 +131,7 @@ require __DIR__ . '/../includes/topbar.php';
                 <i class="bi <?= e($item['icon'] ?? 'bi-bar-chart') ?> fs-4 text-primary" id="iconPreview"></i>
               </div>
               <div class="small lh-sm">
-                <span class="fw-bold text-dark d-block" id="previewTitle"><?= e($item['title'] ?: 'Judul Statistik') ?></span>
+                <span class="fw-bold text-dark d-block" id="previewTitle"><?= e(($item['title'] ?? '') !== '' ? $item['title'] : 'Judul Statistik') ?></span>
                 <span class="text-primary fw-bold" id="previewValue"><?= number_format((int) ($item['value'] ?? 0), 0, ',', '.') ?></span>
               </div>
             </div>

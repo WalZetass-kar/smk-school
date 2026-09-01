@@ -57,8 +57,8 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
           <a class="nav-link dropdown-toggle<?= $currentPath === '/jurusan' || $currentPath === '/agenda' || $currentPath === '/unduhan' ? ' active' : '' ?>" href="#" id="akademikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Akademik</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="akademikDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/jurusan"><i class="bi bi-mortarboard me-2 text-primary"></i>Program Keahlian (Jurusan)</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/agenda"><i class="bi bi-calendar-event me-2 text-success"></i>Agenda &amp; Kalender Kegiatan</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/unduhan"><i class="bi bi-download me-2 text-secondary"></i>Pusat Unduhan Dokumen</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/agenda"><i class="bi bi-calendar-event me-2 text-primary"></i>Agenda &amp; Kalender Kegiatan</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/unduhan"><i class="bi bi-download me-2 text-primary"></i>Pusat Unduhan Dokumen</a></li>
           </ul>
         </li>
 
@@ -67,9 +67,9 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
           <a class="nav-link dropdown-toggle<?= $currentPath === '/ekstrakurikuler' || $currentPath === '/prestasi' || $currentPath === '/kelulusan' ? ' active' : '' ?>" href="#" id="kesiswaanDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kesiswaan</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kesiswaanDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ekstrakurikuler"><i class="bi bi-activity me-2 text-primary"></i>Ekstrakurikuler</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-warning"></i>Prestasi Siswa (Hall of Fame)</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-primary"></i>Prestasi Siswa (Hall of Fame)</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kelulusan"><i class="bi bi-mortarboard-fill me-2 text-success"></i>Pengumuman Kelulusan (SKL)</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kelulusan"><i class="bi bi-mortarboard-fill me-2 text-primary"></i>Pengumuman Kelulusan (SKL)</a></li>
           </ul>
         </li>
 
@@ -78,8 +78,8 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
           <a class="nav-link dropdown-toggle<?= $currentPath === '/berita' || $currentPath === '/galeri' || str_starts_with($currentPath, '/bkk') ? ' active' : '' ?>" href="#" id="informasiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Informasi</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="informasiDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/berita"><i class="bi bi-newspaper me-2 text-primary"></i>Berita &amp; Artikel</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/galeri"><i class="bi bi-images me-2 text-info"></i>Galeri Foto &amp; Kegiatan</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/bkk"><i class="bi bi-briefcase me-2 text-warning"></i>Bursa Kerja Khusus (BKK)</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/galeri"><i class="bi bi-images me-2 text-primary"></i>Galeri Foto &amp; Kegiatan</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/bkk"><i class="bi bi-briefcase me-2 text-primary"></i>Bursa Kerja Khusus (BKK)</a></li>
           </ul>
         </li>
 
@@ -98,7 +98,7 @@ $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['runn
           <a class="nav-link dropdown-toggle<?= $currentPath === '/kontak' || $currentPath === '/buku-tamu' ? ' active' : '' ?>" href="#" id="kontakDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kontak</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kontakDropdown">
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kontak"><i class="bi bi-telephone me-2 text-primary"></i>Kontak &amp; Lokasi Sekolah</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/buku-tamu"><i class="bi bi-book-half me-2 text-success"></i>Buku Tamu Digital</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/buku-tamu"><i class="bi bi-book-half me-2 text-primary"></i>Buku Tamu Digital</a></li>
           </ul>
         </li>
         

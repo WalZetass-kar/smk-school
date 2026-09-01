@@ -31,12 +31,12 @@ $stmt = $db->prepare("SELECT title, slug, published_at FROM news WHERE status = 
 $stmt->execute([$term, $term, $term]);
 while ($r = $stmt->fetch()) {
     $results[] = [
-        'category' => 'Berita & Informasi',
+        'category' => 'Berita',
         'title'    => $r['title'],
         'subtitle' => date('d/m/Y', strtotime($r['published_at'])),
         'url'      => BASE_URL . '/berita/' . $r['slug'],
         'icon'     => 'bi-newspaper',
-        'badge'    => 'bg-primary'
+        'badge'    => 'bg-light text-dark border'
     ];
 }
 
@@ -45,12 +45,12 @@ $stmt = $db->prepare("SELECT name, slug, code, short_description FROM majors WHE
 $stmt->execute([$term, $term, $term]);
 while ($r = $stmt->fetch()) {
     $results[] = [
-        'category' => 'Program Keahlian (Jurusan)',
+        'category' => 'Jurusan',
         'title'    => $r['name'] . ' (' . $r['code'] . ')',
         'subtitle' => mb_strimwidth($r['short_description'], 0, 75, '...'),
         'url'      => BASE_URL . '/jurusan/detail/' . $r['slug'],
         'icon'     => 'bi-mortarboard',
-        'badge'    => 'bg-success'
+        'badge'    => 'bg-light text-dark border'
     ];
 }
 
@@ -59,12 +59,12 @@ $stmt = $db->prepare("SELECT title, slug, company_name, job_type FROM bkk_jobs W
 $stmt->execute([$term, $term, $term]);
 while ($r = $stmt->fetch()) {
     $results[] = [
-        'category' => 'Bursa Kerja (BKK)',
+        'category' => 'BKK',
         'title'    => $r['title'],
         'subtitle' => $r['company_name'] . ' &middot; ' . ucfirst($r['job_type']),
         'url'      => BASE_URL . '/bkk/' . $r['slug'],
         'icon'     => 'bi-briefcase',
-        'badge'    => 'bg-warning text-dark'
+        'badge'    => 'bg-light text-dark border'
     ];
 }
 
@@ -78,7 +78,7 @@ while ($r = $stmt->fetch()) {
         'subtitle' => $r['category'] . ($r['schedule'] ? ' (' . $r['schedule'] . ')' : ''),
         'url'      => BASE_URL . '/ekstrakurikuler',
         'icon'     => 'bi-activity',
-        'badge'    => 'bg-info text-dark'
+        'badge'    => 'bg-light text-dark border'
     ];
 }
 
@@ -87,12 +87,12 @@ $stmt = $db->prepare("SELECT title, slug, start_date, location FROM agendas WHER
 $stmt->execute([$term, $term, $term]);
 while ($r = $stmt->fetch()) {
     $results[] = [
-        'category' => 'Agenda Kegiatan',
+        'category' => 'Agenda',
         'title'    => $r['title'],
         'subtitle' => date('d/m/Y', strtotime($r['start_date'])) . ' &middot; ' . $r['location'],
         'url'      => BASE_URL . '/agenda/' . $r['slug'],
         'icon'     => 'bi-calendar-event',
-        'badge'    => 'bg-primary'
+        'badge'    => 'bg-light text-dark border'
     ];
 }
 
@@ -101,12 +101,12 @@ $stmt = $db->prepare("SELECT id, title, category, file_size FROM downloads WHERE
 $stmt->execute([$term, $term, $term]);
 while ($r = $stmt->fetch()) {
     $results[] = [
-        'category' => 'Pusat Unduhan',
+        'category' => 'Unduhan',
         'title'    => $r['title'],
         'subtitle' => $r['category'] . ' (' . ($r['file_size'] ?: 'File') . ')',
         'url'      => BASE_URL . '/unduhan/download/' . $r['id'],
         'icon'     => 'bi-download',
-        'badge'    => 'bg-secondary'
+        'badge'    => 'bg-light text-dark border'
     ];
 }
 

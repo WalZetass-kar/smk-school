@@ -9,14 +9,14 @@ $ppdbSettings = getPpdbSettings();
 // 1. Statistics Counts
 // 1. Statistics Counts
 $stats = [
-    'Total Berita'     => ['count' => (int) $db->query("SELECT COUNT(*) FROM news")->fetchColumn(), 'icon' => 'bi-newspaper', 'url' => BASE_URL . '/admin/news/index.php', 'color' => '#2563EB'],
-    'Pendaftar PPDB'   => ['count' => (int) $db->query("SELECT COUNT(*) FROM ppdb_registrations")->fetchColumn(), 'icon' => 'bi-person-lines-fill', 'url' => BASE_URL . '/admin/ppdb/index.php', 'color' => '#10B981'],
-    'Kelulusan Siswa'  => ['count' => (int) $db->query("SELECT COUNT(*) FROM graduations")->fetchColumn(), 'icon' => 'bi-mortarboard-fill', 'url' => BASE_URL . '/admin/graduations/index.php', 'color' => '#059669'],
-    'Agenda Kegiatan'  => ['count' => (int) $db->query("SELECT COUNT(*) FROM agendas WHERE status = 1")->fetchColumn(), 'icon' => 'bi-calendar-event', 'url' => BASE_URL . '/admin/agendas/index.php', 'color' => '#6366F1'],
-    'Lowongan BKK'     => ['count' => (int) $db->query("SELECT COUNT(*) FROM bkk_jobs WHERE status = 'open'")->fetchColumn(), 'icon' => 'bi-briefcase', 'url' => BASE_URL . '/admin/bkk/index.php', 'color' => '#F59E0B'],
-    'Buku Tamu'        => ['count' => (int) $db->query("SELECT COUNT(*) FROM guestbooks")->fetchColumn(), 'icon' => 'bi-book-half', 'url' => BASE_URL . '/admin/guestbook/index.php', 'color' => '#0D9488'],
-    'Prestasi Siswa'   => ['count' => (int) $db->query("SELECT COUNT(*) FROM achievements")->fetchColumn(), 'icon' => 'bi-trophy', 'url' => BASE_URL . '/admin/achievements/index.php', 'color' => '#8B5CF6'],
-    'Total Unduhan'    => ['count' => (int) $db->query("SELECT COUNT(*) FROM downloads")->fetchColumn(), 'icon' => 'bi-download', 'url' => BASE_URL . '/admin/downloads/index.php', 'color' => '#06B6D4'],
+    'Total Berita'     => ['count' => (int) $db->query("SELECT COUNT(*) FROM news")->fetchColumn(), 'icon' => 'bi-newspaper', 'url' => BASE_URL . '/admin/news/index.php', 'color' => '#0F2C59'],
+    'Pendaftar PPDB'   => ['count' => (int) $db->query("SELECT COUNT(*) FROM ppdb_registrations")->fetchColumn(), 'icon' => 'bi-person-lines-fill', 'url' => BASE_URL . '/admin/ppdb/index.php', 'color' => '#2563EB'],
+    'Kelulusan Siswa'  => ['count' => (int) $db->query("SELECT COUNT(*) FROM graduations")->fetchColumn(), 'icon' => 'bi-mortarboard-fill', 'url' => BASE_URL . '/admin/graduations/index.php', 'color' => '#0F2C59'],
+    'Agenda Kegiatan'  => ['count' => (int) $db->query("SELECT COUNT(*) FROM agendas WHERE status = 1")->fetchColumn(), 'icon' => 'bi-calendar-event', 'url' => BASE_URL . '/admin/agendas/index.php', 'color' => '#2563EB'],
+    'Lowongan BKK'     => ['count' => (int) $db->query("SELECT COUNT(*) FROM bkk_jobs WHERE status = 'open'")->fetchColumn(), 'icon' => 'bi-briefcase', 'url' => BASE_URL . '/admin/bkk/index.php', 'color' => '#D97706'],
+    'Buku Tamu'        => ['count' => (int) $db->query("SELECT COUNT(*) FROM guestbooks")->fetchColumn(), 'icon' => 'bi-book-half', 'url' => BASE_URL . '/admin/guestbook/index.php', 'color' => '#475569'],
+    'Prestasi Siswa'   => ['count' => (int) $db->query("SELECT COUNT(*) FROM achievements")->fetchColumn(), 'icon' => 'bi-trophy', 'url' => BASE_URL . '/admin/achievements/index.php', 'color' => '#D97706'],
+    'Total Unduhan'    => ['count' => (int) $db->query("SELECT COUNT(*) FROM downloads")->fetchColumn(), 'icon' => 'bi-download', 'url' => BASE_URL . '/admin/downloads/index.php', 'color' => '#475569'],
 ];
 
 // 2. Monthly News for Chart (Last 6 Months)

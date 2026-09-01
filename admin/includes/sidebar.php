@@ -83,11 +83,11 @@ function navIsActive(string $needle, string $currentScript): bool
 
     <div class="nav-section-label">Sistem &amp; Akun</div>
     <?php if (isSuperAdmin()): ?>
-    <a class="nav-link <?= navIsActive('activity-logs', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/activity-logs/index.php" title="Audit Log Aktivitas"><i class="bi bi-shield-lock-fill text-info"></i> <span class="nav-text">Audit Log Aktivitas</span></a>
-    <a class="nav-link <?= navIsActive('users', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/users/index.php" title="Manajemen Admin"><i class="bi bi-people-fill text-warning"></i> <span class="nav-text">Manajemen Admin</span></a>
-    <a class="nav-link text-warning" href="<?= e(BASE_URL) ?>/admin/backup.php" title="Backup Database"><i class="bi bi-database-down"></i> <span class="nav-text">Backup Database</span></a>
+    <a class="nav-link <?= navIsActive('activity-logs', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/activity-logs/index.php" title="Audit Log Aktivitas"><i class="bi bi-shield-lock-fill"></i> <span class="nav-text">Audit Log Aktivitas</span></a>
+    <a class="nav-link <?= navIsActive('users', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/users/index.php" title="Manajemen Admin"><i class="bi bi-people-fill"></i> <span class="nav-text">Manajemen Admin</span></a>
+    <a class="nav-link" href="<?= e(BASE_URL) ?>/admin/backup.php" title="Backup Database"><i class="bi bi-database-down"></i> <span class="nav-text">Backup Database</span></a>
     <?php endif; ?>
     <a class="nav-link <?= str_ends_with($currentScript, '/admin/profile-admin.php') ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/profile-admin.php" title="Profil &amp; Keamanan"><i class="bi bi-person-circle"></i> <span class="nav-text">Profil &amp; Keamanan</span></a>
-    <a class="nav-link text-danger" href="<?= e(BASE_URL) ?>/admin/logout.php" title="Keluar"><i class="bi bi-box-arrow-right"></i> <span class="nav-text">Logout</span></a>
+    <a class="nav-link" href="<?= e(BASE_URL) ?>/admin/logout.php" title="Keluar"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text text-danger">Logout</span></a>
   </nav>
 </aside>
