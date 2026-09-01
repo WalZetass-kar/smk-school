@@ -22,8 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $announcementDate  = trim($_POST['announcement_date'] ?? '') ?: null;
         $information       = trim($_POST['information'] ?? '');
         $contactPerson     = trim($_POST['contact_person'] ?? '');
-        $runningText       = trim($_POST['running_text'] ?? '');
-        $isTickerActive    = isset($_POST['is_running_text_active']) ? 1 : 0;
 
         if ($academicYear === '') {
             $errors[] = 'Tahun ajaran wajib diisi.';
@@ -45,14 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$academicYear, $isOpen, $startDate, $endDate, $announcementDate, $information, $contactPerson]);
             }
 
-            // Also update running announcement text in school profile
-            if (!empty($profile['id'])) {
-                $db->prepare("UPDATE school_profile SET running_text = ?, is_running_text_active = ? WHERE id = ?")
-                   ->execute([$runningText, $isTickerActive, $profile['id']]);
-            }
-
             logActivity('UPDATE_PPDB_SETTINGS', 'ppdb', "Memperbarui jadwal & pengaturan PPDB online TA $academicYear");
-            setFlash('success', 'Pengaturan PPDB & Teks Pengumuman Berjalan berhasil disimpan.');
+            setFlash('success', 'Pengaturan PPDB berhasil disimpan.');
             redirect(BASE_URL . '/admin/ppdb/settings.php');
         }
 
@@ -68,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageTitle = 'Pengaturan PPDB Online';
+$pageTitle = 'Pengaturan PPDB';
 require __DIR__ . '/../includes/header.php';
 require __DIR__ . '/../includes/sidebar.php';
 require __DIR__ . '/../includes/topbar.php';
@@ -76,8 +68,14 @@ require __DIR__ . '/../includes/topbar.php';
 
 <?= flashMessage() ?>
 
-<?php if ($errors): ?>
-  <div class="alert alert-danger"><ul class="mb-0 ps-3"><?php foreach ($errors as $err): ?><li><?= e($err) ?></li><?php endforeach; ?></ul></div>
+<?php if (!empty($errors)): ?>
+  <div class="alert alert-danger mb-4">
+    <ul class="mb-0">
+      <?php foreach ($errors as $err): ?>
+        <li><?= e($err) ?></li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
 <?php endif; ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -88,19 +86,18 @@ require __DIR__ . '/../includes/topbar.php';
 </div>
 
 <div class="admin-card">
-  <form method="post">
+  <form method="post" action="">
     <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
-
     <div class="row g-3">
       <div class="col-md-6">
         <label class="form-label small fw-semibold">Tahun Ajaran <span class="text-danger">*</span></label>
-        <input type="text" name="academic_year" class="form-control" value="<?= e($settings['academic_year'] ?? '2027/2028') ?>" required placeholder="Contoh: 2027/2028">
+        <input type="text" name="academic_year" class="form-control" value="<?= e($settings['academic_year'] ?? '2026/2027') ?>" placeholder="Contoh: 2026/2027" required>
       </div>
 
       <div class="col-md-6 d-flex align-items-center pt-md-4">
-        <div class="form-check form-switch fs-5">
+        <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" id="isOpenSwitch" name="is_open" value="1" <?= !empty($settings['is_open']) ? 'checked' : '' ?>>
-          <label class="form-check-label fs-6 fw-semibold ms-2" for="isOpenSwitch">Buka Jalur Pendaftaran Online</label>
+          <label class="form-check-label fw-semibold" for="isOpenSwitch">Buka Pendaftaran Online (PPDB Aktif)</label>
         </div>
       </div>
 
@@ -110,41 +107,23 @@ require __DIR__ . '/../includes/topbar.php';
       </div>
 
       <div class="col-md-4">
-        <label class="form-label small fw-semibold">Tanggal Penutupan Pendaftaran</label>
+        <label class="form-label small fw-semibold">Tanggal Selesai Pendaftaran</label>
         <input type="date" name="end_date" class="form-control" value="<?= e($settings['end_date'] ?? '') ?>">
       </div>
 
       <div class="col-md-4">
-        <label class="form-label small fw-semibold">Tanggal Pengumuman Kelulusan</label>
+        <label class="form-label small fw-semibold">Tanggal Pengumuman Hasil</label>
         <input type="date" name="announcement_date" class="form-control" value="<?= e($settings['announcement_date'] ?? '') ?>">
       </div>
 
       <div class="col-12">
-        <label class="form-label small fw-semibold">Informasi &amp; Persyaratan PPDB (Tampil di Halaman Publik)</label>
-        <textarea name="information" rows="8" class="form-control wysiwyg-editor"><?= e($settings['information'] ?? '') ?></textarea>
+        <label class="form-label small fw-semibold">Informasi &amp; Alur / Petunjuk PPDB</label>
+        <textarea name="information" class="form-control wysiwyg-editor"><?= e($settings['information'] ?? '') ?></textarea>
       </div>
 
       <div class="col-12">
         <label class="form-label small fw-semibold">Kontak Pusat Bantuan / Hotline Panitia</label>
         <input type="text" name="contact_person" class="form-control" value="<?= e($settings['contact_person'] ?? '') ?>" placeholder="Contoh: (0761) 123456 / 0812-3456-7890 (Pak Bambang)">
-      </div>
-
-      <!-- Teks Pengumuman Berjalan (Running Text Navbar) -->
-      <div class="col-12 mt-4 pt-3 border-top">
-        <h2 class="h6 fw-bold text-primary mb-3"><i class="bi bi-megaphone-fill me-2 text-warning"></i>Teks Pengumuman Berjalan (Running Text Navbar)</h2>
-        <div class="row g-3">
-          <div class="col-md-8">
-            <label class="form-label small fw-semibold">Kalimat Pengumuman Berjalan</label>
-            <input type="text" name="running_text" class="form-control" value="<?= e($profile['running_text'] ?? '') ?>" placeholder="Contoh: Penerimaan Peserta Didik Baru (PPDB) Tahun Ajaran 2027/2028 Resmi Dibuka! Daftar secara online sekarang.">
-            <div class="form-text small text-muted">Teks ini akan berjalan otomatis di bilah paling atas (*top announcement bar*) website publik.</div>
-          </div>
-          <div class="col-md-4 d-flex align-items-center pt-md-4">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" role="switch" id="rtSwitchPpdb" name="is_running_text_active" value="1" <?= !empty($profile['is_running_text_active']) ? 'checked' : '' ?>>
-              <label class="form-check-label small fw-semibold ms-1" for="rtSwitchPpdb">Aktifkan Running Text di Website</label>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="col-12 pt-3">
