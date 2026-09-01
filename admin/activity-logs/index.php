@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 requireAuth();
@@ -69,7 +69,7 @@ require __DIR__ . '/../includes/topbar.php';
       <a href="<?= e(BASE_URL) ?>/admin/activity-logs/export.php<?= ($moduleFilter || $search) ? '?' . http_build_query(array_filter(['module' => $moduleFilter, 'q' => $search])) : '' ?>" class="btn btn-sm btn-outline-primary">
         <i class="bi bi-file-earmark-arrow-down me-1"></i> Export CSV
       </a>
-      <form method="post" action="<?= e(BASE_URL) ?>/admin/activity-logs/delete.php" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas? Aksi ini permanen dan tidak dapat dibatalkan.');" class="d-inline">
+      <form method="post" action="<?= e(BASE_URL) ?>/admin/activity-logs/delete.php" data-confirm="Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas? Tindakan ini bersifat permanen." class="d-inline">
         <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
         <button type="submit" class="btn btn-sm btn-outline-danger">
           <i class="bi bi-trash3 me-1"></i> Bersihkan Log

@@ -100,7 +100,7 @@ require __DIR__ . '/../includes/topbar.php';
                 <a href="form.php?id=<?= (int) $s['id'] ?>" class="btn btn-outline-primary-custom" title="Edit Angka / Data">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <form method="post" action="delete.php" class="d-inline" onsubmit="return confirm('Hapus statistik <?= e(addslashes($s['title'])) ?>?');">
+                <form method="post" action="delete.php" class="d-inline" data-confirm-delete="Hapus data statistik '<?= e($s['title']) ?>'?">
                   <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                   <input type="hidden" name="id" value="<?= (int) $s['id'] ?>">
                   <button type="submit" class="btn btn-outline-danger" title="Hapus">

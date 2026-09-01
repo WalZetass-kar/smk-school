@@ -161,12 +161,112 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.querySelectorAll('[data-confirm-delete]').forEach((form) => {
-        form.addEventListener('submit', (e) => {
-            const msg = form.dataset.confirmDelete || 'Yakin ingin menghapus data ini?';
-            if (!confirm(msg)) e.preventDefault();
+    /* ---- 5. Universal Confirmation Modal for Deletions & Actions ---- */
+    const uniModalEl = document.getElementById('universalConfirmModal');
+    const uniIconWrap = document.getElementById('universalConfirmIconWrap');
+    const uniIcon = document.getElementById('universalConfirmIcon');
+    const uniTitle = document.getElementById('universalConfirmTitle');
+    const uniMessage = document.getElementById('universalConfirmMessage');
+    const uniBtn = document.getElementById('universalConfirmBtn');
+    const uniBtnText = document.getElementById('universalConfirmBtnText');
+
+    let pendingConfirmAction = null;
+
+    if (uniModalEl && window.bootstrap) {
+        const uniModal = bootstrap.Modal.getOrCreateInstance(uniModalEl);
+
+        if (uniBtn) {
+            uniBtn.addEventListener('click', () => {
+                if (typeof pendingConfirmAction === 'function') {
+                    const action = pendingConfirmAction;
+                    pendingConfirmAction = null;
+                    uniModal.hide();
+                    action();
+                }
+            });
+        }
+
+        const showConfirmDialog = (options, onConfirm) => {
+            const isDelete = options.type === 'delete' || /hapus|delete|trash|bersihkan|kosongkan/i.test(options.message || '');
+            const isPreset = options.type === 'preset' || /preset|terapkan/i.test(options.message || '');
+
+            if (isDelete) {
+                if (uniIconWrap) uniIconWrap.className = 'p-3 bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3';
+                if (uniIcon) uniIcon.className = 'bi bi-trash3-fill fs-2';
+                if (uniTitle) uniTitle.textContent = options.title || 'Konfirmasi Hapus Data';
+                if (uniBtn) uniBtn.className = 'btn btn-danger w-50 py-2 fw-semibold rounded-3 d-inline-flex align-items-center justify-content-center gap-1';
+                if (uniBtnText) uniBtnText.textContent = options.btnText || 'Ya, Hapus Data';
+            } else if (isPreset) {
+                if (uniIconWrap) uniIconWrap.className = 'p-3 bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3';
+                if (uniIcon) uniIcon.className = 'bi bi-magic fs-2';
+                if (uniTitle) uniTitle.textContent = options.title || 'Konfirmasi Terapkan Preset';
+                if (uniBtn) uniBtn.className = 'btn btn-primary w-50 py-2 fw-semibold rounded-3 d-inline-flex align-items-center justify-content-center gap-1';
+                if (uniBtnText) uniBtnText.textContent = options.btnText || 'Ya, Terapkan';
+            } else {
+                if (uniIconWrap) uniIconWrap.className = 'p-3 bg-warning bg-opacity-10 text-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3';
+                if (uniIcon) uniIcon.className = 'bi bi-exclamation-triangle-fill fs-2';
+                if (uniTitle) uniTitle.textContent = options.title || 'Konfirmasi Tindakan';
+                if (uniBtn) uniBtn.className = 'btn btn-primary w-50 py-2 fw-semibold rounded-3 d-inline-flex align-items-center justify-content-center gap-1';
+                if (uniBtnText) uniBtnText.textContent = options.btnText || 'Ya, Lanjutkan';
+            }
+
+            if (uniMessage) uniMessage.textContent = options.message || 'Apakah Anda yakin ingin melanjutkan tindakan ini?';
+            pendingConfirmAction = onConfirm;
+            uniModal.show();
+        };
+
+        // Intercept forms with data-confirm-delete or data-confirm
+        document.addEventListener('submit', (e) => {
+            const form = e.target;
+            if (!form) return;
+
+            if (form._bypassConfirm) {
+                return; // already confirmed
+            }
+
+            const confirmMsg = form.dataset.confirmDelete || form.dataset.confirm;
+            if (confirmMsg) {
+                e.preventDefault();
+                showConfirmDialog({
+                    message: confirmMsg,
+                    type: form.dataset.confirmDelete ? 'delete' : 'action'
+                }, () => {
+                    form._bypassConfirm = true;
+                    form.submit();
+                });
+            }
         });
-    });
+
+        // Intercept links or buttons with data-confirm or data-confirm-delete
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-confirm], [data-confirm-delete]');
+            if (!btn || btn.tagName === 'FORM') return;
+
+            const confirmMsg = btn.dataset.confirmDelete || btn.dataset.confirm;
+            if (confirmMsg) {
+                e.preventDefault();
+                showConfirmDialog({
+                    message: confirmMsg,
+                    type: btn.dataset.confirmDelete ? 'delete' : 'action'
+                }, () => {
+                    if (btn.tagName === 'A' && btn.href) {
+                        window.location.href = btn.href;
+                    } else if (btn.type === 'submit' && btn.form) {
+                        btn.form._bypassConfirm = true;
+                        btn.form.submit();
+                    }
+                });
+            }
+        });
+    } else {
+        // Fallback for pages without the bootstrap modal
+        document.querySelectorAll('[data-confirm-delete], [data-confirm]').forEach((form) => {
+            form.addEventListener('submit', (e) => {
+                const msg = form.dataset.confirmDelete || form.dataset.confirm || 'Yakin ingin melanjutkan?';
+                if (!confirm(msg)) e.preventDefault();
+            });
+        });
+    }
 
     /* ---- 6. Global Live Search (Modal + Keyboard Shortcut Ctrl+K) ---- */
     const searchModalEl = document.getElementById('globalSearchModal');

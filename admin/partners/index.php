@@ -155,7 +155,7 @@ require __DIR__ . '/../includes/topbar.php';
                 <a href="form.php?id=<?= (int) $p['id'] ?>" class="btn btn-outline-primary-custom" title="Edit Data Mitra">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <form method="post" action="delete.php" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mitra <?= e(addslashes($p['name'])) ?>?');">
+                <form method="post" action="delete.php" class="d-inline" data-confirm-delete="Apakah Anda yakin ingin menghapus data mitra '<?= e($p['name']) ?>'?">
                   <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                   <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
                   <button type="submit" class="btn btn-outline-danger" title="Hapus Mitra">

@@ -148,9 +148,28 @@ foreach ($socials as $s) {
     </button>
   </div>
 
-  <button class="btn-back-to-top" aria-label="Kembali ke atas">
-    <i class="bi bi-arrow-up"></i>
-  </button>
+  <!-- Universal Action / Delete / Confirmation Modal -->
+  <div class="modal fade" id="universalConfirmModal" tabindex="-1" aria-labelledby="universalConfirmTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-body p-4 text-center">
+          <div id="universalConfirmIconWrap" class="p-3 bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+            <i id="universalConfirmIcon" class="bi bi-trash3-fill fs-2"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2" id="universalConfirmTitle">Konfirmasi Tindakan</h5>
+          <p class="text-muted small mb-4" id="universalConfirmMessage" style="line-height: 1.55;">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-light border w-50 py-2 fw-semibold rounded-3" data-bs-dismiss="modal">
+              <i class="bi bi-x-lg me-1"></i> Batal
+            </button>
+            <button type="button" class="btn btn-danger w-50 py-2 fw-semibold rounded-3 d-inline-flex align-items-center justify-content-center gap-1" id="universalConfirmBtn">
+              <i class="bi bi-check-lg"></i> <span id="universalConfirmBtnText">Ya, Lanjutkan</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.bundle.min.js') ?>"></script>
   <script src="<?= e(ASSETS_URL . '/js/main.js') ?>"></script>

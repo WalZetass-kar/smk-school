@@ -165,7 +165,7 @@ require __DIR__ . '/../includes/topbar.php';
                     <i class="bi bi-pencil-square"></i>
                   </a>
                   <?php if (!$isCurrent): ?>
-                    <form method="post" action="delete.php" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun admin <?= e(addslashes($u['name'])) ?> (@<?= e($u['username']) ?>)?');">
+                    <form method="post" action="delete.php" class="d-inline" data-confirm-delete="Apakah Anda yakin ingin menghapus akun admin <?= e($u['name']) ?> (@<?= e($u['username']) ?>)?">
                       <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                       <input type="hidden" name="id" value="<?= (int) $u['id'] ?>">
                       <button type="submit" class="btn btn-outline-danger" title="Hapus Akun">

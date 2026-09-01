@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/modules/index.php
  * Halaman Pengaturan Fitur & Modul Halaman (Multi-Level School Template Switcher)
@@ -82,7 +82,7 @@ require __DIR__ . '/../includes/topbar.php';
   <div class="row g-3">
     <!-- Preset SMK -->
     <div class="col-md-3 col-6">
-      <form method="post" action="preset.php" onsubmit="return confirm('Terapkan Preset SMK (Seluruh Fitur Vokasi & Kemitraan Aktif)?');">
+      <form method="post" action="preset.php" data-confirm="Terapkan Preset SMK? Seluruh fitur vokasi, jurusan, mitra industri DU/DI, dan BKK akan diaktifkan.">
         <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
         <input type="hidden" name="preset" value="SMK">
         <button type="submit" class="btn btn-outline-primary w-100 p-3 rounded-3 text-start h-100 d-flex flex-column justify-content-between hover-lift">
@@ -97,7 +97,7 @@ require __DIR__ . '/../includes/topbar.php';
 
     <!-- Preset SMA -->
     <div class="col-md-3 col-6">
-      <form method="post" action="preset.php" onsubmit="return confirm('Terapkan Preset SMA (Menonaktifkan Mitra & BKK)?');">
+      <form method="post" action="preset.php" data-confirm="Terapkan Preset SMA / MA? Modul Mitra DU/DI dan BKK akan dinonaktifkan.">
         <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
         <input type="hidden" name="preset" value="SMA">
         <button type="submit" class="btn btn-outline-success w-100 p-3 rounded-3 text-start h-100 d-flex flex-column justify-content-between hover-lift">
@@ -112,7 +112,7 @@ require __DIR__ . '/../includes/topbar.php';
 
     <!-- Preset SMP -->
     <div class="col-md-3 col-6">
-      <form method="post" action="preset.php" onsubmit="return confirm('Terapkan Preset SMP?');">
+      <form method="post" action="preset.php" data-confirm="Terapkan Preset SMP / MTs? Modul Jurusan, Mitra DU/DI, dan BKK akan dinonaktifkan.">
         <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
         <input type="hidden" name="preset" value="SMP">
         <button type="submit" class="btn btn-outline-warning w-100 p-3 rounded-3 text-start h-100 d-flex flex-column justify-content-between hover-lift">
@@ -127,7 +127,7 @@ require __DIR__ . '/../includes/topbar.php';
 
     <!-- Preset SD -->
     <div class="col-md-3 col-6">
-      <form method="post" action="preset.php" onsubmit="return confirm('Terapkan Preset SD?');">
+      <form method="post" action="preset.php" data-confirm="Terapkan Preset SD / MI? Tampilan ramah anak tanpa Jurusan, BKK, dan Mitra.">
         <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
         <input type="hidden" name="preset" value="SD">
         <button type="submit" class="btn btn-outline-info w-100 p-3 rounded-3 text-start h-100 d-flex flex-column justify-content-between hover-lift">
