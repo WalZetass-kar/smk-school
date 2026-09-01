@@ -4,6 +4,8 @@
  * Highlights the active link by matching the current script's folder/name.
  */
 $currentScript = $_SERVER['SCRIPT_NAME'] ?? '';
+$sidebarProfile = getSchoolProfile();
+$adminBrandTitle = !empty($sidebarProfile['school_name']) ? $sidebarProfile['school_name'] : 'Admin Panel';
 
 /** True when the current request is inside admin/$folder/ or is admin/$file itself. */
 function navIsActive(string $needle, string $currentScript): bool
@@ -17,9 +19,9 @@ function navIsActive(string $needle, string $currentScript): bool
 <aside class="admin-sidebar" id="adminSidebar">
   <!-- Sidebar Header with Brand and Internal Burger Menu -->
   <div class="sidebar-brand d-flex align-items-center justify-content-between">
-    <div class="sidebar-brand-left d-flex align-items-center gap-2 overflow-hidden">
+    <div class="sidebar-brand-left d-flex align-items-center gap-2 overflow-hidden" title="<?= e($adminBrandTitle) ?>">
       <i class="bi bi-mortarboard-fill flex-shrink-0" style="color: var(--color-accent); font-size:1.35rem;"></i>
-      <span class="sidebar-brand-title text-nowrap fw-bold">Admin SMK</span>
+      <span class="sidebar-brand-title text-nowrap fw-bold"><?= e($adminBrandTitle) ?></span>
     </div>
     <button type="button" class="btn btn-sm btn-link text-white-50 p-1 sidebar-toggle-btn shadow-none flex-shrink-0" id="sidebarToggleInsideBtn" title="Buka / Tutup Sidebar" aria-label="Toggle Sidebar">
       <i class="bi bi-list fs-4 text-white"></i>

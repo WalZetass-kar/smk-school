@@ -4,6 +4,8 @@
  * Expects $pageTitle to be set by the including page.
  */
 $adminPageTitle = $pageTitle ?? 'Dashboard';
+$adminHeaderProfile = getSchoolProfile();
+$adminSchoolName = !empty($adminHeaderProfile['school_name']) ? $adminHeaderProfile['school_name'] : 'Admin Panel';
 
 if (!headers_sent()) {
     header('X-Content-Type-Options: nosniff');
@@ -19,7 +21,7 @@ if (!headers_sent()) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title><?= e($adminPageTitle) ?> — Admin SMK</title>
+<title><?= e($adminPageTitle) ?> — <?= e($adminSchoolName) ?></title>
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
