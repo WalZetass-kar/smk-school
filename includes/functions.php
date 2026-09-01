@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * functions.php
  * Small, reusable helpers shared across the whole site.
@@ -8,6 +8,53 @@
 function e(?string $value): string
 {
     return htmlspecialchars((string) ($value ?? ''), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+/** Redirect and stop execution. */
+function redirect(string $path): void
+{
+    header('Location: ' . $path);
+    exit;
+}
+
+/** Turn a title into a URL-friendly slug, e.g. "Berita Terbaru!" -> "berita-terbaru". */
+function slugify(string $text): string
+{
+    $text = strtolower(trim($text));
+    $text = preg_replace('/[^a-z0-9]+/', '-', $text);
+    return trim($text, '-');
+}
+
+/** Format a MySQL datetime/date as "24 Agustus 2026". */
+function formatTanggalIndo(?string $date): string
+{
+    if (!$date) {
+        return '-';
+    }
+    $bulan = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    ];
+    $ts = strtotime($date);
+    return date('d', $ts) . ' ' . $bulan[(int) date('n', $ts)] . ' ' . date('Y', $ts);
+}
+
+/** Fetch the single-row school_profile settings, cached for the request. */
+function getSchoolProfile(): array
+{
+    static $profile = null;
+    if ($profile === null) {
+        $stmt = getDB()->query('SELECT * FROM school_profile ORDER BY id LIMIT 1');
+        $profile = $stmt->fetch() ?: [];
+    }
+    return $profile;
+}
+
+/** Active social media links, ordered by platform. */
+function getSocialMedia(): array
+{
+    $stmt = getDB()->query('SELECT * FROM social_media WHERE status = 1 ORDER BY id ASC');
+    return $stmt->fetchAll();
 }
 
 /** Get sanitized client IP address. */
@@ -99,21 +146,30 @@ function recordRateLimitAttempt(string $key, int $decaySeconds = 600): void
     try {
         $db = getDB();
         $now = time();
-        $stmt = $db->prepare("
-            INSERT INTO rate_limits (rate_key, attempts, last_attempt, lockout_until)
-            VALUES (?, 1, ?, NULL)
-            ON DUPLICATE KEY UPDATE 
-              attempts = IF(attempts >= 100, 100, attempts + 1),
-              last_attempt = VALUES(last_attempt)
-        ");
-        $stmt->execute([$key, $now]);
+        $stmt = $db->prepare("SELECT id, attempts, last_attempt FROM rate_limits WHERE rate_key = ? LIMIT 1");
+        $stmt->execute([$key]);
+        $row = $stmt->fetch();
+
+        if ($row) {
+            // Check if decayed
+            if (($now - (int)$row['last_attempt']) > $decaySeconds) {
+                $upd = $db->prepare("UPDATE rate_limits SET attempts = 1, last_attempt = ?, lockout_until = NULL WHERE id = ?");
+                $upd->execute([$now, $row['id']]);
+            } else {
+                $upd = $db->prepare("UPDATE rate_limits SET attempts = attempts + 1, last_attempt = ? WHERE id = ?");
+                $upd->execute([$now, $row['id']]);
+            }
+        } else {
+            $ins = $db->prepare("INSERT INTO rate_limits (rate_key, attempts, last_attempt) VALUES (?, 1, ?)");
+            $ins->execute([$key, $now]);
+        }
     } catch (Throwable $e) {
-        error_log('Rate limit attempt error: ' . $e->getMessage());
+        error_log('Rate limiter record error: ' . $e->getMessage());
     }
 }
 
 /**
- * Reset rate limit counter on success.
+ * Reset rate limit counter upon successful action (e.g. valid login).
  */
 function resetRateLimit(string $key): void
 {
@@ -122,63 +178,90 @@ function resetRateLimit(string $key): void
         $stmt = $db->prepare("DELETE FROM rate_limits WHERE rate_key = ?");
         $stmt->execute([$key]);
     } catch (Throwable $e) {
-        // ignore
+        error_log('Rate limiter reset error: ' . $e->getMessage());
     }
 }
 
 /**
- * Validate + move an uploaded image into /assets/uploads with a random filename and deep security inspection.
- * Signature: handleImageUpload(array $file, ?string &$error = null, string $subDir = '')
+ * Check if a file extension is potentially dangerous/executable.
  */
-function handleImageUpload(array $file, ?string &$error = null, string $subDir = ''): ?string
+function isForbiddenExtension(string $filename): bool
 {
-    $subDir = trim($subDir, '/\\');
+    $forbidden = [
+        'php', 'php3', 'php4', 'php5', 'php7', 'phtml', 'phar', 'inc',
+        'exe', 'bat', 'sh', 'cgi', 'pl', 'py', 'js', 'jsp', 'asp', 'aspx',
+        'htaccess', 'htpasswd', 'env', 'config'
+    ];
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    return in_array($ext, $forbidden, true);
+}
 
-    if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-        $error = 'Upload gagal atau tidak ada file yang dipilih.';
-        return null;
-    }
-    if ($file['size'] > MAX_UPLOAD_SIZE) {
-        $error = 'Ukuran file melebihi batas maksimal 2MB.';
-        return null;
-    }
-
-    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (isForbiddenExtension($ext) || !in_array($ext, ALLOWED_IMAGE_EXT, true)) {
-        $error = 'Format file tidak diizinkan. Gunakan JPG, JPEG, PNG, atau WEBP.';
-        return null;
-    }
-
-    // Re-check with finfo — don't trust the client-supplied extension/MIME alone.
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mime  = finfo_file($finfo, $file['tmp_name']);
-    finfo_close($finfo);
-    $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!in_array($mime, $allowedMime, true)) {
-        $error = 'Isi file bukan gambar yang valid (MIME tidak cocok).';
-        return null;
+/**
+ * Verify Magic Bytes (file header) to ensure uploaded file actually matches its expected format.
+ */
+function validateMagicBytes(string $tmpFilePath, string $extension): bool
+{
+    if (!file_exists($tmpFilePath) || !is_readable($tmpFilePath)) {
+        return false;
     }
 
-    // Deep Magic Bytes validation
-    if (!validateMagicBytes($file['tmp_name'], $ext)) {
-        $error = 'Struktur header file tidak valid (magic bytes mismatch).';
-        return null;
+    $handle = fopen($tmpFilePath, 'rb');
+    if (!$handle) {
+        return false;
+    }
+    $bytes = fread($handle, 16);
+    fclose($handle);
+
+    if (empty($bytes)) {
+        return false;
     }
 
-    $targetDir = UPLOADS_PATH . ($subDir !== '' ? '/' . $subDir : '');
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0755, true);
+    $ext = strtolower($extension);
+
+    // Check Magic Bytes
+    return match ($ext) {
+        'jpg', 'jpeg' => str_starts_with($bytes, "\xFF\xD8\xFF"),
+        'png'         => str_starts_with($bytes, "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"),
+        'gif'         => str_starts_with($bytes, "GIF87a") || str_starts_with($bytes, "GIF89a"),
+        'webp'        => str_starts_with($bytes, "RIFF") && substr($bytes, 8, 4) === "WEBP",
+        'pdf'         => str_starts_with($bytes, "%PDF-"),
+        'zip', 'docx', 'xlsx', 'pptx' => str_starts_with($bytes, "PK\x03\x04") || str_starts_with($bytes, "PK\x05\x06"),
+        'csv', 'txt'  => true, // Plain text files have no fixed binary signature
+        default       => true,
+    };
+}
+
+/**
+ * Check if a target file path resides safely inside the allowed base directory (Path Traversal Protection).
+ */
+function isSafePath(string $baseDir, string $targetPath): bool
+{
+    $realBase = realpath($baseDir);
+    $realTarget = realpath($targetPath);
+
+    if ($realBase === false || $realTarget === false) {
+        return false;
     }
 
-    $filename = bin2hex(random_bytes(16)) . '.' . $ext;
-    $destination = $targetDir . '/' . $filename;
+    return str_starts_with($realTarget, $realBase);
+}
 
-    if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        $error = 'Gagal menyimpan file ke server.';
-        return null;
-    }
+/** Strict validator for 10-digit NISN. */
+function validateNISN(?string $nisn): bool
+{
+    return (bool) preg_match('/^\d{10}$/', (string)$nisn);
+}
 
-    return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $filename;
+/** Strict validator for phone numbers (Indonesian standard 9-15 digits). */
+function validatePhone(?string $phone): bool
+{
+    return (bool) preg_match('/^(\+62|62|08)[0-9]{8,13}$/', preg_replace('/[\s\-\.\(\)]/', '', (string)$phone));
+}
+
+/** Strict validator for email. */
+function validateEmail(?string $email): bool
+{
+    return (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
 /** Generate (and remember) a CSRF token for the current session. */
@@ -297,6 +380,66 @@ function getPpdbSettings(): array
 }
 
 /**
+ * Validate + move an uploaded image into /assets/uploads with a random filename.
+ * Signature: handleImageUpload(array $file, ?string &$error = null, string $subDir = '')
+ */
+function handleImageUpload(array $file, ?string &$error = null, string $subDir = ''): ?string
+{
+    $subDir = trim($subDir, '/');
+
+    if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
+        $error = 'Upload gagal atau tidak ada file yang dipilih.';
+        return null;
+    }
+    if ($file['size'] > MAX_UPLOAD_SIZE) {
+        $error = 'Ukuran file melebihi batas maksimal 2MB.';
+        return null;
+    }
+
+    if (isForbiddenExtension($file['name'])) {
+        $error = 'Format ekstensi file berbahaya dan dilarang diunggah.';
+        return null;
+    }
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, ALLOWED_IMAGE_EXT, true)) {
+        $error = 'Format file tidak diizinkan. Gunakan JPG, JPEG, PNG, atau WEBP.';
+        return null;
+    }
+
+    // Magic Bytes Check
+    if (!validateMagicBytes($file['tmp_name'], $ext)) {
+        $error = 'Struktur binary file tidak sesuai dengan gambar asli.';
+        return null;
+    }
+
+    // Re-check with finfo — don't trust the client-supplied extension/MIME alone.
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime  = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!in_array($mime, $allowedMime, true)) {
+        $error = 'Isi file bukan gambar yang valid.';
+        return null;
+    }
+
+    $targetDir = UPLOADS_PATH . ($subDir !== '' ? '/' . $subDir : '');
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
+    }
+
+    $filename = bin2hex(random_bytes(16)) . '.' . $ext;
+    $destination = $targetDir . '/' . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        $error = 'Gagal menyimpan file ke server.';
+        return null;
+    }
+
+    return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $filename;
+}
+
+/**
  * Validate + move an uploaded document (PDF/Image) for PPDB registrations.
  */
 function handleDocumentUpload(array $file, ?string &$error = null): ?string
@@ -310,10 +453,20 @@ function handleDocumentUpload(array $file, ?string &$error = null): ?string
         return null;
     }
 
+    if (isForbiddenExtension($file['name'])) {
+        $error = 'Format file berbahaya dan dilarang diunggah.';
+        return null;
+    }
+
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $allowedExt = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
-    if (isForbiddenExtension($ext) || !in_array($ext, $allowedExt, true)) {
+    if (!in_array($ext, $allowedExt, true)) {
         $error = 'Format file tidak diizinkan. Gunakan JPG, PNG, WEBP, atau PDF.';
+        return null;
+    }
+
+    if (!validateMagicBytes($file['tmp_name'], $ext)) {
+        $error = 'Struktur binary file tidak valid.';
         return null;
     }
 
@@ -323,13 +476,7 @@ function handleDocumentUpload(array $file, ?string &$error = null): ?string
 
     $allowedMime = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
     if (!in_array($mime, $allowedMime, true)) {
-        $error = 'Isi file tidak valid (MIME mismatch).';
-        return null;
-    }
-
-    // Magic Bytes Check
-    if (!validateMagicBytes($file['tmp_name'], $ext)) {
-        $error = 'Header file tidak sesuai dengan tipe ekstensi.';
+        $error = 'Isi file tidak valid (harus berupa gambar atau PDF asli).';
         return null;
     }
 
@@ -363,27 +510,31 @@ function handleGenericFileUpload(array $file, array $allowedExt, int $maxSize, s
         return null;
     }
 
+    if (isForbiddenExtension($file['name'])) {
+        $error = 'Format file berbahaya dan dilarang diunggah.';
+        return null;
+    }
+
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $detectedExt = $ext;
     $sizeFormatted = formatBytes($file['size']);
 
-    if (isForbiddenExtension($ext) || !in_array($ext, $allowedExt, true)) {
+    if (!in_array($ext, $allowedExt, true)) {
         $error = 'Format file tidak diizinkan. Gunakan format: ' . implode(', ', array_map('strtoupper', $allowedExt));
         return null;
     }
 
-    // Magic bytes check
     if (!validateMagicBytes($file['tmp_name'], $ext)) {
-        $error = 'Header berkas tidak valid atau rusak.';
+        $error = 'Struktur binary file tidak valid.';
         return null;
     }
 
-    $targetDir = UPLOADS_PATH . '/' . trim($subDir, '/\\');
+    $targetDir = UPLOADS_PATH . '/' . trim($subDir, '/');
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0755, true);
     }
 
-    $filename = trim($subDir, '/\\') . '_' . bin2hex(random_bytes(12)) . '.' . $ext;
+    $filename = $subDir . '_' . bin2hex(random_bytes(10)) . '.' . $ext;
     $destination = $targetDir . '/' . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $destination)) {
@@ -391,7 +542,7 @@ function handleGenericFileUpload(array $file, array $allowedExt, int $maxSize, s
         return null;
     }
 
-    return 'assets/uploads/' . trim($subDir, '/\\') . '/' . $filename;
+    return 'assets/uploads/' . trim($subDir, '/') . '/' . $filename;
 }
 
 /**
@@ -405,98 +556,6 @@ function formatBytes(int $bytes, int $precision = 1): string
     $pow = min($pow, count($units) - 1);
     $bytes /= pow(1024, $pow);
     return round($bytes, $precision) . ' ' . $units[$pow];
-}
-
-/**
- * Check if a file extension is dangerous / forbidden to prevent RCE.
- */
-function isForbiddenExtension(string $ext): bool
-{
-    $blacklisted = [
-        'php', 'php3', 'php4', 'php5', 'php7', 'php8', 'phtml', 'phps', 'pht', 'phar',
-        'inc', 'cgi', 'pl', 'py', 'sh', 'bash', 'zsh', 'exe', 'bat', 'cmd', 'ps1',
-        'vbs', 'js', 'jsp', 'asp', 'aspx', 'cer', 'htaccess', 'htpasswd', 'env', 'ini',
-        'conf', 'config', 'sql', 'dll', 'so', 'bin'
-    ];
-    return in_array(strtolower(trim($ext, '.')), $blacklisted, true);
-}
-
-/**
- * Validate real file header / magic bytes against declared extension.
- */
-function validateMagicBytes(string $filePath, string $ext): bool
-{
-    if (!file_exists($filePath) || !is_readable($filePath)) {
-        return false;
-    }
-
-    $ext = strtolower(trim($ext, '.'));
-    if (isForbiddenExtension($ext)) {
-        return false;
-    }
-
-    $handle = @fopen($filePath, 'rb');
-    if (!$handle) {
-        return false;
-    }
-    $bytes = fread($handle, 16);
-    fclose($handle);
-
-    if (empty($bytes)) {
-        return false;
-    }
-
-    switch ($ext) {
-        case 'jpg':
-        case 'jpeg':
-            return str_starts_with($bytes, "\xFF\xD8\xFF");
-        case 'png':
-            return str_starts_with($bytes, "\x89PNG\r\n\x1a\n");
-        case 'webp':
-            return str_starts_with($bytes, "RIFF") && substr($bytes, 8, 4) === "WEBP";
-        case 'pdf':
-            return str_starts_with($bytes, "%PDF");
-        case 'zip':
-        case 'docx':
-        case 'xlsx':
-            return str_starts_with($bytes, "PK\x03\x04") || str_starts_with($bytes, "PK\x05\x06") || str_starts_with($bytes, "PK\x07\x08");
-        default:
-            return true;
-    }
-}
-
-/**
- * Check if a file path is strictly within an allowed base directory (Anti Path Traversal).
- */
-function isSafePath(string $filePath, string $baseDirectory = UPLOADS_PATH): bool
-{
-    $realBase = realpath($baseDirectory);
-    $realPath = realpath($filePath);
-
-    if ($realBase === false || $realPath === false) {
-        return false;
-    }
-
-    return str_starts_with($realPath, $realBase);
-}
-
-/**
- * Strict Validators
- */
-function validateNISN(string $nisn): bool
-{
-    return (bool) preg_match('/^[0-9]{10}$/', trim($nisn));
-}
-
-function validatePhone(string $phone): bool
-{
-    $clean = preg_replace('/[\s\-\(\)\+]/', '', $phone);
-    return (bool) preg_match('/^[0-9]{8,18}$/', $clean);
-}
-
-function validateEmail(string $email): bool
-{
-    return (bool) filter_var(trim($email), FILTER_VALIDATE_EMAIL);
 }
 
 /**
@@ -518,5 +577,3 @@ function getYouTubeEmbedUrl(?string $url): ?string
     }
     return $url;
 }
-
-
