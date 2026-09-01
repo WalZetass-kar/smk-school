@@ -200,18 +200,6 @@ require BASE_PATH . '/includes/navbar.php';
       'Penyaluran Kerja Langsung via Bursa Kerja Khusus (BKK)'
   ];
 ?>
-<!-- ================= VIDEO PROFIL SEKOLAH ================= -->
-<?php if (!empty($profile['video_profile_url'])): ?>
-<?php 
-  $embedUrl = getYouTubeEmbedUrl($profile['video_profile_url']); 
-  $videoTitle = !empty($profile['video_title']) ? $profile['video_title'] : 'Video Profil & Lingkungan Sekolah';
-  $videoDesc  = !empty($profile['video_description']) ? $profile['video_description'] : 'Saksikan suasana pembelajaran modern, bengkel kejuruan berstandar industri, serta berbagai sarana penunjang prestasi di sekolah kami.';
-  $rawFeatures = !empty($profile['video_features']) ? explode("\n", str_replace("\r", "", $profile['video_features'])) : [
-      'Kurikulum Berbasis Industri 4.0 & BNSP',
-      'Laboratorium Komputer & Bengkel Praktik Lengkap',
-      'Penyaluran Kerja Langsung via Bursa Kerja Khusus (BKK)'
-  ];
-?>
 <section class="section section-video-tour">
   <div class="container">
     <div class="row align-items-center g-4 g-lg-5 text-center text-lg-start">
