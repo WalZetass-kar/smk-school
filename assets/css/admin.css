@@ -55,16 +55,22 @@ body.admin-body {
     width: var(--admin-sidebar-width);
     background: var(--color-primary-dark);
     color: rgba(255,255,255,0.85);
-    overflow-y: auto;
-    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     z-index: 1030;
     transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 2px 0 14px rgba(0,0,0,0.18);
 }
-.admin-sidebar::-webkit-scrollbar {
+.admin-sidebar .sidebar-nav-scroll {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.admin-sidebar .sidebar-nav-scroll::-webkit-scrollbar {
     width: 4px;
 }
-.admin-sidebar::-webkit-scrollbar-thumb {
+.admin-sidebar .sidebar-nav-scroll::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.15);
     border-radius: 4px;
 }
@@ -77,6 +83,7 @@ body.admin-body {
     color: #ffffff;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     transition: padding 0.25s ease;
+    flex-shrink: 0;
 }
 .admin-sidebar .sidebar-brand-title {
     transition: opacity 0.2s ease;
@@ -128,6 +135,25 @@ body.admin-body {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+/* Sidebar Footer (Pinned at bottom) */
+.admin-sidebar .sidebar-footer {
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.55rem 0.75rem;
+}
+.admin-sidebar .sidebar-logout-btn {
+    color: #f87171 !important;
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+    font-weight: 600;
+    border-left: 3px solid transparent;
+}
+.admin-sidebar .sidebar-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.16) !important;
+    color: #fca5a5 !important;
 }
 
 /* ---- Content area ---- */
@@ -213,6 +239,22 @@ body.admin-body {
         background: rgba(245, 158, 11, 0.2);
         color: var(--color-accent);
         border-left: 3px solid var(--color-accent);
+    }
+
+    /* Pinned footer in collapsed mode */
+    body.sidebar-collapsed .admin-sidebar .sidebar-footer {
+        padding: 0.5rem 0.25rem;
+    }
+    body.sidebar-collapsed .admin-sidebar .sidebar-logout-btn {
+        padding: 0.75rem 0;
+        justify-content: center;
+    }
+    body.sidebar-collapsed .admin-sidebar .sidebar-logout-btn .nav-text {
+        display: none !important;
+    }
+    body.sidebar-collapsed .admin-sidebar .sidebar-logout-btn i {
+        margin: 0 auto;
+        font-size: 1.3rem;
     }
 }
 
