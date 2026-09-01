@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/graduations/settings.php
  * Pengaturan Jadwal Rilis Kelulusan
@@ -49,8 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Pengaturan Jadwal Kelulusan';
-$currentAdminNav = 'graduations';
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">

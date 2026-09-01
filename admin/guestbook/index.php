@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/guestbook/index.php
  * Kelola Data Buku Tamu Digital
@@ -36,6 +36,8 @@ $stmt->execute($params);
 $guests = $stmt->fetchAll();
 
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">

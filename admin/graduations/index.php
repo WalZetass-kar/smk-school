@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/graduations/index.php
  * Kelola Data Kelulusan Siswa & SKL Online
@@ -48,7 +48,11 @@ $totalTidak    = (int)$db->query("SELECT COUNT(*) FROM graduations WHERE status 
 $totalDitunda  = (int)$db->query("SELECT COUNT(*) FROM graduations WHERE status = 'ditunda'")->fetchColumn();
 
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
+
+<?= flashMessage() ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
   <div>

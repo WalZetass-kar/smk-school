@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/graduations/form.php
  * Tambah / Edit Siswa Kelulusan
@@ -102,9 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = ($id > 0 ? 'Edit' : 'Tambah') . ' Data Siswa Kelulusan';
-$currentAdminNav = 'graduations';
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
+
+<?= flashMessage() ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h4 fw-bold text-primary mb-0"><?= $id > 0 ? 'Edit' : 'Tambah' ?> Data Siswa Kelulusan</h1>

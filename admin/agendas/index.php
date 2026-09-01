@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/agendas/index.php
  * Kelola Agenda & Kalender Kegiatan Sekolah
@@ -9,11 +9,9 @@ requireAuth();
 
 $db = getDB();
 $pageTitle = 'Kelola Agenda Kegiatan';
-$currentAdminNav = 'agendas';
-
-$agendas = $db->query("SELECT * FROM agendas ORDER BY start_date DESC")->fetchAll();
-
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">

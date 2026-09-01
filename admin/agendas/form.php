@@ -94,8 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = ($id > 0 ? 'Edit' : 'Tambah') . ' Agenda Kegiatan';
-$currentAdminNav = 'agendas';
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
