@@ -49,7 +49,7 @@ foreach ($socials as $s) {
       </div>
       <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
         <span>&copy; <?= date('Y') ?> <?= e($profile['school_name'] ?? '') ?>. Seluruh hak cipta dilindungi.</span>
-        <span>Dibuat dengan PHP Native &amp; Bootstrap 5</span>
+        <span>Developer by WalZetass-Kar</span>
       </div>
     </div>
   </footer>
