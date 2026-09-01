@@ -1645,4 +1645,105 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
     }
 }
 
+/* =========================================================
+   Universal Mobile Precision & Touch Ergonomics (< 768px)
+   ========================================================= */
+@media (max-width: 767.98px) {
+    /* Section Headers */
+    .section {
+        padding: 3rem 0;
+    }
+    .section-header {
+        margin-bottom: 2rem;
+    }
+    .section-title {
+        font-size: clamp(1.4rem, 5vw, 1.85rem);
+        line-height: 1.28;
+    }
+    .section-subtitle {
+        font-size: 0.9rem;
+        line-height: 1.55;
+    }
+
+    /* Cards & Grids */
+    .jurusan-card-img-wrap,
+    .berita-card-img-wrap {
+        height: 175px;
+    }
+    .jurusan-card-body,
+    .berita-card-body {
+        padding: 1.15rem;
+    }
+    .jurusan-card-title,
+    .berita-card-title {
+        font-size: 1.05rem;
+    }
+    .testimoni-card {
+        padding: 1.25rem 1rem;
+    }
+
+    /* Filter Pills Nav (Touch-Friendly Horizontal Scroll) */
+    .filter-pills-nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .filter-pills-nav::-webkit-scrollbar {
+        display: none;
+    }
+    .filter-pills-nav .btn {
+        flex-shrink: 0;
+        font-size: 0.82rem;
+        padding: 0.4rem 0.85rem;
+    }
+
+    /* Video Tour */
+    .section-video-tour {
+        padding: 3.25rem 0;
+    }
+    .video-container-card {
+        border-radius: var(--radius);
+        border-width: 2px;
+    }
+
+    /* Footer Mobile Alignment */
+    .footer-smk {
+        text-align: center;
+        padding-top: 3rem;
+    }
+    .footer-smk .d-flex {
+        justify-content: center;
+    }
+    .footer-smk .footer-bottom {
+        margin-top: 2rem;
+        padding-top: 1.25rem;
+        text-align: center;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumb {
+        font-size: 0.78rem;
+        flex-wrap: wrap;
+    }
+
+    /* Modals & Dialogs */
+    .modal-dialog {
+        margin: 0.75rem;
+    }
+
+    /* SKL Countdown on Mobile */
+    #countdownWrapper > div {
+        min-width: 65px !important;
+        padding: 0.65rem 0.4rem !important;
+    }
+    #countdownWrapper .display-6 {
+        font-size: 1.5rem !important;
+    }
+}
+
+
 
