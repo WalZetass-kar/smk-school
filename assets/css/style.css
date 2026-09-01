@@ -450,6 +450,7 @@ img {
 .hero-slider {
     position: relative;
     background-color: var(--color-primary-dark);
+    width: 100%;
 }
 .hero-slide {
     min-height: 520px;
@@ -459,6 +460,20 @@ img {
     background-position: center;
     position: relative;
     padding: 4rem 0;
+}
+@media (min-width: 992px) {
+    /* Full Desktop Screen (Without Ticker) */
+    .hero-slide {
+        min-height: calc(100vh - 68px);
+        min-height: calc(100dvh - 68px);
+        padding: 5rem 0;
+    }
+    /* Full Desktop Screen (With Ticker) */
+    .hero-slider.has-ticker-offset .hero-slide,
+    body:has(.top-announcement-bar) .hero-slide {
+        min-height: calc(100vh - 106px);
+        min-height: calc(100dvh - 106px);
+    }
 }
 .hero-slide::after {
     content: "";

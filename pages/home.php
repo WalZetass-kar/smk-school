@@ -29,7 +29,7 @@ require BASE_PATH . '/includes/navbar.php';
 <?= flashMessage() ?>
 
 <!-- ================= HERO / BANNER SLIDER ================= -->
-<section class="hero-slider">
+<section class="hero-slider <?= !empty($hasTicker) ? 'has-ticker-offset' : '' ?>">
   <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
     <div class="carousel-indicators">
       <?php foreach ($banners as $i => $b): ?>
