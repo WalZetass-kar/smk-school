@@ -99,19 +99,19 @@ foreach ($missionLines as $line) {
 
             <div class="row g-3">
               <div class="col-md-4">
-                <div class="p-3.5 rounded-3 bg-light border h-100">
+                <div class="p-3 p-md-4 rounded-3 bg-light border h-100">
                   <div class="fw-bold text-primary mb-1">1. Bekerja (B)</div>
                   <p class="small text-muted mb-0" style="line-height: 1.55;">Terserap di dunia industri dan usaha terkemuka dengan keahlian bersertifikat.</p>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="p-3.5 rounded-3 bg-light border h-100">
+                <div class="p-3 p-md-4 rounded-3 bg-light border h-100">
                   <div class="fw-bold text-primary mb-1">2. Melanjutkan (M)</div>
                   <p class="small text-muted mb-0" style="line-height: 1.55;">Mampu melanjutkan pendidikan ke perguruan tinggi dan politeknik vokasi negeri.</p>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="p-3.5 rounded-3 bg-light border h-100">
+                <div class="p-3 p-md-4 rounded-3 bg-light border h-100">
                   <div class="fw-bold text-primary mb-1">3. Wirausaha (W)</div>
                   <p class="small text-muted mb-0" style="line-height: 1.55;">Memiliki mental mandiri dan kecakapan membuka usaha secara profesional.</p>
                 </div>

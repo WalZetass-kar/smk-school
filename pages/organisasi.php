@@ -96,9 +96,9 @@ require BASE_PATH . '/includes/navbar.php';
           <div class="row g-3">
             <!-- Waka Kurikulum -->
             <div class="col-md-6">
-              <div class="card border-0 shadow-sm rounded-4 p-3.5 h-100 bg-white hover-lift border">
+              <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2.5 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
                     <i class="bi bi-journal-bookmark-fill fs-5"></i>
                   </div>
                   <div>
@@ -114,9 +114,9 @@ require BASE_PATH . '/includes/navbar.php';
 
             <!-- Waka Kesiswaan -->
             <div class="col-md-6">
-              <div class="card border-0 shadow-sm rounded-4 p-3.5 h-100 bg-white hover-lift border">
+              <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2.5 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
                     <i class="bi bi-people-fill fs-5"></i>
                   </div>
                   <div>
@@ -132,9 +132,9 @@ require BASE_PATH . '/includes/navbar.php';
 
             <!-- Waka Sarpras -->
             <div class="col-md-6">
-              <div class="card border-0 shadow-sm rounded-4 p-3.5 h-100 bg-white hover-lift border">
+              <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2.5 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
                     <i class="bi bi-tools fs-5"></i>
                   </div>
                   <div>
@@ -150,9 +150,9 @@ require BASE_PATH . '/includes/navbar.php';
 
             <!-- Waka Humas / Hubin -->
             <div class="col-md-6">
-              <div class="card border-0 shadow-sm rounded-4 p-3.5 h-100 bg-white hover-lift border">
+              <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2.5 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
                     <i class="bi bi-buildings fs-5"></i>
                   </div>
                   <div>
