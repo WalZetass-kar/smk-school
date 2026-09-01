@@ -76,19 +76,19 @@ require BASE_PATH . '/includes/navbar.php';
 <section class="section">
   <div class="container">
     <div class="sambutan-card">
-      <div class="row align-items-center g-4 g-lg-5">
+      <div class="row align-items-center g-4 g-lg-5 text-center text-md-start">
         <div class="col-lg-4 col-md-5 reveal-left">
-          <div class="sambutan-photo-frame">
+          <div class="sambutan-photo-frame mx-auto">
             <img src="<?= e(BASE_URL . '/' . $principal['photo']) ?>" alt="<?= e($principal['principal_name']) ?>">
           </div>
         </div>
         <div class="col-lg-8 col-md-7 reveal-right">
-          <div class="sambutan-quote-icon">
+          <div class="sambutan-quote-icon d-none d-md-inline-flex">
             <i class="bi bi-quote"></i>
           </div>
           <h2 class="section-title">Sambutan Kepala Sekolah</h2>
           <p class="text-muted fs-6 mb-4" style="line-height: 1.75;"><?= nl2br(e(mb_strimwidth($principal['content'], 0, 340, '...'))) ?></p>
-          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pt-2 border-top">
+          <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 pt-3 border-top text-center text-sm-start">
             <div>
               <h5 class="mb-0 text-primary fw-bold"><?= e($principal['principal_name']) ?></h5>
               <span class="text-muted small fw-medium"><?= e($principal['position']) ?></span>
@@ -107,16 +107,16 @@ require BASE_PATH . '/includes/navbar.php';
 <!-- ================= PROFIL SEKOLAH RINGKAS ================= -->
 <section class="section section-alt">
   <div class="container">
-    <div class="row align-items-center g-5">
+    <div class="row align-items-center g-4 g-lg-5 text-center text-lg-start">
       <div class="col-lg-5 reveal-left">
         <h2 class="section-title">Mengenal <?= e($profile['school_name'] ?? '') ?></h2>
-        <p class="section-subtitle mb-4"><?= e(mb_strimwidth($profile['description'] ?? '', 0, 240, '...')) ?></p>
+        <p class="section-subtitle mb-4 mx-auto mx-lg-0"><?= e(mb_strimwidth($profile['description'] ?? '', 0, 240, '...')) ?></p>
         <a href="<?= e(BASE_URL) ?>/profil" class="btn btn-accent">
           Profil Lengkap Sekolah <i class="bi bi-arrow-right ms-1"></i>
         </a>
       </div>
       <div class="col-lg-7 reveal-right">
-        <div class="row g-3 reveal-group">
+        <div class="row g-3 reveal-group text-start">
           <div class="col-sm-6">
             <div class="profil-fact-card">
               <div class="profil-fact-icon"><i class="bi bi-bank"></i></div>
@@ -200,17 +200,29 @@ require BASE_PATH . '/includes/navbar.php';
       'Penyaluran Kerja Langsung via Bursa Kerja Khusus (BKK)'
   ];
 ?>
+<!-- ================= VIDEO PROFIL SEKOLAH ================= -->
+<?php if (!empty($profile['video_profile_url'])): ?>
+<?php 
+  $embedUrl = getYouTubeEmbedUrl($profile['video_profile_url']); 
+  $videoTitle = !empty($profile['video_title']) ? $profile['video_title'] : 'Video Profil & Lingkungan Sekolah';
+  $videoDesc  = !empty($profile['video_description']) ? $profile['video_description'] : 'Saksikan suasana pembelajaran modern, bengkel kejuruan berstandar industri, serta berbagai sarana penunjang prestasi di sekolah kami.';
+  $rawFeatures = !empty($profile['video_features']) ? explode("\n", str_replace("\r", "", $profile['video_features'])) : [
+      'Kurikulum Berbasis Industri 4.0 & BNSP',
+      'Laboratorium Komputer & Bengkel Praktik Lengkap',
+      'Penyaluran Kerja Langsung via Bursa Kerja Khusus (BKK)'
+  ];
+?>
 <section class="section section-video-tour">
   <div class="container">
-    <div class="row align-items-center g-5">
+    <div class="row align-items-center g-4 g-lg-5 text-center text-lg-start">
       <div class="col-lg-5 reveal-left">
         <h2 class="section-title text-white"><?= e($videoTitle) ?></h2>
-        <p class="text-white-50 mb-4" style="line-height: 1.7;"><?= nl2br(e($videoDesc)) ?></p>
-        <div class="d-flex flex-column gap-3">
+        <p class="text-white-50 mb-4 mx-auto mx-lg-0" style="line-height: 1.7;"><?= nl2br(e($videoDesc)) ?></p>
+        <div class="d-flex flex-column gap-3 align-items-center align-items-lg-start">
           <?php foreach ($rawFeatures as $feat): ?>
             <?php $feat = trim($feat); if ($feat === '') continue; ?>
-            <div class="d-flex align-items-center gap-3 text-white">
-              <i class="bi bi-check-circle-fill text-warning fs-5"></i>
+            <div class="d-flex align-items-center gap-3 text-white text-start">
+              <i class="bi bi-check-circle-fill text-warning fs-5 flex-shrink-0"></i>
               <span class="fw-medium"><?= e($feat) ?></span>
             </div>
           <?php endforeach; ?>
@@ -232,7 +244,7 @@ require BASE_PATH . '/includes/navbar.php';
 <!-- ================= AGENDA KEGIATAN TERDEKAT ================= -->
 <section class="section">
   <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-3 reveal-up">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end mb-4 gap-3 text-center text-sm-start reveal-up">
       <div>
         <h2 class="section-title mb-0">Agenda &amp; Kegiatan Sekolah</h2>
       </div>
@@ -247,7 +259,7 @@ require BASE_PATH . '/includes/navbar.php';
         ?>
         <div class="col-lg-4 col-md-6">
           <div class="card h-100 border shadow-sm rounded-4 p-3 bg-white hover-lift">
-            <div class="d-flex gap-3 align-items-start">
+            <div class="d-flex gap-3 align-items-start text-start">
               <div class="p-2 rounded-3 text-center text-white bg-primary flex-shrink-0" style="width:65px;">
                 <span class="d-block fs-4 fw-bold lh-1"><?= e($day) ?></span>
                 <span class="small text-uppercase fw-semibold" style="font-size:0.75rem;"><?= e($month) ?></span>
@@ -273,7 +285,7 @@ require BASE_PATH . '/includes/navbar.php';
 <!-- ================= BERITA TERBARU ================= -->
 <section class="section section-alt">
   <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 gap-3 reveal-up">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end mb-5 gap-3 text-center text-sm-start reveal-up">
       <div>
         <h2 class="section-title mb-0">Berita Terbaru</h2>
       </div>
@@ -284,7 +296,7 @@ require BASE_PATH . '/includes/navbar.php';
     <div class="row g-4 reveal-group">
       <?php foreach ($news as $n): ?>
         <div class="col-lg-4 col-md-6">
-          <div class="berita-card hover-lift d-flex flex-column">
+          <div class="berita-card hover-lift d-flex flex-column text-start">
             <div class="berita-card-img-wrap">
               <img src="<?= e(BASE_URL . '/' . $n['featured_image']) ?>" alt="<?= e($n['title']) ?>" class="berita-card-img">
             </div>
@@ -318,7 +330,7 @@ require BASE_PATH . '/includes/navbar.php';
     <div class="row g-4 reveal-group">
       <?php foreach ($testimonials as $t): ?>
         <div class="col-lg-4 col-md-6">
-          <div class="testimoni-card hover-lift">
+          <div class="testimoni-card hover-lift text-start">
             <div class="d-flex align-items-center gap-3">
               <img src="<?= e(BASE_URL . '/' . $t['photo']) ?>" alt="<?= e($t['name']) ?>" class="testimoni-photo">
               <div>
@@ -373,7 +385,7 @@ require BASE_PATH . '/includes/navbar.php';
 <!-- ================= GALERI ================= -->
 <section class="section">
   <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 gap-3 reveal-up">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end mb-5 gap-3 text-center text-sm-start reveal-up">
       <div>
         <h2 class="section-title mb-0">Galeri Kegiatan</h2>
       </div>

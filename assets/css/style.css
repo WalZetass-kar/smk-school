@@ -1710,18 +1710,13 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
         border-width: 2px;
     }
 
-    /* Footer Mobile Alignment */
+    /* Footer Layout on Mobile */
     .footer-smk {
-        text-align: center;
         padding-top: 3rem;
-    }
-    .footer-smk .d-flex {
-        justify-content: center;
     }
     .footer-smk .footer-bottom {
         margin-top: 2rem;
         padding-top: 1.25rem;
-        text-align: center;
     }
 
     /* Breadcrumbs */
