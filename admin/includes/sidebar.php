@@ -91,6 +91,6 @@ function navIsActive(string $needle, string $currentScript): bool
     <a class="nav-link" href="<?= e(BASE_URL) ?>/admin/backup.php" title="Backup Database"><i class="bi bi-database-down"></i> <span class="nav-text">Backup Database</span></a>
     <?php endif; ?>
     <a class="nav-link <?= str_ends_with($currentScript, '/admin/profile-admin.php') ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/profile-admin.php" title="Profil &amp; Keamanan"><i class="bi bi-person-circle"></i> <span class="nav-text">Profil &amp; Keamanan</span></a>
-    <a class="nav-link" href="<?= e(BASE_URL) ?>/admin/logout.php" title="Keluar"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text text-danger">Logout</span></a>
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal" title="Keluar"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text text-danger">Logout</span></a>
   </nav>
 </aside>

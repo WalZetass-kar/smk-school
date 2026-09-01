@@ -1,5 +1,25 @@
   </main>
 </div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-body p-4 text-center">
+        <div class="p-3 bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+          <i class="bi bi-box-arrow-right fs-2"></i>
+        </div>
+        <h5 class="fw-bold text-dark mb-1" id="logoutConfirmModalLabel">Konfirmasi Keluar</h5>
+        <p class="text-muted small mb-4">Apakah Anda yakin ingin mengakhiri sesi dan keluar dari panel admin?</p>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-light border w-50 py-2 fw-semibold" data-bs-dismiss="modal">Batal</button>
+          <a href="<?= e(BASE_URL) ?>/admin/logout.php" class="btn btn-danger w-50 py-2 fw-semibold">Ya, Keluar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="<?= e(ASSETS_URL . '/vendor/jquery/jquery.min.js') ?>"></script>
 <script src="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.bundle.min.js') ?>"></script>
 <script src="<?= e(ASSETS_URL . '/vendor/summernote/summernote-lite.min.js') ?>"></script>

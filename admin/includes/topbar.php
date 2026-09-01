@@ -53,7 +53,7 @@ if (!empty($_SESSION['admin_id'])) {
             <li><a class="dropdown-item py-2 small" href="<?= e(BASE_URL) ?>/admin/backup.php"><i class="bi bi-database-down me-2 text-info"></i>Backup Database</a></li>
           <?php endif; ?>
           <li><hr class="dropdown-divider my-1"></li>
-          <li><a class="dropdown-item py-2 small text-danger" href="<?= e(BASE_URL) ?>/admin/logout.php"><i class="bi bi-box-arrow-right me-2"></i>Keluar (Logout)</a></li>
+          <li><a class="dropdown-item py-2 small text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal"><i class="bi bi-box-arrow-right me-2"></i>Keluar (Logout)</a></li>
         </ul>
       </div>
     </div>
