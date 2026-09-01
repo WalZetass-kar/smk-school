@@ -63,7 +63,12 @@ function navIsActive(string $needle, string $currentScript): bool
     <a class="nav-link <?= navIsActive('ppdb/index', $currentScript) || (navIsActive('ppdb', $currentScript) && !navIsActive('ppdb/settings', $currentScript)) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/ppdb/index.php"><i class="bi bi-person-lines-fill"></i> Data Pendaftar</a>
     <a class="nav-link <?= navIsActive('ppdb/settings', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/ppdb/settings.php"><i class="bi bi-sliders"></i> Pengaturan PPDB</a>
 
-    <div class="nav-section-label">Kontak</div>
+    <div class="nav-section-label">Kelulusan &amp; Agenda</div>
+    <a class="nav-link <?= navIsActive('graduations', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/graduations/index.php"><i class="bi bi-mortarboard-fill"></i> Kelulusan (SKL Online)</a>
+    <a class="nav-link <?= navIsActive('agendas', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/agendas/index.php"><i class="bi bi-calendar-event"></i> Agenda Kegiatan</a>
+
+    <div class="nav-section-label">Buku Tamu &amp; Kontak</div>
+    <a class="nav-link <?= navIsActive('guestbook', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/guestbook/index.php"><i class="bi bi-book-half"></i> Buku Tamu Digital</a>
     <a class="nav-link <?= navIsActive('contacts', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/contacts/index.php"><i class="bi bi-envelope"></i> Pesan Masuk</a>
 
     <div class="nav-section-label">Sistem &amp; Akun</div>

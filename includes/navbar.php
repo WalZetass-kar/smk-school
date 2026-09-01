@@ -50,12 +50,15 @@ function navActive(string $path, string $current): string
         </li>
         <li class="nav-item"><a class="nav-link<?= navActive('/jurusan', $currentPath) ?>" href="<?= e(BASE_URL) ?>/jurusan">Jurusan</a></li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle<?= $currentPath === '/ekstrakurikuler' || $currentPath === '/prestasi' ? ' active' : '' ?>" href="#" id="kesiswaanDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kesiswaan</a>
+          <a class="nav-link dropdown-toggle<?= $currentPath === '/ekstrakurikuler' || $currentPath === '/prestasi' || $currentPath === '/kelulusan' ? ' active' : '' ?>" href="#" id="kesiswaanDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kesiswaan</a>
           <ul class="dropdown-menu shadow-sm" aria-labelledby="kesiswaanDropdown">
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ekstrakurikuler">Ekstrakurikuler</a></li>
-            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi">Prestasi Siswa</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ekstrakurikuler"><i class="bi bi-activity me-2 text-primary"></i>Ekstrakurikuler</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/prestasi"><i class="bi bi-trophy me-2 text-warning"></i>Prestasi Siswa</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kelulusan"><i class="bi bi-mortarboard-fill me-2 text-success"></i>Pengumuman Kelulusan (SKL)</a></li>
           </ul>
         </li>
+        <li class="nav-item"><a class="nav-link<?= navActive('/agenda', $currentPath) ?>" href="<?= e(BASE_URL) ?>/agenda">Agenda</a></li>
         <li class="nav-item"><a class="nav-link<?= navActive('/berita', $currentPath) ?>" href="<?= e(BASE_URL) ?>/berita">Berita</a></li>
         <li class="nav-item"><a class="nav-link<?= str_starts_with($currentPath, '/bkk') ? ' active' : '' ?>" href="<?= e(BASE_URL) ?>/bkk">BKK</a></li>
         <li class="nav-item"><a class="nav-link<?= navActive('/galeri', $currentPath) ?>" href="<?= e(BASE_URL) ?>/galeri">Galeri</a></li>
@@ -68,7 +71,13 @@ function navActive(string $path, string $current): string
             <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/ppdb/cek-status">Cek Status Pendaftaran</a></li>
           </ul>
         </li>
-        <li class="nav-item"><a class="nav-link<?= navActive('/kontak', $currentPath) ?>" href="<?= e(BASE_URL) ?>/kontak">Kontak</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle<?= $currentPath === '/kontak' || $currentPath === '/buku-tamu' ? ' active' : '' ?>" href="#" id="kontakDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kontak</a>
+          <ul class="dropdown-menu shadow-sm" aria-labelledby="kontakDropdown">
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/kontak"><i class="bi bi-telephone me-2 text-primary"></i>Kontak Sekolah</a></li>
+            <li><a class="dropdown-item" href="<?= e(BASE_URL) ?>/buku-tamu"><i class="bi bi-book-half me-2 text-success"></i>Buku Tamu Digital</a></li>
+          </ul>
+        </li>
         
         <!-- Search Button for Desktop -->
         <li class="nav-item d-none d-xl-flex align-items-center ms-2">

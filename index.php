@@ -39,6 +39,10 @@ $routes = [
     '/ekstrakurikuler'              => 'ekstrakurikuler.php',
     '/prestasi'                     => 'prestasi.php',
     '/unduhan'                      => 'unduhan.php',
+    '/kelulusan'                    => 'kelulusan.php',
+    '/kelulusan/cetak'              => 'kelulusan-cetak.php',
+    '/agenda'                       => 'agenda.php',
+    '/buku-tamu'                    => 'buku-tamu.php',
     '/api/search'                   => 'search-api.php',
 ];
 
@@ -61,6 +65,11 @@ if (preg_match('#^/berita/([a-z0-9\-]+)$#', $uri, $m)) {
 if (preg_match('#^/bkk/([a-z0-9\-]+)$#', $uri, $m)) {
     $_GET['slug'] = $m[1];
     require BASE_PATH . '/pages/bkk-detail.php';
+    exit;
+}
+if (preg_match('#^/agenda/([a-z0-9\-]+)$#', $uri, $m)) {
+    $_GET['slug'] = $m[1];
+    require BASE_PATH . '/pages/agenda-detail.php';
     exit;
 }
 if (preg_match('#^/unduhan/download/([0-9]+)$#', $uri, $m)) {

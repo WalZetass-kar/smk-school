@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/search-api.php — /api/search?q=...
  * Live Global Search API across News, Majors, BKK, Ekskul, Downloads
@@ -71,7 +71,21 @@ while ($r = $stmt->fetch()) {
     ];
 }
 
-// 5. Downloads / Unduhan
+// 5. Agendas / Agenda Kegiatan
+$stmt = $db->prepare("SELECT title, slug, start_date, location FROM agendas WHERE status = 1 AND (title LIKE ? OR description LIKE ? OR location LIKE ?) LIMIT 3");
+$stmt->execute([$term, $term, $term]);
+while ($r = $stmt->fetch()) {
+    $results[] = [
+        'category' => 'Agenda Kegiatan',
+        'title'    => $r['title'],
+        'subtitle' => date('d/m/Y', strtotime($r['start_date'])) . ' &middot; ' . $r['location'],
+        'url'      => BASE_URL . '/agenda/' . $r['slug'],
+        'icon'     => 'bi-calendar-event',
+        'badge'    => 'bg-primary'
+    ];
+}
+
+// 6. Downloads / Unduhan
 $stmt = $db->prepare("SELECT id, title, category, file_size FROM downloads WHERE title LIKE ? OR description LIKE ? OR category LIKE ? LIMIT 3");
 $stmt->execute([$term, $term, $term]);
 while ($r = $stmt->fetch()) {

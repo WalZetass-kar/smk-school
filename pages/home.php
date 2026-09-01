@@ -20,6 +20,7 @@ $testimonials = $db->query("SELECT * FROM alumni_testimonials WHERE status = 1 O
 $partners  = $db->query("SELECT * FROM partners WHERE status = 1 ORDER BY sort_order ASC")->fetchAll();
 $galleries = $db->query("SELECT * FROM galleries ORDER BY id DESC LIMIT 8")->fetchAll();
 $stats     = $db->query("SELECT * FROM statistics WHERE status = 1 ORDER BY sort_order ASC")->fetchAll();
+$upcomingAgendas = $db->query("SELECT * FROM agendas WHERE status = 1 ORDER BY start_date ASC LIMIT 3")->fetchAll();
 
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
@@ -165,6 +166,48 @@ require BASE_PATH . '/includes/navbar.php';
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<?php if (!empty($upcomingAgendas)): ?>
+<!-- ================= AGENDA KEGIATAN TERDEKAT ================= -->
+<section class="section">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-3 reveal-up">
+      <div>
+        <h2 class="section-title mb-0">Agenda &amp; Kegiatan Sekolah</h2>
+      </div>
+      <a href="<?= e(BASE_URL) ?>/agenda" class="btn btn-outline-primary-custom">Semua Agenda</a>
+    </div>
+
+    <div class="row g-4 reveal-group">
+      <?php foreach ($upcomingAgendas as $ag): ?>
+        <?php
+          $day = date('d', strtotime($ag['start_date']));
+          $month = date('M', strtotime($ag['start_date']));
+        ?>
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 border shadow-sm rounded-4 p-3 bg-white hover-lift">
+            <div class="d-flex gap-3 align-items-start">
+              <div class="p-2 rounded-3 text-center text-white bg-primary flex-shrink-0" style="width:65px;">
+                <span class="d-block fs-4 fw-bold lh-1"><?= e($day) ?></span>
+                <span class="small text-uppercase fw-semibold" style="font-size:0.75rem;"><?= e($month) ?></span>
+              </div>
+              <div class="flex-grow-1 min-w-0">
+                <div class="small text-muted mb-1"><i class="bi bi-clock me-1"></i><?= e($ag['time_info']) ?></div>
+                <h3 class="h6 fw-bold text-dark mb-1 line-clamp-1">
+                  <a href="<?= e(BASE_URL) ?>/agenda/<?= e($ag['slug']) ?>" class="text-dark text-decoration-none hover-primary">
+                    <?= e($ag['title']) ?>
+                  </a>
+                </h3>
+                <div class="small text-muted text-truncate"><i class="bi bi-geo-alt me-1 text-danger"></i><?= e($ag['location']) ?></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>

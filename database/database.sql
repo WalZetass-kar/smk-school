@@ -576,9 +576,67 @@ VALUES
 ('Juara 2 LKS SMK IT Network System Administration', 'juara-2-lks-smk-it-network-administration', 'Fajar Ramadhan (Kelas XII TKJ)', 'Lomba Kompetensi Siswa (LKS) SMK Tingkat Kota Pekanbaru', 'kota', 'Juara 2', '2026', 'assets/images/galeri-1.jpg', 'Meraih prestasi gemilang dalam konfigurasi server Linux, keamanan jaringan, dan simulasi jaringan enterprise.'),
 ('Juara 1 Turnamen Futsal Pelajar Riau Cup', 'juara-1-turnamen-futsal-pelajar-riau-cup', 'Tim Futsal SMK Negeri Contoh', 'Turnamen Futsal Antar Pelajar Se-Sumatera Bagian Tengah', 'provinsi', 'Juara 1', '2025', 'assets/images/galeri-3.jpg', 'Tim futsal sekolah sukses meraih piala bergilir setelah mengalahkan 32 tim perwakilan sekolah lainnya.');
 
-INSERT INTO downloads (title, category, file_path, file_size, file_ext, description, downloads_count)
-VALUES
-('Kalender Akademik Tahun Ajaran 2026/2027', 'Akademik', 'assets/images/logo.png', '1.2 MB', 'pdf', 'Jadwal kegiatan belajar mengajar, UTS, UAS, libur semester, dan agenda penting sekolah.', 142),
-('Brosur Profil Sekolah & Informasi PPDB', 'PPDB', 'assets/images/logo.png', '3.5 MB', 'pdf', 'Panduan lengkap profil program keahlian, sarana prasarana, biaya, dan tata cara pendaftaran.', 289),
-('Formulir Permohonan Izin / Cuti Siswa', 'Formulir Surat', 'assets/images/logo.png', '250 KB', 'pdf', 'Format surat resmi permohonan izin tidak masuk sekolah atau kegiatan luar.', 67);
+-- ---------------------------------------------------------
+-- graduation_settings & graduations (SKL Online)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS graduation_settings (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  academic_year VARCHAR(20) NOT NULL DEFAULT '2026/2027',
+  announcement_date DATETIME NOT NULL DEFAULT '2026-05-05 10:00:00',
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  header_info TEXT,
+  signature_city VARCHAR(100) DEFAULT 'Pekanbaru',
+  signature_date DATE DEFAULT '2026-05-05',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS graduations (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nisn VARCHAR(20) NOT NULL UNIQUE,
+  exam_number VARCHAR(30) NOT NULL UNIQUE,
+  student_name VARCHAR(150) NOT NULL,
+  birth_place VARCHAR(100) DEFAULT NULL,
+  birth_date DATE DEFAULT NULL,
+  major_name VARCHAR(100) NOT NULL,
+  average_score DECIMAL(5,2) DEFAULT '85.50',
+  status ENUM('lulus', 'tidak_lulus', 'ditunda') NOT NULL DEFAULT 'lulus',
+  remarks TEXT DEFAULT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- agendas (Agenda Kegiatan Sekolah)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS agendas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(200) NOT NULL,
+  slug VARCHAR(200) NOT NULL UNIQUE,
+  start_date DATE NOT NULL,
+  end_date DATE DEFAULT NULL,
+  time_info VARCHAR(100) DEFAULT '08.00 WIB - Selesai',
+  location VARCHAR(200) DEFAULT 'Aula Utama Sekolah',
+  organizer VARCHAR(100) DEFAULT 'Waka Kurikulum / Kesiswaan',
+  description TEXT,
+  status TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- guestbooks (Buku Tamu Digital)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS guestbooks (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  institution VARCHAR(150) DEFAULT NULL,
+  phone VARCHAR(50) DEFAULT NULL,
+  email VARCHAR(150) DEFAULT NULL,
+  purpose ENUM('Dinas / Instansi', 'Orang Tua / Wali Siswa', 'Kemitraan Industri', 'Alumni', 'Umum') NOT NULL DEFAULT 'Umum',
+  person_to_meet VARCHAR(150) DEFAULT 'Kepala Sekolah / Tata Usaha',
+  notes TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
 

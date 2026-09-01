@@ -7,14 +7,14 @@ $db = getDB();
 $stats = [
     'Total Berita'     => (int) $db->query("SELECT COUNT(*) FROM news")->fetchColumn(),
     'Pendaftar PPDB'   => (int) $db->query("SELECT COUNT(*) FROM ppdb_registrations")->fetchColumn(),
+    'Kelulusan Siswa'  => (int) $db->query("SELECT COUNT(*) FROM graduations")->fetchColumn(),
+    'Agenda Kegiatan'  => (int) $db->query("SELECT COUNT(*) FROM agendas WHERE status = 1")->fetchColumn(),
     'Lowongan BKK'     => (int) $db->query("SELECT COUNT(*) FROM bkk_jobs WHERE status = 'open'")->fetchColumn(),
+    'Buku Tamu'        => (int) $db->query("SELECT COUNT(*) FROM guestbooks")->fetchColumn(),
     'Prestasi Siswa'   => (int) $db->query("SELECT COUNT(*) FROM achievements")->fetchColumn(),
-    'Ekstrakurikuler'  => (int) $db->query("SELECT COUNT(*) FROM extracurriculars WHERE status = 1")->fetchColumn(),
     'Total Unduhan'    => (int) $db->query("SELECT COUNT(*) FROM downloads")->fetchColumn(),
-    'Total Guru'       => (int) $db->query("SELECT COUNT(*) FROM teachers WHERE category = 'guru'")->fetchColumn(),
-    'Pesan Masuk'      => (int) $db->query("SELECT COUNT(*) FROM contacts WHERE is_read = 0")->fetchColumn(),
 ];
-$icons = ['bi-newspaper', 'bi-person-lines-fill', 'bi-briefcase', 'bi-trophy', 'bi-activity', 'bi-download', 'bi-person-workspace', 'bi-envelope'];
+$icons = ['bi-newspaper', 'bi-person-lines-fill', 'bi-mortarboard-fill', 'bi-calendar-event', 'bi-briefcase', 'bi-book-half', 'bi-trophy', 'bi-download'];
 
 // Berita per bulan (6 bulan terakhir)
 $monthly = $db->query("
