@@ -23,7 +23,14 @@ if (empty($_SESSION['guest_captcha_a']) || empty($_SESSION['guest_captcha_b'])) 
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+    $ip = getClientIP();
+    $rateKey = 'guestbook_submit_' . md5($ip);
+    $remainingLockout = 0;
+
+    if (!checkRateLimit($rateKey, 5, 600, $remainingLockout)) {
+        $mins = ceil($remainingLockout / 60);
+        $errors[] = "Terlalu banyak pengisian buku tamu dari perangkat Anda. Silakan tunggu {$mins} menit sebelum mencoba lagi.";
+    } elseif (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
         $errors[] = 'Sesi form kadaluarsa. Silakan muat ulang halaman.';
     }
 
@@ -59,6 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $old['person_to_meet'],
             $old['notes'],
         ]);
+
+        recordRateLimitAttempt($rateKey, 600);
 
         $_SESSION['guest_captcha_a'] = rand(1, 9);
         $_SESSION['guest_captcha_b'] = rand(1, 9);

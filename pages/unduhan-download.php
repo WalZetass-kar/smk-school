@@ -21,16 +21,16 @@ if (!$doc) {
 // Increment downloads count
 $db->prepare("UPDATE downloads SET downloads_count = downloads_count + 1 WHERE id = ?")->execute([$id]);
 
-$filePath = BASE_PATH . '/' . $doc['file_path'];
+$filePath = BASE_PATH . '/' . ltrim($doc['file_path'], '/\\');
 
-if (file_exists($filePath) && is_file($filePath)) {
-    $filename = basename($doc['file_path']);
+// Anti Path Traversal Validation
+if (file_exists($filePath) && is_file($filePath) && isSafePath($filePath, BASE_PATH)) {
     $mime = mime_content_type($filePath) ?: 'application/octet-stream';
 
     header('Content-Description: File Transfer');
     header('Content-Type: ' . $mime);
     $safeName = preg_replace('/[^a-zA-Z0-9_\-\. ]/', '', $doc['title']) ?: 'dokumen';
-    header('Content-Disposition: attachment; filename="' . $safeName . '.' . $doc['file_ext'] . '"');
+    header('Content-Disposition: attachment; filename="' . $safeName . '.' . preg_replace('/[^a-zA-Z0-9]/', '', $doc['file_ext']) . '"');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
@@ -38,6 +38,6 @@ if (file_exists($filePath) && is_file($filePath)) {
     readfile($filePath);
     exit;
 } else {
-    // If file is external or relative asset URL
-    redirect(BASE_URL . '/' . $doc['file_path']);
+    setFlash('error', 'File fisik dokumen tidak ditemukan atau tidak valid.');
+    redirect(BASE_URL . '/unduhan');
 }

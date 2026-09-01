@@ -16,6 +16,15 @@ $pageDescription = $pageDescription ?? ($profile['description'] ?? '');
 $pageImage       = $pageImage ?? (ASSETS_URL . '/images/og-default.jpg');
 $canonicalPath   = $canonicalPath ?? ($_SERVER['REQUEST_URI'] ?? '/');
 $canonicalUrl    = BASE_URL . $canonicalPath;
+
+// Emit standard Security Headers if headers haven't been sent yet
+if (!headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

@@ -40,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $update = $db->prepare("UPDATE ppdb_registrations SET status = ?, notes = ? WHERE id = ?");
         $update->execute([$status, $notes, $id]);
 
+        logActivity('UPDATE_PPDB_STATUS', 'ppdb', "Verifikasi status PPDB {$reg['full_name']} ({$reg['registration_no']}) diubah menjadi: $status");
+
         setFlash('success', 'Status pendaftaran berhasil diperbarui.');
         redirect(BASE_URL . '/admin/ppdb/detail.php?id=' . $id);
     }

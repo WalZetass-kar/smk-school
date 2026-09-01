@@ -23,6 +23,7 @@ $stmt->execute([$id]);
 $files = $stmt->fetch();
 
 if ($files) {
+    $candName = $db->query("SELECT full_name FROM ppdb_registrations WHERE id = $id")->fetchColumn() ?: "ID #$id";
     foreach (['document_photo', 'document_kk', 'document_rapor'] as $col) {
         if (!empty($files[$col])) {
             $path = BASE_PATH . '/' . $files[$col];
@@ -32,6 +33,7 @@ if ($files) {
         }
     }
     $db->prepare("DELETE FROM ppdb_registrations WHERE id = ?")->execute([$id]);
+    logActivity('DELETE_PPDB_REGISTRATION', 'ppdb', "Menghapus berkas & data pendaftar: $candName (ID: $id)");
     setFlash('success', 'Data pendaftar berhasil dihapus.');
 }
 

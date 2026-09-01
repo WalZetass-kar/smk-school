@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/agendas/form.php
  * Tambah / Edit Agenda
@@ -61,6 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        $old['description'] = cleanHtml($old['description']);
+
         if ($id > 0) {
             $stmt = $db->prepare("
                 UPDATE agendas 
@@ -72,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $old['time_info'], $old['location'], $old['organizer'], 
                 $old['description'], $old['status'], $id
             ]);
+            logActivity('UPDATE_AGENDA', 'agendas', "Memperbarui agenda kegiatan: {$old['title']}");
             setFlash('success', 'Agenda kegiatan berhasil diperbarui.');
         } else {
             $stmt = $db->prepare("
@@ -83,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $old['time_info'], $old['location'], $old['organizer'], 
                 $old['description'], $old['status']
             ]);
+            logActivity('CREATE_AGENDA', 'agendas', "Menambahkan agenda kegiatan baru: {$old['title']}");
             setFlash('success', 'Agenda kegiatan baru berhasil ditambahkan.');
         }
         redirect(BASE_URL . '/admin/agendas/index.php');

@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
+            $content = cleanHtml($content);
             $publishedAt = $article['published_at'] ?? null;
             if ($status === 'publish' && !$publishedAt) {
                 $publishedAt = date('Y-m-d H:i:s');
@@ -53,9 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($article) {
                 $db->prepare("UPDATE news SET category_id=?, title=?, slug=?, excerpt=?, content=?, featured_image=?, status=?, published_at=? WHERE id=?")
                    ->execute([$categoryId, $title, $slug, $excerpt, $content, $image, $status, $publishedAt, $article['id']]);
+                logActivity('UPDATE_NEWS', 'news', "Memperbarui artikel berita: $title ($status)");
             } else {
                 $db->prepare("INSERT INTO news (category_id, title, slug, excerpt, content, featured_image, author_id, status, published_at) VALUES (?,?,?,?,?,?,?,?,?)")
                    ->execute([$categoryId, $title, $slug, $excerpt, $content, $image, $_SESSION['admin_id'], $status, $publishedAt]);
+                logActivity('CREATE_NEWS', 'news', "Menerbitkan artikel berita baru: $title ($status)");
             }
             setFlash('success', 'Berita berhasil disimpan.');
             redirect(BASE_URL . '/admin/news/index.php');

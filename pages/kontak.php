@@ -17,6 +17,10 @@ if (empty($_SESSION['captcha_a']) || empty($_SESSION['captcha_b'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $ip = getClientIP();
+    $rateKey = 'contact_submit_' . md5($ip);
+    $remainingLockout = 0;
+
     $old['name']    = trim($_POST['name'] ?? '');
     $old['email']   = trim($_POST['email'] ?? '');
     $old['phone']   = trim($_POST['phone'] ?? '');
@@ -24,7 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old['message'] = trim($_POST['message'] ?? '');
     $captchaAnswer  = trim($_POST['captcha_answer'] ?? '');
 
-    if (!csrfVerify($_POST['csrf_token'] ?? null)) {
+    if (!checkRateLimit($rateKey, 5, 600, $remainingLockout)) {
+        $mins = ceil($remainingLockout / 60);
+        $errors[] = "Terlalu banyak pengiriman pesan. Silakan tunggu {$mins} menit sebelum mengirim pesan baru.";
+    } elseif (!csrfVerify($_POST['csrf_token'] ?? null)) {
         $errors[] = 'Sesi form sudah kadaluarsa atau tidak valid, silakan coba lagi.';
     }
     if ($old['name'] === '') {
@@ -44,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare("INSERT INTO contacts (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$old['name'], $old['email'], $old['phone'], $old['subject'], $old['message']]);
         
+        recordRateLimitAttempt($rateKey, 600);
+
         // Reset captcha
         $_SESSION['captcha_a'] = random_int(2, 9);
         $_SESSION['captcha_b'] = random_int(1, 9);

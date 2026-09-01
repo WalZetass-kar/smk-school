@@ -7,13 +7,19 @@ if (!empty($_SESSION['admin_id'])) {
 }
 
 $errors = [];
+$remainingLockout = 0;
+$ip = getClientIP();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $rateKey  = 'login_admin_' . md5($ip . '_' . $username);
 
-    if (!csrfVerify($_POST['csrf_token'] ?? null)) {
-        $errors[] = 'Sesi form sudah tidak valid, silakan coba lagi.';
+    if (!checkRateLimit($rateKey, 5, 600, $remainingLockout)) {
+        $mins = ceil($remainingLockout / 60);
+        $errors[] = "Terlalu banyak percobaan login gagal. Akun/IP terkunci sementara demi keamanan. Silakan tunggu {$mins} menit ({$remainingLockout} detik).";
+    } elseif (!csrfVerify($_POST['csrf_token'] ?? null)) {
+        $errors[] = 'Sesi form sudah tidak valid atau telah kedaluwarsa. Silakan refresh halaman.';
     } elseif ($username === '' || $password === '') {
         $errors[] = 'Username dan password wajib diisi.';
     } else {
@@ -22,13 +28,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch();
 
         if (!$user || !password_verify($password, $user['password'])) {
+            recordRateLimitAttempt($rateKey, 600);
+            logActivity('LOGIN_FAILED', 'auth', 'Percobaan login gagal untuk username: ' . substr($username, 0, 50));
             $errors[] = 'Username atau password salah.';
         } else {
-            // Prevent session fixation: get a fresh session ID after a successful login.
+            // Reset rate limit on successful authentication
+            resetRateLimit($rateKey);
+
+            // Prevent session fixation: get a fresh session ID
             session_regenerate_id(true);
-            $_SESSION['admin_id']   = $user['id'];
-            $_SESSION['admin_name'] = $user['name'];
-            $_SESSION['admin_role'] = $user['role'];
+            $_SESSION['admin_id']       = $user['id'];
+            $_SESSION['admin_name']     = $user['name'];
+            $_SESSION['admin_username'] = $user['username'];
+            $_SESSION['admin_role']     = $user['role'];
+            $_SESSION['last_activity']  = time();
+
+            logActivity('LOGIN_SUCCESS', 'auth', 'Admin ' . $user['name'] . ' (' . $user['role'] . ') berhasil masuk ke sistem.');
             redirect(BASE_URL . '/admin/dashboard.php');
         }
     }

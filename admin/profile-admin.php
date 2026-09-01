@@ -70,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->prepare("UPDATE users SET name=?, username=?, email=?, photo=? WHERE id=?")
                    ->execute([$name, $username, $email, $photo, $me['id']]);
                 $_SESSION['admin_name'] = $name;
+                logActivity('UPDATE_PROFILE', 'users', "Admin memperbarui data profil akun ({$username})");
                 setFlash('success', 'Informasi profil admin berhasil diperbarui.');
                 redirect(BASE_URL . '/admin/profile-admin.php');
             }
@@ -91,10 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (empty($passErrors)) {
                 // Verify old password
                 if (!password_verify($oldPassword, $me['password'])) {
+                    logActivity('FAILED_PASSWORD_CHANGE', 'users', 'Percobaan ganti password gagal (password lama salah)');
                     $passErrors[] = 'Password saat ini salah. Silakan periksa kembali.';
                 } else {
                     $newHash = password_hash($newPassword, PASSWORD_BCRYPT);
                     $db->prepare("UPDATE users SET password = ? WHERE id = ?")->execute([$newHash, $me['id']]);
+                    logActivity('CHANGE_PASSWORD', 'users', 'Admin berhasil mengganti password akun.');
                     setFlash('success', 'Password akun Anda berhasil diperbarui.');
                     redirect(BASE_URL . '/admin/profile-admin.php');
                 }

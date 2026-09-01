@@ -5,8 +5,19 @@
  */
 header('Content-Type: application/json; charset=utf-8');
 
+$ip = getClientIP();
+$rateKey = 'search_api_' . md5($ip);
+$remainingLockout = 0;
+
+if (!checkRateLimit($rateKey, 60, 60, $remainingLockout)) {
+    http_response_code(429);
+    echo json_encode(['results' => [], 'error' => 'Too Many Requests']);
+    exit;
+}
+recordRateLimitAttempt($rateKey, 60);
+
 $query = trim($_GET['q'] ?? '');
-if (mb_strlen($query) < 2) {
+if (mb_strlen($query) < 2 || mb_strlen($query) > 100) {
     echo json_encode(['results' => []]);
     exit;
 }

@@ -24,16 +24,26 @@ $searched = false;
 $searchError = null;
 
 if ($isOpen && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $searchKey = trim($_POST['search_key'] ?? '');
-    $searched = true;
-    if ($searchKey === '') {
-        $searchError = 'Silakan masukkan NISN atau Nomor Peserta Ujian.';
+    $ip = getClientIP();
+    $rateKey = 'kelulusan_search_' . md5($ip);
+    $remainingLockout = 0;
+
+    if (!checkRateLimit($rateKey, 20, 60, $remainingLockout)) {
+        $searchError = "Terlalu banyak permintaan pencarian. Mohon tunggu {$remainingLockout} detik.";
+        $searched = true;
     } else {
-        $stmt = $db->prepare("SELECT * FROM graduations WHERE nisn = ? OR exam_number = ? LIMIT 1");
-        $stmt->execute([$searchKey, $searchKey]);
-        $student = $stmt->fetch();
-        if (!$student) {
-            $searchError = 'Data siswa dengan NISN / Nomor Ujian "' . htmlspecialchars($searchKey) . '" tidak ditemukan. Mohon periksa kembali nomor yang Anda masukkan.';
+        recordRateLimitAttempt($rateKey, 60);
+        $searchKey = trim($_POST['search_key'] ?? '');
+        $searched = true;
+        if ($searchKey === '') {
+            $searchError = 'Silakan masukkan NISN atau Nomor Peserta Ujian.';
+        } else {
+            $stmt = $db->prepare("SELECT * FROM graduations WHERE nisn = ? OR exam_number = ? LIMIT 1");
+            $stmt->execute([$searchKey, $searchKey]);
+            $student = $stmt->fetch();
+            if (!$student) {
+                $searchError = 'Data siswa dengan NISN / Nomor Ujian "' . htmlspecialchars($searchKey) . '" tidak ditemukan. Mohon periksa kembali nomor yang Anda masukkan.';
+            }
         }
     }
 }

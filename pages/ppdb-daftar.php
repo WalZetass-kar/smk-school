@@ -59,7 +59,14 @@ $formData = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrfVerify($_POST['csrf_token'] ?? null)) {
+    $ip = getClientIP();
+    $rateKey = 'ppdb_submit_' . md5($ip);
+    $remainingLockout = 0;
+
+    if (!checkRateLimit($rateKey, 5, 3600, $remainingLockout)) {
+        $mins = ceil($remainingLockout / 60);
+        $errors[] = "Anda telah mencapai batas pengiriman formulir. Demi keamanan, silakan tunggu {$mins} menit sebelum mencoba mendaftar kembali.";
+    } elseif (!csrfVerify($_POST['csrf_token'] ?? null)) {
         $errors[] = 'Sesi formulir telah kedaluwarsa, silakan coba kirim ulang formulir.';
     } else {
         $formData['full_name']       = trim($_POST['full_name'] ?? '');
@@ -81,10 +88,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData['major_choice_1']  = (int) ($_POST['major_choice_1'] ?? 0);
         $formData['major_choice_2']  = (int) ($_POST['major_choice_2'] ?? 0) ?: null;
 
-        // Validasi Wajib
+        // Validasi Wajib & Format Ketat
         if ($formData['full_name'] === '')     { $errors[] = 'Nama lengkap calon siswa wajib diisi.'; }
         if ($formData['nisn'] === '')          { $errors[] = 'NISN (10 Digit) wajib diisi.'; }
+        elseif (!preg_match('/^[0-9]{10}$/', $formData['nisn'])) { $errors[] = 'Format NISN tidak valid (harus tepat 10 digit angka).'; }
+
         if ($formData['nik'] === '')           { $errors[] = 'NIK (16 Digit) wajib diisi.'; }
+        elseif (!preg_match('/^[0-9]{16}$/', $formData['nik'])) { $errors[] = 'Format NIK tidak valid (harus tepat 16 digit angka).'; }
+
         if ($formData['birth_place'] === '')   { $errors[] = 'Tempat lahir wajib diisi.'; }
         if ($formData['birth_date'] === '')    { $errors[] = 'Tanggal lahir wajib diisi.'; }
         if ($formData['address'] === '')       { $errors[] = 'Alamat tempat tinggal wajib diisi.'; }
@@ -94,8 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($formData['parent_phone'] === '')  { $errors[] = 'Nomor WhatsApp / HP Orang Tua wajib diisi.'; }
         if (!$formData['major_choice_1'])      { $errors[] = 'Pilihan Jurusan Utama wajib dipilih.'; }
 
+        if ($formData['email'] !== '' && !filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Format alamat email tidak valid.';
+        }
+
         // Cek apakah NISN sudah pernah terdaftar
-        if ($formData['nisn'] !== '') {
+        if ($formData['nisn'] !== '' && empty($errors)) {
             $checkNisn = $db->prepare("SELECT id, registration_no FROM ppdb_registrations WHERE nisn = ?");
             $checkNisn->execute([$formData['nisn']]);
             if ($existing = $checkNisn->fetch()) {
@@ -179,6 +194,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $docKk,
                 $docRapor
             ]);
+
+            recordRateLimitAttempt($rateKey, 3600);
+            logActivity('PPDB_REGISTER', 'ppdb', 'Pendaftaran PPDB Baru: ' . $formData['full_name'] . ' (No: ' . $regNo . ', NISN: ' . $formData['nisn'] . ')');
 
             setFlash('success', 'Selamat! Formulir pendaftaran Anda berhasil terkirim.');
             redirect(BASE_URL . '/ppdb/sukses?no=' . urlencode($regNo));

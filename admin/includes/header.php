@@ -4,6 +4,14 @@
  * Expects $pageTitle to be set by the including page.
  */
 $adminPageTitle = $pageTitle ?? 'Dashboard';
+
+if (!headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

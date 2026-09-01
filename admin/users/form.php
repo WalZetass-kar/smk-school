@@ -86,11 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ((int)$item['id'] === (int)$_SESSION['admin_id']) {
                     $_SESSION['admin_name'] = $name;
                 }
+                logActivity('UPDATE_ADMIN_USER', 'users', "Super Admin mengubah data admin: $name ($username, role: $role)");
                 setFlash('success', 'Akun admin "' . e($name) . '" berhasil diperbarui.');
             } else {
                 $hash = password_hash($password, PASSWORD_BCRYPT);
                 $db->prepare("INSERT INTO users (name, username, email, password, role, photo) VALUES (?,?,?,?,?,?)")
                    ->execute([$name, $username, $email, $hash, $role, $photo]);
+                logActivity('CREATE_ADMIN_USER', 'users', "Super Admin mendaftarkan admin baru: $name ($username, role: $role)");
                 setFlash('success', 'Akun admin baru "' . e($name) . '" berhasil ditambahkan.');
             }
             redirect(BASE_URL . '/admin/users/index.php');

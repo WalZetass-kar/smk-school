@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 
+if (!empty($_SESSION['admin_id'])) {
+    logActivity('LOGOUT', 'auth', 'Admin ' . ($_SESSION['admin_name'] ?? 'Admin') . ' berhasil keluar dari sesi.');
+}
+
 $_SESSION = [];
 if (ini_get('session.use_cookies')) {
     $params = session_get_cookie_params();

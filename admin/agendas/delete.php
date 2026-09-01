@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/agendas/delete.php
  * Hapus Agenda
@@ -12,8 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = (int)($_POST['id'] ?? 0);
         if ($id > 0) {
             $db = getDB();
+            $title = $db->query("SELECT title FROM agendas WHERE id = $id")->fetchColumn() ?: "ID #$id";
             $stmt = $db->prepare("DELETE FROM agendas WHERE id = ?");
             $stmt->execute([$id]);
+            logActivity('DELETE_AGENDA', 'agendas', "Menghapus agenda kegiatan: $title (ID: $id)");
             setFlash('success', 'Agenda kegiatan berhasil dihapus.');
         }
     }

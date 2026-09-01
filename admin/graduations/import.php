@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/graduations/import.php
  * Import Data Siswa Kelulusan Massal dari CSV
@@ -16,7 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Sesi form kadaluarsa.';
     }
 
-    if (empty($_FILES['csv_file']['tmp_name'])) {
+    $fileName = $_FILES['csv_file']['name'] ?? '';
+    $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+    if ($ext !== 'csv') {
+        $errors[] = 'Format berkas harus berupa file CSV (.csv).';
+    } elseif (empty($_FILES['csv_file']['tmp_name'])) {
         $errors[] = 'Silakan pilih file CSV yang akan diunggah.';
     } else {
         $file = $_FILES['csv_file']['tmp_name'];
@@ -54,6 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             fclose($handle);
+
+            logActivity('IMPORT_GRADUATION_CSV', 'graduations', "Mengimpor massal $successCount data siswa kelulusan via CSV.");
             setFlash('success', "Berhasil mengimpor / memperbarui $successCount data siswa kelulusan.");
             redirect(BASE_URL . '/admin/graduations/index.php');
         } else {
@@ -63,8 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Import Data Siswa Kelulusan (CSV)';
-$currentAdminNav = 'graduations';
 require __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/sidebar.php';
+require __DIR__ . '/../includes/topbar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">

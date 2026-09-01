@@ -59,7 +59,8 @@ foreach ($tables as $table) {
 $sqlDump .= "SET FOREIGN_KEY_CHECKS=1;\n";
 
 // Stream download
-$filename = 'backup_' . $dbName . '_' . date('Ymd_His') . '.sql';
+$filename = 'backup_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $dbName) . '_' . date('Ymd_His') . '.sql';
+logActivity('DATABASE_BACKUP', 'backup', 'Super Admin mengunduh backup cadangan database: ' . $filename);
 
 header('Content-Type: application/sql');
 header('Content-Disposition: attachment; filename="' . $filename . '"');

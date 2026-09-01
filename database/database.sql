@@ -642,4 +642,34 @@ CREATE TABLE IF NOT EXISTS guestbooks (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
+-- ---------------------------------------------------------
+-- activity_logs (Audit Trail Keamanan Admin)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS activity_logs (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED DEFAULT NULL,
+  user_name VARCHAR(100) DEFAULT 'System',
+  user_role VARCHAR(50) DEFAULT 'admin',
+  action VARCHAR(100) NOT NULL,
+  module VARCHAR(100) NOT NULL,
+  detail TEXT DEFAULT NULL,
+  ip_address VARCHAR(45) NOT NULL,
+  user_agent VARCHAR(255) DEFAULT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_user (user_id),
+  INDEX idx_module (module),
+  INDEX idx_created (created_at)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- rate_limits (Proteksi Brute Force & Rate Limiting)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS rate_limits (
+  rate_key VARCHAR(150) PRIMARY KEY,
+  attempts INT UNSIGNED NOT NULL DEFAULT 1,
+  last_attempt INT UNSIGNED NOT NULL,
+  lockout_until INT UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB;
+
+
 
