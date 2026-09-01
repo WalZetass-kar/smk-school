@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * admin/modules/toggle.php
  * Endpoint toggle 1-klik untuk status aktif/nonaktif modul fitur
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int) ($_POST['id'] ?? 0);
     $db = getDB();
 
-    $stmt = $db->prepare("SELECT id, module_key, module_name, is_active FROM site_modules WHERE id = ?");
+    $stmt = $db->prepare("SELECT id, module_key, name, is_active FROM site_modules WHERE id = ?");
     $stmt->execute([$id]);
     $mod = $stmt->fetch();
 
@@ -24,8 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->prepare("UPDATE site_modules SET is_active = ? WHERE id = ?")->execute([$newStatus, $id]);
 
         $statusText = $newStatus ? 'diaktifkan (ON)' : 'dinonaktifkan (OFF)';
-        logActivity('TOGGLE_MODULE', 'site_modules', "Modul {$mod['module_name']} ({$mod['module_key']}) $statusText.");
-        setFlash('success', "Modul \"{$mod['module_name']}\" berhasil $statusText.");
+        $modDisplayName = $mod['name'] ?? ucfirst($mod['module_key']);
+        logActivity('TOGGLE_MODULE', 'site_modules', "Modul {$modDisplayName} ({$mod['module_key']}) $statusText.");
+        setFlash('success', "Modul \"{$modDisplayName}\" berhasil $statusText.");
     } else {
         setFlash('danger', 'Modul tidak ditemukan.');
     }
