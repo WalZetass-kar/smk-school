@@ -176,23 +176,24 @@ body.admin-body {
     top: 0;
     z-index: 1020;
 }
+/* ---- Admin Main Content Page Transition (Bottom to Top Slide Up) ---- */
 .admin-main {
     padding: 1.85rem;
     flex-grow: 1;
-    animation: adminPageFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: adminSlideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     will-change: opacity, transform;
 }
 
 .admin-main.admin-main-leaving {
-    opacity: 0.75;
-    transform: translateY(-4px);
-    transition: opacity 0.16s ease, transform 0.16s ease;
+    opacity: 0.6;
+    transform: translateY(-8px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-@keyframes adminPageFadeIn {
+@keyframes adminSlideUp {
     0% {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(30px);
     }
     100% {
         opacity: 1;
@@ -200,11 +201,29 @@ body.admin-body {
     }
 }
 
-/* ---- Smooth Bootstrap Tabs & Tab Panes Transition ---- */
+/* Staggered bottom-to-top rise for cards and elements */
+.admin-main .admin-card, 
+.admin-main .card,
+.admin-main .row {
+    animation: adminCardSlideUp 0.44s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes adminCardSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Smooth Bootstrap Tabs (Bottom to Top Slide Up) ---- */
 .tab-content > .tab-pane {
     opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.25s ease-out, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(24px);
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .tab-content > .tab-pane.active.show {
     opacity: 1;
@@ -215,7 +234,7 @@ body.admin-body {
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-tabs .nav-link:active, .nav-pills .nav-link:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
 }
 
 /* =========================================================

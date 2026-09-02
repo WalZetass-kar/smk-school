@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ---- 10. Smooth Bootstrap Tab Switch Animation ---- */
+    /* ---- 10. Smooth Bootstrap Tab Switch Animation (Bottom to Top) ---- */
     document.querySelectorAll('[data-bs-toggle="tab"], [data-bs-toggle="pill"]').forEach((tab) => {
         tab.addEventListener('shown.bs.tab', (e) => {
             const targetSelector = e.target.getAttribute('data-bs-target') || e.target.getAttribute('href');
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (targetPane) {
                     targetPane.style.animation = 'none';
                     targetPane.offsetHeight; // trigger reflow
-                    targetPane.style.animation = 'adminPageFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                    targetPane.style.animation = 'adminSlideUp 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards';
                 }
             }
         });
