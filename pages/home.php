@@ -411,6 +411,18 @@ require BASE_PATH . '/includes/navbar.php';
   $isOpen = !empty($ppdbSettings['is_open']);
   $acadYear = $ppdbSettings['academic_year'] ?? '2026/2027';
   $waContact = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $profile['whatsapp_ppdb']) : (!empty($ppdbSettings['contact_person']) ? preg_replace('/[^0-9]/', '', $ppdbSettings['contact_person']) : '6281234567890');
+
+  $periodeText = 'Segera Diumumkan';
+  if (!empty($ppdbSettings['start_date']) && !empty($ppdbSettings['end_date'])) {
+      $periodeText = date('d M Y', strtotime($ppdbSettings['start_date'])) . ' – ' . date('d M Y', strtotime($ppdbSettings['end_date']));
+  } elseif (!empty($ppdbSettings['start_date'])) {
+      $periodeText = 'Mulai ' . date('d M Y', strtotime($ppdbSettings['start_date']));
+  }
+
+  $announcementText = 'Menyusul';
+  if (!empty($ppdbSettings['announcement_date'])) {
+      $announcementText = date('d M Y', strtotime($ppdbSettings['announcement_date']));
+  }
 ?>
 <section class="section pt-3 pb-5">
   <div class="container">
@@ -435,11 +447,11 @@ require BASE_PATH . '/includes/navbar.php';
           <div class="d-flex flex-wrap gap-2.5 justify-content-center justify-content-lg-start">
             <div class="ppdb-cta-highlight">
               <i class="bi bi-calendar-check text-warning fs-5"></i>
-              <span>Periode: <strong><?= date('d M Y', strtotime($ppdbSettings['start_date'])) ?> – <?= date('d M Y', strtotime($ppdbSettings['end_date'])) ?></strong></span>
+              <span>Periode: <strong><?= e($periodeText) ?></strong></span>
             </div>
             <div class="ppdb-cta-highlight">
               <i class="bi bi-megaphone text-info fs-5"></i>
-              <span>Pengumuman: <strong><?= date('d M Y', strtotime($ppdbSettings['announcement_date'])) ?></strong></span>
+              <span>Pengumuman: <strong><?= e($announcementText) ?></strong></span>
             </div>
           </div>
         </div>
