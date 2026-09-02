@@ -35,19 +35,8 @@ if (!headers_sent()) {
 <link href="<?= e(ASSETS_URL . '/css/style.css?v=' . filemtime(BASE_PATH . '/assets/css/style.css')) ?>" rel="stylesheet">
 <link href="<?= e(ASSETS_URL . '/css/admin.css?v=' . filemtime(BASE_PATH . '/assets/css/admin.css')) ?>" rel="stylesheet">
 
-<!-- Dynamic Theme Colors -->
-<?php
-  $themePrimary   = !empty($adminHeaderProfile['theme_color_primary']) ? $adminHeaderProfile['theme_color_primary'] : '#0F2C59';
-  $themeSecondary = !empty($adminHeaderProfile['theme_color_secondary']) ? $adminHeaderProfile['theme_color_secondary'] : '#2563EB';
-  $themeAccent    = !empty($adminHeaderProfile['theme_color_accent']) ? $adminHeaderProfile['theme_color_accent'] : '#F59E0B';
-?>
-<style>
-  :root {
-    --color-primary: <?= htmlspecialchars($themePrimary, ENT_QUOTES, 'UTF-8') ?>;
-    --color-secondary: <?= htmlspecialchars($themeSecondary, ENT_QUOTES, 'UTF-8') ?>;
-    --color-accent: <?= htmlspecialchars($themeAccent, ENT_QUOTES, 'UTF-8') ?>;
-  }
-</style>
+<!-- Dynamic Theme Colors Overrides -->
+<?= renderDynamicThemeStyles($adminHeaderProfile) ?>
 
 <!-- Local Summernote -->
 <link href="<?= e(ASSETS_URL . '/vendor/summernote/summernote-lite.min.css?v=' . filemtime(BASE_PATH . '/assets/vendor/summernote/summernote-lite.min.css')) ?>" rel="stylesheet">

@@ -835,3 +835,211 @@ function sendWhatsAppNotification(string $targetPhone, string $message): array
         return ['status' => false, 'message' => $e->getMessage()];
     }
 }
+
+/**
+ * Convert Hex color to "R, G, B" string for CSS RGB variables.
+ */
+function hexToRgb(string $hex): string
+{
+    $hex = ltrim($hex, '#');
+    if (strlen($hex) === 3) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+    if (strlen($hex) !== 6) {
+        return '15, 44, 89';
+    }
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+    return "$r, $g, $b";
+}
+
+/**
+ * Adjust color brightness by percentage (-100 to +100).
+ */
+function adjustColorBrightness(string $hex, float $percent): string
+{
+    $hex = ltrim($hex, '#');
+    if (strlen($hex) === 3) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+    if (strlen($hex) !== 6) {
+        return '#0F2C59';
+    }
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+
+    $r = max(0, min(255, $r + ($r * $percent / 100)));
+    $g = max(0, min(255, $g + ($g * $percent / 100)));
+    $b = max(0, min(255, $b + ($b * $percent / 100)));
+
+    return sprintf('#%02x%02x%02x', round($r), round($g), round($b));
+}
+
+/**
+ * Mix color with white to create soft pastel tints for badges & subtle boxes.
+ */
+function mixColorWithWhite(string $hex, float $weight = 0.88): string
+{
+    $hex = ltrim($hex, '#');
+    if (strlen($hex) === 3) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+    if (strlen($hex) !== 6) {
+        return '#EEF2FF';
+    }
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+
+    $r = round($r * (1 - $weight) + 255 * $weight);
+    $g = round($g * (1 - $weight) + 255 * $weight);
+    $b = round($b * (1 - $weight) + 255 * $weight);
+
+    return sprintf('#%02x%02x%02x', $r, $g, $b);
+}
+
+/**
+ * Output dynamic CSS variables and comprehensive class overrides.
+ */
+function renderDynamicThemeStyles(array $profile): string
+{
+    $p = !empty($profile['theme_color_primary']) ? $profile['theme_color_primary'] : '#0F2C59';
+    $s = !empty($profile['theme_color_secondary']) ? $profile['theme_color_secondary'] : '#2563EB';
+    $a = !empty($profile['theme_color_accent']) ? $profile['theme_color_accent'] : '#F59E0B';
+
+    $pDark   = adjustColorBrightness($p, -38);
+    $pLight  = adjustColorBrightness($p, 25);
+    $pSubtle = mixColorWithWhite($p, 0.90);
+
+    $sDark   = adjustColorBrightness($s, -25);
+    $sSubtle = mixColorWithWhite($s, 0.88);
+
+    $aDark   = adjustColorBrightness($a, -18);
+    $aSubtle = mixColorWithWhite($a, 0.88);
+
+    $pRgb = hexToRgb($p);
+    $sRgb = hexToRgb($s);
+    $aRgb = hexToRgb($a);
+
+    return <<<CSS
+<style id="dynamicThemeStyles">
+  :root {
+    --color-primary: {$p} !important;
+    --color-primary-dark: {$pDark} !important;
+    --color-primary-light: {$pLight} !important;
+    --color-primary-subtle: {$pSubtle} !important;
+    --color-secondary: {$s} !important;
+    --color-secondary-dark: {$sDark} !important;
+    --color-secondary-light: {$sSubtle} !important;
+    --color-accent: {$a} !important;
+    --color-accent-hover: {$aDark} !important;
+    --color-accent-light: {$aSubtle} !important;
+
+    --bs-primary: {$p} !important;
+    --bs-primary-rgb: {$pRgb} !important;
+    --bs-secondary: {$s} !important;
+    --bs-secondary-rgb: {$sRgb} !important;
+    --bs-link-color: {$p} !important;
+    --bs-link-hover-color: {$pDark} !important;
+  }
+
+  /* Universal Solid Theme Overrides (White remains pure white) */
+  .bg-primary, 
+  .navbar-custom, 
+  .top-announcement-bar, 
+  .section-video-tour, 
+  .footer-smk, 
+  .statistik-section, 
+  .ppdb-cta-card, 
+  .admin-sidebar {
+    background-color: var(--color-primary) !important;
+  }
+
+  .footer-bottom, .admin-sidebar .sidebar-footer {
+    background-color: var(--color-primary-dark) !important;
+  }
+
+  .bg-primary-subtle {
+    background-color: var(--color-primary-subtle) !important;
+    color: var(--color-primary) !important;
+  }
+
+  .text-primary, 
+  .text-primary-custom, 
+  a.hover-primary:hover, 
+  .section-title, 
+  .jurusan-card-title, 
+  .sambutan-card h2, 
+  .profil-fact-card .profil-fact-icon, 
+  .admin-sidebar .sidebar-brand {
+    color: var(--color-primary) !important;
+  }
+
+  .border-primary {
+    border-color: var(--color-primary) !important;
+  }
+
+  .btn-primary, .btn-primary-custom {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: #ffffff !important;
+  }
+  .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+    color: #ffffff !important;
+  }
+
+  .btn-outline-primary, .btn-outline-primary-custom {
+    color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+  }
+  .btn-outline-primary:hover, .btn-outline-primary-custom:hover {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: #ffffff !important;
+  }
+
+  .btn-accent, .btn-hero-primary {
+    background-color: var(--color-accent) !important;
+    border-color: var(--color-accent) !important;
+    color: #000000 !important;
+  }
+  .btn-accent:hover, .btn-hero-primary:hover {
+    background-color: var(--color-accent-hover) !important;
+    border-color: var(--color-accent-hover) !important;
+    color: #000000 !important;
+  }
+
+  .badge.bg-primary {
+    background-color: var(--color-primary) !important;
+    color: #ffffff !important;
+  }
+
+  .badge.bg-primary-subtle, .badge-jurusan, .jurusan-code-tag {
+    background-color: var(--color-primary-subtle) !important;
+    color: var(--color-primary) !important;
+  }
+
+  .nav-pills .nav-link.active, 
+  .nav-tabs .nav-link.active, 
+  .pagination .page-item.active .page-link, 
+  .dropdown-item.active {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: #ffffff !important;
+  }
+
+  .form-check-input:checked {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+  }
+
+  #page-progress-bar, #pageTopProgress {
+    background-color: var(--color-secondary) !important;
+  }
+</style>
+CSS;
+}
