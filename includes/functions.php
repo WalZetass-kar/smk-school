@@ -972,8 +972,7 @@ function renderDynamicThemeStyles(array $profile): string
   .section-title, 
   .jurusan-card-title, 
   .sambutan-card h2, 
-  .profil-fact-card .profil-fact-icon, 
-  .admin-sidebar .sidebar-brand {
+  .profil-fact-card .profil-fact-icon {
     color: var(--color-primary) !important;
   }
 
@@ -1035,6 +1034,42 @@ function renderDynamicThemeStyles(array $profile): string
   .form-check-input:checked {
     background-color: var(--color-primary) !important;
     border-color: var(--color-primary) !important;
+  }
+
+  /* Admin Sidebar Elements Always Clean & Visible */
+  .admin-sidebar {
+    background-color: var(--color-primary-dark) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+  .admin-sidebar .sidebar-brand {
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  .admin-sidebar .sidebar-brand-title {
+    color: #ffffff !important;
+  }
+  .admin-sidebar .sidebar-brand-subtitle {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+  .admin-sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.82) !important;
+  }
+  .admin-sidebar .nav-link:hover {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .admin-sidebar .nav-link.active {
+    color: var(--color-accent) !important;
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    border-left-color: var(--color-accent) !important;
+  }
+  .admin-sidebar .nav-link i {
+    display: inline-flex !important;
+    font-size: 1.15rem !important;
+  }
+  .admin-sidebar .sidebar-footer {
+    background-color: var(--color-primary-dark) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 
   #page-progress-bar, #pageTopProgress {
