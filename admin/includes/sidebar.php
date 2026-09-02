@@ -104,9 +104,9 @@ function navIsActive(string $needle, string $currentScript): bool
 
   <!-- Bottom Pinned Logout Button (Never scrolls away!) -->
   <div class="sidebar-footer flex-shrink-0">
-    <a class="nav-link sidebar-logout-btn" href="#" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal" title="Keluar dari Panel Admin">
-      <i class="bi bi-box-arrow-right"></i>
-      <span class="nav-text">Keluar (Logout)</span>
+    <a class="nav-link sidebar-logout-btn text-danger fw-semibold d-flex align-items-center gap-2" href="#" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal" title="Keluar dari Panel Admin">
+      <i class="bi bi-box-arrow-right text-danger fs-5"></i>
+      <span class="nav-text text-danger">Keluar</span>
     </a>
   </div>
 </aside>

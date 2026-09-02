@@ -1072,6 +1072,17 @@ function renderDynamicThemeStyles(array $profile): string
     display: inline-flex !important;
     font-size: 1.15rem !important;
   }
+  .admin-sidebar .sidebar-logout-btn,
+  .admin-sidebar .sidebar-logout-btn i,
+  .admin-sidebar .sidebar-logout-btn span {
+    color: #ef4444 !important;
+  }
+  .admin-sidebar .sidebar-logout-btn:hover,
+  .admin-sidebar .sidebar-logout-btn:hover i,
+  .admin-sidebar .sidebar-logout-btn:hover span {
+    color: #f87171 !important;
+    background-color: rgba(239, 68, 68, 0.16) !important;
+  }
   .admin-sidebar .sidebar-footer {
     background-color: var(--color-primary-dark) !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
