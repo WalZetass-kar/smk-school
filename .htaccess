@@ -7,6 +7,7 @@ RewriteRule ^includes/ - [F,L]
 
 # Dynamic sitemap: /sitemap.xml -> sitemap.php (keeps berita/jurusan current).
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
+RewriteRule ^robots\.txt$ robots.php [L]
 
 # Let real files/folders (assets, admin/*.php, robots.txt, etc.) pass through untouched.
 RewriteCond %{REQUEST_FILENAME} -f [OR]

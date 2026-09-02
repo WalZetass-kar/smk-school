@@ -12,10 +12,23 @@ $schoolName = $profile['school_name'] ?? 'SMK Negeri Contoh Indonesia';
 
 $pageTitle       = $pageTitle ?? $schoolName;
 $fullTitle       = $pageTitle === $schoolName ? $schoolName : $pageTitle . ' — ' . $schoolName;
-$pageDescription = $pageDescription ?? ($profile['description'] ?? '');
-$pageImage       = $pageImage ?? (ASSETS_URL . '/images/og-default.jpg');
+
+// Clean plain text description (strips HTML, collapses whitespace, max 160 chars)
+$rawDesc         = !empty($pageDescription) ? $pageDescription : ($profile['description'] ?? 'Portal Resmi ' . $schoolName);
+$cleanDesc       = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($rawDesc, ENT_QUOTES, 'UTF-8'))));
+$pageDescription = mb_substr($cleanDesc, 0, 160, 'UTF-8');
+
+// Absolute URL for Open Graph Image (WhatsApp & Facebook require full absolute URL with protocol)
+$rawImage = $pageImage ?? (!empty($profile['logo']) ? $profile['logo'] : 'assets/images/og-default.jpg');
+if (!str_starts_with($rawImage, 'http://') && !str_starts_with($rawImage, 'https://')) {
+    $ogImage = rtrim(BASE_URL, '/') . '/' . ltrim($rawImage, '/');
+} else {
+    $ogImage = $rawImage;
+}
+
 $canonicalPath   = $canonicalPath ?? ($_SERVER['REQUEST_URI'] ?? '/');
-$canonicalUrl    = BASE_URL . $canonicalPath;
+$canonicalUrl    = str_starts_with($canonicalPath, 'http') ? $canonicalPath : (rtrim(BASE_URL, '/') . $canonicalPath);
+$pageType        = $pageType ?? 'website';
 
 // Emit standard Security Headers if headers haven't been sent yet
 if (!headers_sent()) {
@@ -33,17 +46,35 @@ if (!headers_sent()) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= e($fullTitle) ?></title>
 
-<!-- SEO -->
+<!-- Standard SEO -->
 <meta name="description" content="<?= e($pageDescription) ?>">
 <link rel="canonical" href="<?= e($canonicalUrl) ?>">
 <meta name="robots" content="index, follow">
+<meta name="author" content="<?= e($schoolName) ?>">
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
+<!-- Open Graph / WhatsApp / Facebook Rich Preview -->
+<meta property="og:site_name" content="<?= e($schoolName) ?>">
+<meta property="og:locale" content="id_ID">
+<meta property="og:type" content="<?= e($pageType) ?>">
 <meta property="og:title" content="<?= e($fullTitle) ?>">
 <meta property="og:description" content="<?= e($pageDescription) ?>">
-<meta property="og:image" content="<?= e($pageImage) ?>">
 <meta property="og:url" content="<?= e($canonicalUrl) ?>">
+<meta property="og:image" content="<?= e($ogImage) ?>">
+<meta property="og:image:secure_url" content="<?= e($ogImage) ?>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<?= e($fullTitle) ?>">
+<?php if (!empty($publishedTime)): ?>
+<meta property="article:published_time" content="<?= e(date('c', strtotime($publishedTime))) ?>">
+<meta property="article:author" content="<?= e($authorName ?? $schoolName) ?>">
+<?php endif; ?>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<?= e($fullTitle) ?>">
+<meta name="twitter:description" content="<?= e($pageDescription) ?>">
+<meta name="twitter:image" content="<?= e($ogImage) ?>">
+<meta name="twitter:image:alt" content="<?= e($fullTitle) ?>">
 
 <!-- Favicon -->
 <link rel="icon" href="<?= e(BASE_URL . '/' . ($profile['favicon'] ?? 'assets/images/favicon.png')) ?>">

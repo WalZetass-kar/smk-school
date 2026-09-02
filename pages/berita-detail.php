@@ -63,9 +63,12 @@ $readMinutes = max(1, (int) ceil($wordCount / 200));
 
 $pageTitle       = $article['title'];
 $pageDescription = $article['excerpt'] ?: excerpt($article['content'], 155);
-$pageImage       = BASE_URL . '/' . $article['featured_image'];
+$pageImage       = !empty($article['featured_image']) ? (BASE_URL . '/' . $article['featured_image']) : null;
 $canonicalPath   = '/berita/' . $article['slug'];
 $shareUrl        = BASE_URL . '/berita/' . $article['slug'];
+$pageType        = 'article';
+$publishedTime   = $article['published_at'];
+$authorName      = $article['author_name'] ?? null;
 
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';

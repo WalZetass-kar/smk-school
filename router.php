@@ -20,6 +20,12 @@ if ($uri === '/sitemap.xml') {
     exit;
 }
 
+// Dynamic robots.txt rewrite
+if ($uri === '/robots.txt') {
+    require __DIR__ . '/robots.php';
+    exit;
+}
+
 // Let static files and existing admin PHP files be handled directly
 if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
     return false;
