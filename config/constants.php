@@ -15,7 +15,13 @@ define('BASE_PATH', dirname(__DIR__));
 // different (and for admin, wrong) base URLs depending on which was open.
 // Example on XAMPP with the project at htdocs/smk-school: http://localhost/smk-school
 if (!defined('BASE_URL')) {
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    // Intelligent HTTPS Detection (supports direct SSL, Cloudflare, AWS, Nginx reverse proxy)
+    $isHttps = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+        || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+        || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) === 'on');
+
+    $protocol = $isHttps ? 'https://' : 'http://';
     $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
     $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/') : '';
@@ -31,7 +37,7 @@ if (!defined('BASE_URL')) {
         $urlPrefix = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
     }
 
-    define('BASE_URL', $protocol . $host . $urlPrefix);
+    define('BASE_URL', rtrim($protocol . $host . $urlPrefix, '/'));
 }
 
 define('ASSETS_URL', BASE_URL . '/assets');
