@@ -69,5 +69,19 @@ if (!headers_sent()) {
 
 <!-- Site styles -->
 <link href="<?= e(ASSETS_URL . '/css/style.css?v=' . filemtime(BASE_PATH . '/assets/css/style.css')) ?>" rel="stylesheet">
+
+<!-- Dynamic Theme Colors -->
+<?php
+  $themePrimary   = !empty($profile['theme_color_primary']) ? $profile['theme_color_primary'] : '#0F2C59';
+  $themeSecondary = !empty($profile['theme_color_secondary']) ? $profile['theme_color_secondary'] : '#2563EB';
+  $themeAccent    = !empty($profile['theme_color_accent']) ? $profile['theme_color_accent'] : '#F59E0B';
+?>
+<style>
+  :root {
+    --color-primary: <?= htmlspecialchars($themePrimary, ENT_QUOTES, 'UTF-8') ?>;
+    --color-secondary: <?= htmlspecialchars($themeSecondary, ENT_QUOTES, 'UTF-8') ?>;
+    --color-accent: <?= htmlspecialchars($themeAccent, ENT_QUOTES, 'UTF-8') ?>;
+  }
+</style>
 </head>
 <body>

@@ -380,7 +380,7 @@ function getPpdbSettings(): array
 }
 
 /**
- * Validate + move an uploaded image into /assets/uploads with a random filename.
+ * Validate + optimize/compress and save uploaded image into /assets/uploads as modern WebP.
  * Signature: handleImageUpload(array $file, ?string &$error = null, string $subDir = '')
  */
 function handleImageUpload(array $file, ?string &$error = null, string $subDir = ''): ?string
@@ -391,8 +391,8 @@ function handleImageUpload(array $file, ?string &$error = null, string $subDir =
         $error = 'Upload gagal atau tidak ada file yang dipilih.';
         return null;
     }
-    if ($file['size'] > MAX_UPLOAD_SIZE) {
-        $error = 'Ukuran file melebihi batas maksimal 2MB.';
+    if ($file['size'] > 6 * 1024 * 1024) { // 6MB max raw input (will be compressed to ~80KB-250KB)
+        $error = 'Ukuran file melebihi batas maksimal 6MB.';
         return null;
     }
 
@@ -413,7 +413,7 @@ function handleImageUpload(array $file, ?string &$error = null, string $subDir =
         return null;
     }
 
-    // Re-check with finfo — don't trust the client-supplied extension/MIME alone.
+    // Re-check with finfo
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mime  = finfo_file($finfo, $file['tmp_name']);
     finfo_close($finfo);
@@ -428,15 +428,69 @@ function handleImageUpload(array $file, ?string &$error = null, string $subDir =
         mkdir($targetDir, 0755, true);
     }
 
-    $filename = bin2hex(random_bytes(16)) . '.' . $ext;
-    $destination = $targetDir . '/' . $filename;
+    $baseName = bin2hex(random_bytes(16));
+    $tempDestination = $targetDir . '/' . $baseName . '.' . $ext;
 
-    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+    $moved = is_uploaded_file($file['tmp_name']) 
+        ? move_uploaded_file($file['tmp_name'], $tempDestination) 
+        : @copy($file['tmp_name'], $tempDestination);
+
+    if (!$moved) {
         $error = 'Gagal menyimpan file ke server.';
         return null;
     }
 
-    return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $filename;
+    // Auto-Compress & Convert to WebP via GD
+    if (extension_loaded('gd') && function_exists('imagewebp')) {
+        $srcImage = null;
+        if ($mime === 'image/jpeg') {
+            $srcImage = @imagecreatefromjpeg($tempDestination);
+        } elseif ($mime === 'image/png') {
+            $srcImage = @imagecreatefrompng($tempDestination);
+        } elseif ($mime === 'image/webp') {
+            $srcImage = @imagecreatefromwebp($tempDestination);
+        }
+
+        if ($srcImage) {
+            $origW = imagesx($srcImage);
+            $origH = imagesy($srcImage);
+            $maxDim = 1920; // Max width/height for web
+
+            $targetW = $origW;
+            $targetH = $origH;
+
+            if ($origW > $maxDim || $origH > $maxDim) {
+                $ratio = min($maxDim / $origW, $maxDim / $origH);
+                $targetW = (int) round($origW * $ratio);
+                $targetH = (int) round($origH * $ratio);
+            }
+
+            $optimizedImage = imagecreatetruecolor($targetW, $targetH);
+            // Handle PNG/WebP Alpha transparency
+            imagealphablending($optimizedImage, false);
+            imagesavealpha($optimizedImage, true);
+            $transparent = imagecolorallocatealpha($optimizedImage, 255, 255, 255, 127);
+            imagefilledrectangle($optimizedImage, 0, 0, $targetW, $targetH, $transparent);
+
+            imagecopyresampled($optimizedImage, $srcImage, 0, 0, 0, 0, $targetW, $targetH, $origW, $origH);
+
+            $webpDestination = $targetDir . '/' . $baseName . '.webp';
+            if (imagewebp($optimizedImage, $webpDestination, 82)) {
+                imagedestroy($srcImage);
+                imagedestroy($optimizedImage);
+                if ($tempDestination !== $webpDestination && file_exists($tempDestination)) {
+                    @unlink($tempDestination);
+                }
+                return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $baseName . '.webp';
+            }
+
+            imagedestroy($srcImage);
+            imagedestroy($optimizedImage);
+        }
+    }
+
+    // Fallback: Return original format if GD WebP is unavailable or failed
+    return 'assets/uploads' . ($subDir !== '' ? '/' . $subDir : '') . '/' . $baseName . '.' . $ext;
 }
 
 /**
