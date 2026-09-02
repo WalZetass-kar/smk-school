@@ -251,7 +251,7 @@ require __DIR__ . '/includes/topbar.php';
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
       <div class="d-flex align-items-center justify-content-between mb-2">
         <span class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Database MySQL</span>
-        <div class="p-2 rounded-2 bg-primary bg-opacity-10 text-primary fs-5">
+        <div class="rounded-2 fs-5 d-flex align-items-center justify-content-center flex-shrink-0" style="width:38px; height:38px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
           <i class="bi bi-database"></i>
         </div>
       </div>
@@ -320,7 +320,7 @@ require __DIR__ . '/includes/topbar.php';
     <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between hover-lift">
       <div>
         <div class="d-flex align-items-center gap-3 mb-3">
-          <div class="p-3 rounded-3 bg-primary bg-opacity-10 text-primary fs-3 flex-shrink-0">
+          <div class="rounded-3 fs-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:54px; height:54px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
             <i class="bi bi-database-down"></i>
           </div>
           <div>
@@ -426,15 +426,22 @@ require __DIR__ . '/includes/topbar.php';
   </div>
 </div>
 
-<!-- Superadmin Security Verification Modal -->
-<div class="modal fade" id="backupAuthModal" tabindex="-1" aria-hidden="true">
+<?php require __DIR__ . '/includes/footer.php'; ?>
+
+<!-- Superadmin Security Verification Modal (Rendered outside .admin-content directly in body) -->
+<div class="modal fade" id="backupAuthModal" tabindex="-1" aria-hidden="true" style="z-index: 1065;">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 460px;">
-    <div class="modal-content border-0 shadow-lg rounded-4 p-2">
-      <div class="modal-body p-4 text-center">
-        <div class="p-3 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;background-color:var(--color-primary-subtle, #e2e8f0);color:var(--color-primary, #0F2C59);">
-          <i class="bi bi-shield-lock-fill fs-2"></i>
+    <div class="modal-content border-0 shadow-lg rounded-4 p-3 bg-white" style="background-color: #ffffff !important;">
+      <div class="modal-body p-3 text-center">
+        <div class="d-flex justify-content-end mb-1">
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <h5 class="fw-bold text-dark mb-1" id="modalTitleText">Otorisasi Keamanan Superadmin</h5>
+
+        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:68px; height:68px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
+          <i class="bi bi-shield-lock-fill fs-1"></i>
+        </div>
+
+        <h5 class="fw-bold text-dark mb-2" id="modalTitleText">Otorisasi Keamanan Superadmin</h5>
         <p class="small text-muted mb-4" id="modalDescText" style="line-height: 1.55;">
           Masukkan kata sandi akun Superadmin Anda untuk memverifikasi hak akses unduhan cadangan data.
         </p>
@@ -444,11 +451,11 @@ require __DIR__ . '/includes/topbar.php';
           <input type="hidden" name="action" id="backupActionInput" value="download_sql">
 
           <div class="mb-3">
-            <label for="confirmPasswordInput" class="form-label small fw-semibold text-dark">Kata Sandi Superadmin</label>
+            <label for="confirmPasswordInput" class="form-label small fw-semibold text-dark mb-1">Kata Sandi Superadmin</label>
             <div class="input-group">
-              <span class="input-group-text bg-light"><i class="bi bi-key text-muted"></i></span>
-              <input type="password" name="confirm_password" id="confirmPasswordInput" class="form-control" placeholder="Ketik kata sandi Anda..." required autocomplete="current-password">
-              <button type="button" class="btn btn-outline-secondary" id="toggleAuthPassBtn" tabindex="-1">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
+              <input type="password" name="confirm_password" id="confirmPasswordInput" class="form-control border-start-0 border-end-0" placeholder="Ketik kata sandi Anda..." required autocomplete="current-password">
+              <button type="button" class="btn btn-light border border-start-0 text-muted shadow-none" id="toggleAuthPassBtn" tabindex="-1">
                 <i class="bi bi-eye" id="toggleAuthPassIcon"></i>
               </button>
             </div>
@@ -458,7 +465,7 @@ require __DIR__ . '/includes/topbar.php';
           </div>
 
           <div class="d-flex align-items-center gap-2 mt-4">
-            <button type="button" class="btn btn-light border w-50 py-2 fw-semibold rounded-3" data-bs-dismiss="modal">
+            <button type="button" class="btn btn-light border w-50 py-2 fw-semibold rounded-3 shadow-none" data-bs-dismiss="modal">
               Batal
             </button>
             <button type="submit" class="btn btn-primary w-50 py-2 fw-bold rounded-3 d-flex align-items-center justify-content-center gap-2" id="btnSubmitBackup">
@@ -473,6 +480,14 @@ require __DIR__ . '/includes/topbar.php';
 </div>
 
 <script>
+// Ensure modal is directly attached to <body> so it never gets trapped below backdrop
+document.addEventListener('DOMContentLoaded', function() {
+  const modalEl = document.getElementById('backupAuthModal');
+  if (modalEl && modalEl.parentNode !== document.body) {
+    document.body.appendChild(modalEl);
+  }
+});
+
 function openBackupModal(actionType, title, description) {
   document.getElementById('backupActionInput').value = actionType;
   document.getElementById('modalTitleText').textContent = title;
@@ -480,7 +495,7 @@ function openBackupModal(actionType, title, description) {
   document.getElementById('confirmPasswordInput').value = '';
 
   const modalEl = document.getElementById('backupAuthModal');
-  const modal = new bootstrap.Modal(modalEl);
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
   modal.show();
 
   modalEl.addEventListener('shown.bs.modal', function () {
@@ -516,6 +531,4 @@ if (backupForm) {
   });
 }
 </script>
-
-<?php require __DIR__ . '/includes/footer.php'; ?>
 
