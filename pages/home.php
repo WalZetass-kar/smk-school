@@ -21,6 +21,7 @@ $partners  = $db->query("SELECT * FROM partners WHERE status = 1 ORDER BY sort_o
 $galleries = $db->query("SELECT * FROM galleries ORDER BY id DESC LIMIT 8")->fetchAll();
 $stats     = $db->query("SELECT * FROM statistics WHERE status = 1 ORDER BY sort_order ASC")->fetchAll();
 $upcomingAgendas = $db->query("SELECT * FROM agendas WHERE status = 1 ORDER BY start_date ASC LIMIT 3")->fetchAll();
+$ppdbSettings = getPpdbSettings();
 
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
@@ -399,6 +400,68 @@ require BASE_PATH . '/includes/navbar.php';
           </a>
         </div>
       <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<!-- ================= CALL TO ACTION PPDB ================= -->
+<?php if (isModuleActive('ppdb')): ?>
+<?php 
+  $isOpen = !empty($ppdbSettings['is_open']);
+  $acadYear = $ppdbSettings['academic_year'] ?? '2026/2027';
+  $waContact = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $profile['whatsapp_ppdb']) : (!empty($ppdbSettings['contact_person']) ? preg_replace('/[^0-9]/', '', $ppdbSettings['contact_person']) : '6281234567890');
+?>
+<section class="section pt-3 pb-5">
+  <div class="container">
+    <div class="ppdb-cta-card reveal-zoom">
+      <div class="row align-items-center g-4 position-relative" style="z-index: 2;">
+        <div class="col-lg-8 text-center text-lg-start">
+          <div class="ppdb-cta-badge mb-2">
+            <span class="spinner-grow spinner-grow-sm text-warning" role="status" aria-hidden="true" style="width: 8px; height: 8px;"></span>
+            <span><?= $isOpen ? 'PPDB ONLINE TAHUN AJARAN ' . e($acadYear) . ' RESMI DIBUKA' : 'INFORMASI PPDB TAHUN AJARAN ' . e($acadYear) ?></span>
+          </div>
+
+          <h2 class="ppdb-cta-title">
+            <?= $isOpen ? 'Siap Menjadi Generasi Unggul? Bergabunglah Bersama Kami!' : 'Persiapkan Masa Depan Anda Bersama Kami' ?>
+          </h2>
+
+          <p class="ppdb-cta-desc mb-4">
+            <?= $isOpen 
+                ? 'Daftarkan diri Anda secara online sekarang juga. Nikmati proses pendaftaran yang cepat, transparan, dan terintegrasi langsung dengan verifikasi WhatsApp.' 
+                : 'Pendaftaran Peserta Didik Baru gelombang berikutnya akan segera dibuka. Pantau terus informasi persyaratan dan jadwal resmi di portal kami.' ?>
+          </p>
+
+          <div class="d-flex flex-wrap gap-2.5 justify-content-center justify-content-lg-start">
+            <div class="ppdb-cta-highlight">
+              <i class="bi bi-calendar-check text-warning fs-5"></i>
+              <span>Periode: <strong><?= date('d M Y', strtotime($ppdbSettings['start_date'])) ?> – <?= date('d M Y', strtotime($ppdbSettings['end_date'])) ?></strong></span>
+            </div>
+            <div class="ppdb-cta-highlight">
+              <i class="bi bi-megaphone text-info fs-5"></i>
+              <span>Pengumuman: <strong><?= date('d M Y', strtotime($ppdbSettings['announcement_date'])) ?></strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 text-center text-lg-end">
+          <div class="d-flex flex-column gap-2.5 align-items-stretch align-items-lg-end">
+            <?php if ($isOpen): ?>
+              <a href="<?= e(BASE_URL) ?>/ppdb/daftar" class="btn btn-accent btn-lg px-4 py-3 fw-bold rounded-4 shadow-lg d-inline-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-pencil-square fs-5"></i> Daftar PPDB Sekarang
+              </a>
+            <?php endif; ?>
+
+            <a href="<?= e(BASE_URL) ?>/ppdb/cek-status" class="btn btn-outline-light btn-lg px-4 py-2.5 fw-semibold rounded-4 d-inline-flex align-items-center justify-content-center gap-2 bg-white bg-opacity-10">
+              <i class="bi bi-search"></i> Cek Status Berkas
+            </a>
+
+            <a href="https://wa.me/<?= e($waContact) ?>?text=Halo%20Panitia%20PPDB%20<?= urlencode($profile['school_name'] ?? 'Sekolah') ?>%2C%20saya%20ingin%20bertanya%20seputar%20informasi%20pendaftaran." target="_blank" rel="noopener" class="btn btn-link text-white text-opacity-80 text-decoration-none small text-center text-lg-end p-0 mt-1">
+              <i class="bi bi-whatsapp text-success me-1"></i> Konsultasi via WhatsApp PPDB &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
