@@ -244,7 +244,7 @@ require BASE_PATH . '/includes/navbar.php';
         </div>
 
         <!-- PPDB Callout -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary text-white text-center reveal-right" style="background: linear-gradient(135deg, #0F2C59 0%, #183E7A 100%);">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary text-white text-center reveal-right" style="background-color: #0F2C59;">
           <div class="p-3 bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:55px;height:55px;">
             <i class="bi bi-mortarboard fs-2 text-warning"></i>
           </div>

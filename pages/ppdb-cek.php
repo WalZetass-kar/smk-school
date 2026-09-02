@@ -57,8 +57,7 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
     </div>
 
     <!-- Search Card Box -->
-    <div class="card border-0 shadow-lg rounded-4 p-3 p-md-4 mb-4 bg-white position-relative overflow-hidden">
-      <div class="position-absolute top-0 start-0 w-100" style="height: 4px; background: linear-gradient(90deg, #2563eb, #38bdf8, #f59e0b);"></div>
+    <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 mb-4 bg-white position-relative overflow-hidden border">
       <form method="get" action="<?= e(BASE_URL) ?>/ppdb/cek-status" class="m-0">
         <div class="input-group input-group-lg rounded-3 overflow-hidden border">
           <span class="input-group-text bg-light border-0 px-3 text-muted">
@@ -77,10 +76,10 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
         <?php
           $st = $result['status'] ?? 'pending';
 
-          // Status Theme Configuration
+          // Status Theme Configuration (Solid Colors Only)
           $theme = match($st) {
             'accepted' => [
-              'grad'      => 'linear-gradient(135deg, #065f46 0%, #059669 50%, #10b981 100%)',
+              'color'     => '#15803D',
               'icon'      => 'bi-trophy-fill',
               'title'     => 'SELAMAT! ANDA DINYATAKAN DITERIMA',
               'subtitle'  => 'Selamat bergabung menjadi bagian dari civitas akademika ' . ($profile['school_name'] ?? 'Sekolah') . '. Silakan segera lakukan daftar ulang sesuai jadwal.',
@@ -89,7 +88,7 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
               'step'      => 4
             ],
             'verified' => [
-              'grad'      => 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #3b82f6 100%)',
+              'color'     => '#1D4ED8',
               'icon'      => 'bi-patch-check-fill',
               'title'     => 'BERKAS LOLOS VERIFIKASI',
               'subtitle'  => 'Seluruh berkas pendaftaran Anda telah lengkap dan valid. Saat ini sedang dalam tahap pemeringkatan hasil seleksi.',
@@ -98,7 +97,7 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
               'step'      => 2
             ],
             'reserve' => [
-              'grad'      => 'linear-gradient(135deg, #78350f 0%, #b45309 50%, #f59e0b 100%)',
+              'color'     => '#B45309',
               'icon'      => 'bi-hourglass-split',
               'title'     => 'STATUS: CADANGAN',
               'subtitle'  => 'Anda berada pada kuota cadangan pendaftaran. Harap menunggu pembaruan informasi dari panitia PPDB jika ada kuota terbuka.',
@@ -107,7 +106,7 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
               'step'      => 3
             ],
             'rejected' => [
-              'grad'      => 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #ef4444 100%)',
+              'color'     => '#DC2626',
               'icon'      => 'bi-x-circle-fill',
               'title'     => 'MOHON MAAF, BELUM MEMENUHI KUOTA',
               'subtitle'  => 'Berdasarkan hasil seleksi panitia PPDB, Anda belum dapat diterima pada periode pendaftaran ini. Tetap semangat menggapai masa depan!',
@@ -116,7 +115,7 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
               'step'      => 4
             ],
             default => [
-              'grad'      => 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+              'color'     => '#0F2C59',
               'icon'      => 'bi-clock-history',
               'title'     => 'BERKAS DALAM PROSES VERIFIKASI',
               'subtitle'  => 'Formulir Anda telah terkirim. Panitia PPDB sedang memeriksa kelengkapan berkas fisik & administrasi Anda.',
@@ -131,9 +130,9 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
         ?>
 
         <!-- RESULT MASTER CONTAINER -->
-        <div class="card border-0 shadow-xl rounded-4 overflow-hidden mb-4 bg-white">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4 bg-white">
           <!-- 1. Hero Status Banner -->
-          <div class="p-4 p-md-5 text-white position-relative" style="background: <?= $theme['grad'] ?>;">
+          <div class="p-4 p-md-5 text-white position-relative" style="background-color: <?= $theme['color'] ?>;">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
               <span class="badge bg-white bg-opacity-20 text-white px-3 py-1.5 rounded-pill fw-semibold border border-white border-opacity-25" style="font-size: 11.5px; letter-spacing: 0.05em;">
                 <i class="bi bi-person-vcard me-1"></i> NO. REGISTRASI: <?= e($result['registration_no']) ?>

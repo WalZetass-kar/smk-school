@@ -86,7 +86,7 @@ require BASE_PATH . '/includes/navbar.php';
       <?php if (!empty($major['image']) && file_exists(BASE_PATH . '/' . $major['image'])): ?>
         <img src="<?= e(BASE_URL . '/' . $major['image']) ?>" alt="<?= e($major['name']) ?>" class="position-absolute w-100 h-100 top-0 start-0" style="object-fit: cover; opacity: 0.38;">
       <?php endif; ?>
-      <div class="position-absolute w-100 h-100 top-0 start-0" style="background: linear-gradient(135deg, rgba(8, 24, 48, 0.95) 0%, rgba(15, 44, 89, 0.85) 50%, rgba(24, 62, 122, 0.65) 100%);"></div>
+      <div class="position-absolute w-100 h-100 top-0 start-0" style="background-color: rgba(15, 44, 89, 0.92);"></div>
 
       <!-- Hero Content -->
       <div class="card-body p-4 p-md-5 position-relative z-1 d-flex flex-column justify-content-center">
@@ -274,7 +274,7 @@ require BASE_PATH . '/includes/navbar.php';
       <!-- Right Column: Registration CTA & Other Majors -->
       <div class="col-lg-4">
         <!-- Registration Card Widget -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-primary text-white text-center reveal-right" style="background: linear-gradient(135deg, #0F2C59 0%, #183E7A 100%);">
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-primary text-white text-center reveal-right" style="background-color: #0F2C59;">
           <div class="p-3 bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:58px;height:58px;">
             <i class="bi bi-mortarboard fs-2 text-warning"></i>
           </div>

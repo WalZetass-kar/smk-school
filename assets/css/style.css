@@ -272,7 +272,7 @@ img {
    Top Announcement Bar (Running Text)
    ========================================================= */
 .top-announcement-bar {
-    background: linear-gradient(90deg, #081830 0%, #0F2C59 50%, #183E7A 100%);
+    background: #081830;
     color: #ffffff;
     height: 38px;
     display: flex;
@@ -1015,7 +1015,7 @@ img {
    Statistik Counter Section
    ========================================================= */
 .statistik-section {
-    background: linear-gradient(135deg, #081830 0%, #0F2C59 60%, #183E7A 100%);
+    background: #0F2C59;
     color: #ffffff;
     padding: 4.5rem 0;
     position: relative;
@@ -1047,7 +1047,7 @@ img {
    Video Profile Section
    ========================================================= */
 .section-video-tour {
-    background: linear-gradient(135deg, #081830 0%, #0F2C59 60%, #183E7A 100%);
+    background: #081830;
     color: #ffffff;
     padding: 5rem 0;
 }
@@ -1220,7 +1220,7 @@ img {
     left: 0;
     width: 0%;
     height: 3.5px;
-    background: linear-gradient(90deg, var(--color-accent), #f97316);
+    background: var(--color-accent);
     box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
     z-index: 99999;
     transition: width 0.25s ease, opacity 0.3s ease;
@@ -1766,47 +1766,23 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
 .gap-2\.5 { gap: 0.625rem !important; }
 
 /* =========================================================
-   PPDB Fast-Action Landing Page Banner Card
+   PPDB Fast-Action Landing Page Banner Card (Solid Clean)
    ========================================================= */
 .ppdb-cta-card {
-    background: linear-gradient(135deg, #081830 0%, #0F2C59 55%, #183E7A 100%);
-    border-radius: 24px;
-    padding: 3.5rem 3rem;
+    background: #0F2C59;
+    border-radius: 20px;
+    padding: 3.25rem 3rem;
     color: #ffffff;
     position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(15, 44, 89, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-}
-.ppdb-cta-card::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 260px;
-    height: 260px;
-    background: radial-gradient(circle, rgba(234, 179, 8, 0.25) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.ppdb-cta-card::after {
-    content: '';
-    position: absolute;
-    bottom: -60px;
-    left: 20%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(15, 44, 89, 0.18);
+    border: 1px solid #1E3E7A;
 }
 .ppdb-cta-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
+    background: #183E7A;
+    border: 1px solid #28549C;
     color: #fef08a;
     font-weight: 700;
     font-size: 0.8rem;
@@ -1829,9 +1805,9 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
     max-width: 680px;
 }
 .ppdb-cta-highlight {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 12px;
+    background: #183E7A;
+    border: 1px solid #28549C;
+    border-radius: 10px;
     padding: 0.75rem 1.25rem;
     display: inline-flex;
     align-items: center;
@@ -1842,6 +1818,6 @@ button, .btn, .nav-link, .dropdown-item, .page-link {
 @media (max-width: 767.98px) {
     .ppdb-cta-card {
         padding: 2.25rem 1.5rem;
-        border-radius: 18px;
+        border-radius: 16px;
     }
 }

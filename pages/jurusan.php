@@ -114,7 +114,7 @@ require BASE_PATH . '/includes/navbar.php';
     </div>
 
     <!-- Bottom PPDB Banner -->
-    <div class="mt-5 card border-0 shadow-sm rounded-4 p-4 p-md-5 text-white text-center reveal-up position-relative overflow-hidden" style="background: linear-gradient(135deg, #0F2C59 0%, #183E7A 100%);">
+    <div class="mt-5 card border-0 shadow-sm rounded-4 p-4 p-md-5 text-white text-center reveal-up position-relative overflow-hidden" style="background-color: #0F2C59;">
       <div class="p-3 bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
         <i class="bi bi-mortarboard fs-2 text-warning"></i>
       </div>
