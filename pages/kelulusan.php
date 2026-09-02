@@ -20,7 +20,7 @@ $settings = $db->query("SELECT * FROM graduation_settings WHERE id = 1")->fetch(
     'signature_date'    => date('Y-m-d'),
 ];
 
-$announcementTimestamp = strtotime($settings['announcement_date']);
+$announcementTimestamp = !empty($settings['announcement_date']) ? strtotime($settings['announcement_date']) : time();
 $now = time();
 $isOpen = ($now >= $announcementTimestamp) && !empty($settings['is_active']);
 

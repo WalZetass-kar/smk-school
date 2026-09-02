@@ -19,9 +19,14 @@ function navIsActive(string $needle, string $currentScript): bool
 <aside class="admin-sidebar" id="adminSidebar">
   <!-- Sidebar Header with Brand and Internal Burger Menu -->
   <div class="sidebar-brand d-flex align-items-center justify-content-between">
-    <div class="sidebar-brand-left d-flex align-items-center gap-2 overflow-hidden" title="<?= e($adminBrandTitle) ?>">
-      <i class="bi bi-mortarboard-fill flex-shrink-0" style="color: var(--color-accent); font-size:1.35rem;"></i>
-      <span class="sidebar-brand-title text-nowrap fw-bold"><?= e($adminBrandTitle) ?></span>
+    <div class="sidebar-brand-left d-flex align-items-center gap-2 overflow-hidden" title="Admin Panel">
+      <div class="p-1.5 rounded-3 bg-white bg-opacity-10 d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width:34px;height:34px;">
+        <i class="bi bi-shield-lock-fill" style="color: var(--color-accent); font-size:1.15rem;"></i>
+      </div>
+      <div class="overflow-hidden">
+        <span class="sidebar-brand-title text-nowrap fw-bold d-block text-white" style="letter-spacing: 0.02em; font-size: 1rem;">Admin Panel</span>
+        <span class="sidebar-brand-subtitle text-nowrap text-white-50 d-block text-truncate" style="font-size: 11px; max-width: 135px;"><?= e($sidebarProfile['school_name'] ?? 'SMK School') ?></span>
+      </div>
     </div>
     <button type="button" class="btn btn-sm btn-link text-white-50 p-1 sidebar-toggle-btn shadow-none flex-shrink-0" id="sidebarToggleInsideBtn" title="Buka / Tutup Sidebar" aria-label="Toggle Sidebar">
       <i class="bi bi-list fs-4 text-white"></i>
