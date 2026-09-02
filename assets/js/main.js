@@ -425,9 +425,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    /* ---- 9. Fast Page Transition Top Progress Indicator ---- */
+    /* ---- 9. Fast Page Transition Top Progress & Exit Indicator ---- */
     const topProgressBar = document.getElementById('pageTopProgress');
-    if (topProgressBar) {
+    const adminMainEl = document.querySelector('.admin-main');
+
+    if (topProgressBar || adminMainEl) {
         // Trigger on any admin internal navigation link
         document.querySelectorAll('a[href]:not([target="_blank"]):not([data-bs-toggle]):not([data-confirm]):not([data-confirm-delete]):not([href^="#"]):not([href^="javascript:"])').forEach((a) => {
             a.addEventListener('click', (e) => {
@@ -435,8 +437,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 try {
                     const url = new URL(a.href, window.location.href);
                     if (url.origin === window.location.origin) {
-                        topProgressBar.style.opacity = '1';
-                        topProgressBar.style.width = '65%';
+                        if (topProgressBar) {
+                            topProgressBar.style.opacity = '1';
+                            topProgressBar.style.width = '75%';
+                        }
+                        if (adminMainEl && !a.closest('.sidebar-brand')) {
+                            adminMainEl.classList.add('admin-main-leaving');
+                        }
                     }
                 } catch (_) {}
             });
@@ -444,11 +451,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Hide when page is ready
         window.addEventListener('load', () => {
-            topProgressBar.style.width = '100%';
-            setTimeout(() => {
+            if (topProgressBar) {
+                topProgressBar.style.width = '100%';
+                setTimeout(() => {
+                    topProgressBar.style.opacity = '0';
+                    setTimeout(() => { topProgressBar.style.width = '0%'; }, 300);
+                }, 150);
+            }
+            if (adminMainEl) {
+                adminMainEl.classList.remove('admin-main-leaving');
+            }
+        });
+
+        // Handle BFCache (back/forward navigation)
+        window.addEventListener('pageshow', () => {
+            if (adminMainEl) {
+                adminMainEl.classList.remove('admin-main-leaving');
+            }
+            if (topProgressBar) {
                 topProgressBar.style.opacity = '0';
-                setTimeout(() => { topProgressBar.style.width = '0%'; }, 300);
-            }, 150);
+                topProgressBar.style.width = '0%';
+            }
         });
     }
+
+    /* ---- 10. Smooth Bootstrap Tab Switch Animation ---- */
+    document.querySelectorAll('[data-bs-toggle="tab"], [data-bs-toggle="pill"]').forEach((tab) => {
+        tab.addEventListener('shown.bs.tab', (e) => {
+            const targetSelector = e.target.getAttribute('data-bs-target') || e.target.getAttribute('href');
+            if (targetSelector && targetSelector.startsWith('#')) {
+                const targetPane = document.querySelector(targetSelector);
+                if (targetPane) {
+                    targetPane.style.animation = 'none';
+                    targetPane.offsetHeight; // trigger reflow
+                    targetPane.style.animation = 'adminPageFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                }
+            }
+        });
+    });
 });

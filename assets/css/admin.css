@@ -179,6 +179,43 @@ body.admin-body {
 .admin-main {
     padding: 1.85rem;
     flex-grow: 1;
+    animation: adminPageFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: opacity, transform;
+}
+
+.admin-main.admin-main-leaving {
+    opacity: 0.75;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+@keyframes adminPageFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Smooth Bootstrap Tabs & Tab Panes Transition ---- */
+.tab-content > .tab-pane {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease-out, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tab-content > .tab-pane.active.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nav-tabs .nav-link, .nav-pills .nav-link {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-tabs .nav-link:active, .nav-pills .nav-link:active {
+    transform: scale(0.97);
 }
 
 /* =========================================================
