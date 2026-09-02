@@ -945,25 +945,10 @@ function renderDynamicThemeStyles(array $profile): string
     --bs-link-hover-color: {$pDark} !important;
   }
 
-  /* Universal Solid Theme Overrides (White remains pure white) */
-  .bg-primary, 
-  .navbar-custom, 
-  .top-announcement-bar, 
-  .section-video-tour, 
-  .footer-smk, 
-  .statistik-section, 
-  .ppdb-cta-card, 
-  .admin-sidebar {
-    background-color: var(--color-primary) !important;
-  }
-
-  .footer-bottom, .admin-sidebar .sidebar-footer {
-    background-color: var(--color-primary-dark) !important;
-  }
-
-  .bg-primary-subtle {
-    background-color: var(--color-primary-subtle) !important;
-    color: var(--color-primary) !important;
+  /* Bootstrap 5 Dynamic Color Overrides (Preserves Opacity Modifiers) */
+  .bg-primary {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
   }
 
   .text-primary, 
@@ -973,6 +958,26 @@ function renderDynamicThemeStyles(array $profile): string
   .jurusan-card-title, 
   .sambutan-card h2, 
   .profil-fact-card .profil-fact-icon {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+  }
+
+  /* Universal Solid Theme Banners & Panels */
+  .navbar-custom, 
+  .top-announcement-bar, 
+  .section-video-tour, 
+  .footer-smk, 
+  .statistik-section, 
+  .ppdb-cta-card {
+    background-color: var(--color-primary) !important;
+  }
+
+  .footer-bottom, .admin-sidebar .sidebar-footer {
+    background-color: var(--color-primary-dark) !important;
+  }
+
+  .bg-primary-subtle {
+    background-color: var(--color-primary-subtle) !important;
     color: var(--color-primary) !important;
   }
 

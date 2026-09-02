@@ -33,7 +33,7 @@ require __DIR__ . '/../includes/topbar.php';
   <div class="col-lg-8">
     <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
       <div class="d-flex align-items-start gap-3">
-        <div class="p-3 rounded-3 bg-primary bg-opacity-10 text-primary fs-3 flex-shrink-0">
+        <div class="p-3 rounded-3 fs-3 flex-shrink-0" style="background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
           <i class="bi bi-sliders2-vertical"></i>
         </div>
         <div>
@@ -182,7 +182,7 @@ $moduleIcons = [
         <div class="col-lg-6">
           <div class="p-3 rounded-3 border h-100 d-flex align-items-center justify-content-between gap-3 <?= $m['is_active'] ? 'bg-white shadow-xs' : 'bg-light bg-opacity-75' ?>" style="transition: all 0.2s ease;">
             <div class="d-flex align-items-start gap-3">
-              <div class="p-2.5 rounded-3 <?= $m['is_active'] ? 'bg-primary bg-opacity-10 text-primary' : 'bg-secondary bg-opacity-10 text-secondary' ?> fs-5 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+              <div class="rounded-3 fs-5 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px; background-color: <?= $m['is_active'] ? 'var(--color-primary-subtle, #e2e8f0)' : '#f1f5f9' ?>; color: <?= $m['is_active'] ? 'var(--color-primary, #0F2C59)' : '#94a3b8' ?>;">
                 <i class="bi <?= e($modIcon) ?>"></i>
               </div>
               <div>
