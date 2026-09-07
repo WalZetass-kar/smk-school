@@ -950,16 +950,35 @@ function renderDynamicThemeStyles(array $profile): string
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
   }
+  .bg-opacity-10 {
+    --bs-bg-opacity: 0.1 !important;
+  }
+  .bg-opacity-25 {
+    --bs-bg-opacity: 0.25 !important;
+  }
+  .bg-opacity-50 {
+    --bs-bg-opacity: 0.5 !important;
+  }
+  .bg-opacity-75 {
+    --bs-bg-opacity: 0.75 !important;
+  }
+  .bg-opacity-100 {
+    --bs-bg-opacity: 1 !important;
+  }
 
   .text-primary, 
   .text-primary-custom, 
   a.hover-primary:hover, 
   .section-title, 
   .jurusan-card-title, 
-  .sambutan-card h2, 
-  .profil-fact-card .profil-fact-icon {
+  .sambutan-card h2 {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+  }
+
+  .profil-fact-card .profil-fact-icon {
+    background-color: var(--color-primary-subtle) !important;
+    color: var(--color-primary) !important;
   }
 
   /* Universal Solid Theme Banners & Panels */

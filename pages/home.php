@@ -122,7 +122,7 @@ require BASE_PATH . '/includes/navbar.php';
         <div class="row g-3 reveal-group text-start">
           <div class="col-sm-6">
             <div class="profil-fact-card">
-              <div class="profil-fact-icon"><i class="bi bi-bank"></i></div>
+              <div class="profil-fact-icon" style="background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);"><i class="bi bi-bank"></i></div>
               <div>
                 <div class="profil-fact-label">NPSN</div>
                 <div class="profil-fact-value"><?= e($profile['npsn'] ?? '-') ?></div>
@@ -131,7 +131,7 @@ require BASE_PATH . '/includes/navbar.php';
           </div>
           <div class="col-sm-6">
             <div class="profil-fact-card">
-              <div class="profil-fact-icon"><i class="bi bi-calendar3"></i></div>
+              <div class="profil-fact-icon" style="background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);"><i class="bi bi-calendar3"></i></div>
               <div>
                 <div class="profil-fact-label">Tahun Berdiri</div>
                 <div class="profil-fact-value"><?= e($profile['founded_year'] ?? '-') ?></div>
@@ -140,7 +140,7 @@ require BASE_PATH . '/includes/navbar.php';
           </div>
           <div class="col-sm-6">
             <div class="profil-fact-card">
-              <div class="profil-fact-icon"><i class="bi bi-award"></i></div>
+              <div class="profil-fact-icon" style="background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);"><i class="bi bi-award"></i></div>
               <div>
                 <div class="profil-fact-label">Akreditasi</div>
                 <div class="profil-fact-value">Predikat <?= e($profile['accreditation'] ?? '-') ?></div>
@@ -149,7 +149,7 @@ require BASE_PATH . '/includes/navbar.php';
           </div>
           <div class="col-sm-6">
             <div class="profil-fact-card">
-              <div class="profil-fact-icon"><i class="bi bi-geo-alt"></i></div>
+              <div class="profil-fact-icon" style="background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);"><i class="bi bi-geo-alt"></i></div>
               <div>
                 <div class="profil-fact-label">Lokasi</div>
                 <div class="profil-fact-value" style="font-size: 0.92rem;"><?= e(mb_strimwidth($profile['address'] ?? '-', 0, 30, '...')) ?></div>

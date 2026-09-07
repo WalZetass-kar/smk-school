@@ -77,7 +77,7 @@ require BASE_PATH . '/includes/navbar.php';
           <!-- Top Leader: Kepala Sekolah -->
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white border-start border-5 border-primary">
             <div class="d-flex align-items-center gap-3">
-              <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px;">
+              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
                 <i class="bi bi-person-badge-fill fs-2"></i>
               </div>
               <div>
@@ -92,13 +92,12 @@ require BASE_PATH . '/includes/navbar.php';
           </div>
 
           <!-- 4 Wakil Kepala Sekolah (Waka) Grid -->
-          <!-- 4 Wakil Kepala Sekolah (Waka) Grid -->
           <div class="row g-3">
             <!-- Waka Kurikulum -->
             <div class="col-md-6">
               <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
                     <i class="bi bi-journal-bookmark-fill fs-5"></i>
                   </div>
                   <div>
@@ -116,7 +115,7 @@ require BASE_PATH . '/includes/navbar.php';
             <div class="col-md-6">
               <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
                     <i class="bi bi-people-fill fs-5"></i>
                   </div>
                   <div>
@@ -134,7 +133,7 @@ require BASE_PATH . '/includes/navbar.php';
             <div class="col-md-6">
               <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
                     <i class="bi bi-tools fs-5"></i>
                   </div>
                   <div>
@@ -152,7 +151,7 @@ require BASE_PATH . '/includes/navbar.php';
             <div class="col-md-6">
               <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white hover-lift border">
                 <div class="d-flex align-items-start gap-3">
-                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px;">
+                  <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:44px; height:44px; background-color: var(--color-primary-subtle, #e2e8f0); color: var(--color-primary, #0F2C59);">
                     <i class="bi bi-buildings fs-5"></i>
                   </div>
                   <div>
