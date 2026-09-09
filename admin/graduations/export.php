@@ -40,9 +40,9 @@ if ($format === 'excel' || $format === 'xls') {
         .title { font-size: 14pt; font-weight: bold; color: #0f2c59; }
         .sub { font-size: 10pt; color: #64748b; margin-bottom: 8px; }
         .meta { font-size: 9.5pt; color: #475569; margin-bottom: 12px; }
-        .table-data { border-collapse: collapse; width: 100%; }
-        .table-data th { background-color: #0f2c59; color: #ffffff; font-weight: bold; text-align: center; border: 1px solid #cbd5e1; padding: 8px 12px; }
-        .table-data td { border: 1px solid #cbd5e1; padding: 6px 10px; }
+        .table-data { border-collapse: collapse; width: 100%; border: 1.5pt solid #000000; }
+        .table-data th { background-color: #0f2c59; color: #ffffff; font-weight: bold; text-align: center; border: 1.5pt solid #000000; padding: 8px 12px; }
+        .table-data td { border: 1pt solid #000000; padding: 6px 10px; }
         .text-center { text-align: center; }
         .text-format { mso-number-format:"\@"; }
         .num-format { mso-number-format:"0\.00"; text-align: right; }
@@ -56,7 +56,7 @@ if ($format === 'excel' || $format === 'xls') {
       <div class="sub"><?= htmlspecialchars($schoolName) ?></div>
       <div class="meta">Waktu Ekspor: <?= date('d/m/Y H:i:s') ?> WIB | Total Data: <?= count($rows) ?> Siswa</div>
       <br>
-      <table class="table-data">
+      <table border="1" cellpadding="6" cellspacing="0" class="table-data" style="border-collapse: collapse; border: 1.5pt solid #000000; width: 100%;">
         <thead>
           <tr>
             <th style="width: 45px;">No</th>

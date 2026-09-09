@@ -298,30 +298,35 @@ require __DIR__ . '/../includes/topbar.php';
       </p>
 
       <div class="d-flex flex-column gap-2 mb-4">
-        <a href="<?= e(BASE_URL) ?>/admin/graduations/template.php?format=csv" class="btn btn-white border shadow-xs d-flex align-items-center justify-content-between p-3 rounded-3 text-start text-dark text-decoration-none">
+        <a href="<?= e(BASE_URL) ?>/admin/graduations/template.php?format=excel" class="btn btn-white border-2 border-primary shadow-sm d-flex align-items-center justify-content-between p-3 rounded-3 text-start text-dark text-decoration-none">
           <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 bg-success bg-opacity-10 text-success p-2.5 d-flex align-items-center justify-content-center">
-              <i class="bi bi-filetype-csv fs-4"></i>
+            <div class="rounded-3 bg-primary text-white p-2.5 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="bi bi-file-earmark-excel-fill fs-3"></i>
             </div>
             <div>
-              <div class="fw-bold text-dark">Unduh Template CSV (Anti-Nyatu)</div>
-              <div class="text-muted small" style="font-size: 11.5px;">Dilengkapi pemisah titik-koma (;) dan UTF-8 BOM otomatis.</div>
+              <div class="d-flex align-items-center gap-2">
+                <strong class="text-dark">Unduh Template Excel (.xls)</strong>
+                <span class="badge bg-primary text-white px-2 py-0.5 rounded-pill" style="font-size: 10px;">Direkomendasikan</span>
+              </div>
+              <div class="text-muted small" style="font-size: 11.5px; line-height: 1.4;">
+                <span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Langsung ada garis border tabel</span> &bull; Angka nol depan NISN tidak hilang.
+              </div>
             </div>
           </div>
-          <i class="bi bi-download text-primary fs-5"></i>
+          <i class="bi bi-download text-primary fs-4"></i>
         </a>
 
-        <a href="<?= e(BASE_URL) ?>/admin/graduations/template.php?format=excel" class="btn btn-white border shadow-xs d-flex align-items-center justify-content-between p-3 rounded-3 text-start text-dark text-decoration-none">
+        <a href="<?= e(BASE_URL) ?>/admin/graduations/template.php?format=csv" class="btn btn-white border shadow-xs d-flex align-items-center justify-content-between p-3 rounded-3 text-start text-dark text-decoration-none">
           <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-2.5 d-flex align-items-center justify-content-center">
-              <i class="bi bi-file-earmark-excel fs-4"></i>
+            <div class="rounded-3 bg-success bg-opacity-10 text-success p-2.5 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="bi bi-filetype-csv fs-3"></i>
             </div>
             <div>
-              <div class="fw-bold text-dark">Unduh Template Microsoft Excel (.xls)</div>
-              <div class="text-muted small" style="font-size: 11.5px;">Kolom berdesain resmi dengan format angka text khusus NISN.</div>
+              <div class="fw-bold text-dark">Unduh Template CSV (.csv)</div>
+              <div class="text-muted small" style="font-size: 11.5px;">Format teks ringan dengan pemisah titik-koma (;) dan UTF-8 BOM otomatis.</div>
             </div>
           </div>
-          <i class="bi bi-download text-primary fs-5"></i>
+          <i class="bi bi-download text-success fs-4"></i>
         </a>
       </div>
 
