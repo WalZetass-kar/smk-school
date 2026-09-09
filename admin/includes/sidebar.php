@@ -41,10 +41,14 @@ function navIsActive(string $needle, string $currentScript): bool
       </a>
 
       <div class="nav-section-label">Website &amp; Fitur</div>
+      <?php if (canManageModules()): ?>
       <a class="nav-link <?= navIsActive('modules', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/modules/index.php" title="Fitur & Modul Halaman"><i class="bi bi-sliders2-vertical text-warning"></i> <span class="nav-text">Fitur &amp; Modul (ON/OFF)</span></a>
+      <?php endif; ?>
       <a class="nav-link <?= navIsActive('profile', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/profile/index.php" title="Identitas & Profil Website"><i class="bi bi-gear"></i> <span class="nav-text">Identitas Sekolah</span></a>
       <a class="nav-link <?= navIsActive('banners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/banners/index.php" title="Banner Slider"><i class="bi bi-images"></i> <span class="nav-text">Banner Slider</span></a>
+      <?php if (isModuleActive('statistics')): ?>
       <a class="nav-link <?= navIsActive('statistics', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/statistics/index.php" title="Statistik Sekolah (Jumlah Siswa, Guru, dll)"><i class="bi bi-bar-chart-line"></i> <span class="nav-text">Statistik Sekolah</span></a>
+      <?php endif; ?>
       <a class="nav-link <?= navIsActive('social-media', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/social-media/index.php" title="Social Media"><i class="bi bi-share"></i> <span class="nav-text">Social Media</span></a>
 
       <div class="nav-section-label">Profil</div>
@@ -54,8 +58,10 @@ function navIsActive(string $needle, string $currentScript): bool
       <a class="nav-link <?= navIsActive('organization', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/organization/index.php" title="Struktur Organisasi"><i class="bi bi-diagram-3"></i> <span class="nav-text">Struktur Organisasi</span></a>
       <a class="nav-link <?= navIsActive('teachers', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/teachers/index.php" title="Guru &amp; Tendik"><i class="bi bi-people"></i> <span class="nav-text">Guru &amp; Tendik</span></a>
 
-      <div class="nav-section-label">Jurusan</div>
-      <a class="nav-link <?= navIsActive('majors', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/majors/index.php" title="Daftar Jurusan"><i class="bi bi-mortarboard"></i> <span class="nav-text">Daftar Jurusan</span></a>
+      <?php if (isModuleActive('majors')): ?>
+      <div class="nav-section-label"><?= getSchoolLevel() === 'SMA' ? 'Peminatan' : 'Jurusan' ?></div>
+      <a class="nav-link <?= navIsActive('majors', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/majors/index.php" title="<?= getSchoolLevel() === 'SMA' ? 'Daftar Peminatan' : 'Daftar Jurusan' ?>"><i class="bi bi-mortarboard"></i> <span class="nav-text"><?= getSchoolLevel() === 'SMA' ? 'Daftar Peminatan' : 'Daftar Jurusan' ?></span></a>
+      <?php endif; ?>
 
       <div class="nav-section-label">Berita</div>
       <a class="nav-link <?= navIsActive('news', $currentScript) && !navIsActive('news/categories', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/news/index.php" title="Semua Berita"><i class="bi bi-newspaper"></i> <span class="nav-text">Semua Berita</span></a>
@@ -65,31 +71,57 @@ function navIsActive(string $needle, string $currentScript): bool
       <a class="nav-link <?= navIsActive('galleries', $currentScript) && !navIsActive('galleries/categories', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/galleries/index.php" title="Semua Galeri"><i class="bi bi-image"></i> <span class="nav-text">Semua Galeri</span></a>
       <a class="nav-link <?= navIsActive('galleries/categories', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/galleries/categories.php" title="Kategori Galeri"><i class="bi bi-tags"></i> <span class="nav-text">Kategori Galeri</span></a>
 
-      <div class="nav-section-label">Alumni &amp; Mitra</div>
+      <?php if (isModuleActive('testimonials') || isModuleActive('partners')): ?>
+      <div class="nav-section-label"><?= isModuleActive('partners') ? 'Alumni &amp; Mitra' : 'Alumni' ?></div>
+      <?php if (isModuleActive('testimonials')): ?>
       <a class="nav-link <?= navIsActive('alumni', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/alumni/index.php" title="Testimoni Alumni"><i class="bi bi-chat-quote"></i> <span class="nav-text">Testimoni Alumni</span></a>
+      <?php endif; ?>
+      <?php if (isModuleActive('partners')): ?>
       <a class="nav-link <?= navIsActive('partners', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/partners/index.php" title="Mitra Kerja Sama &amp; Industri (DU/DI)"><i class="bi bi-buildings"></i> <span class="nav-text">Mitra Kerja Sama</span></a>
+      <?php endif; ?>
+      <?php endif; ?>
 
+      <?php if (isModuleActive('extracurriculars') || isModuleActive('prestasi')): ?>
       <div class="nav-section-label">Kesiswaan</div>
+      <?php if (isModuleActive('extracurriculars')): ?>
       <a class="nav-link <?= navIsActive('extracurriculars', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/extracurriculars/index.php" title="Ekstrakurikuler"><i class="bi bi-activity"></i> <span class="nav-text">Ekstrakurikuler</span></a>
+      <?php endif; ?>
+      <?php if (isModuleActive('prestasi')): ?>
       <a class="nav-link <?= navIsActive('achievements', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/achievements/index.php" title="Prestasi Siswa"><i class="bi bi-trophy"></i> <span class="nav-text">Prestasi Siswa</span></a>
+      <?php endif; ?>
+      <?php endif; ?>
 
+      <?php if (isModuleActive('bkk')): ?>
       <div class="nav-section-label">BKK &amp; Karir</div>
       <a class="nav-link <?= navIsActive('bkk', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/bkk/index.php" title="Lowongan BKK"><i class="bi bi-briefcase"></i> <span class="nav-text">Lowongan BKK</span></a>
+      <?php endif; ?>
 
+      <?php if (isModuleActive('downloads')): ?>
       <div class="nav-section-label">Unduhan</div>
       <a class="nav-link <?= navIsActive('downloads', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/downloads/index.php" title="Pusat Unduhan"><i class="bi bi-download"></i> <span class="nav-text">Pusat Unduhan</span></a>
+      <?php endif; ?>
 
+      <?php if (isModuleActive('ppdb')): ?>
       <div class="nav-section-label">PPDB &amp; Notifikasi</div>
       <a class="nav-link <?= navIsActive('ppdb/index', $currentScript) || (navIsActive('ppdb', $currentScript) && !navIsActive('ppdb/settings', $currentScript) && !navIsActive('ppdb/detail', $currentScript)) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/ppdb/index.php" title="Data Pendaftar PPDB"><i class="bi bi-person-lines-fill"></i> <span class="nav-text">Data Pendaftar</span></a>
       <a class="nav-link <?= navIsActive('ppdb/settings', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/ppdb/settings.php" title="Pengaturan PPDB"><i class="bi bi-sliders"></i> <span class="nav-text">Pengaturan PPDB</span></a>
       <a class="nav-link <?= navIsActive('whatsapp', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/whatsapp/index.php" title="WhatsApp Gateway"><i class="bi bi-whatsapp text-success"></i> <span class="nav-text">WhatsApp Gateway</span></a>
+      <?php endif; ?>
 
-      <div class="nav-section-label">Kelulusan &amp; Agenda</div>
+      <?php if (isModuleActive('kelulusan') || isModuleActive('agendas')): ?>
+      <div class="nav-section-label"><?= isModuleActive('kelulusan') && isModuleActive('agendas') ? 'Kelulusan &amp; Agenda' : (isModuleActive('kelulusan') ? 'Kelulusan' : 'Agenda') ?></div>
+      <?php if (isModuleActive('kelulusan')): ?>
       <a class="nav-link <?= navIsActive('graduations', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/graduations/index.php" title="Kelulusan (SKL Online)"><i class="bi bi-mortarboard-fill"></i> <span class="nav-text">Kelulusan (SKL)</span></a>
+      <?php endif; ?>
+      <?php if (isModuleActive('agendas')): ?>
       <a class="nav-link <?= navIsActive('agendas', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/agendas/index.php" title="Agenda Kegiatan"><i class="bi bi-calendar-event"></i> <span class="nav-text">Agenda Kegiatan</span></a>
+      <?php endif; ?>
+      <?php endif; ?>
 
       <div class="nav-section-label">Buku Tamu &amp; Kontak</div>
+      <?php if (isModuleActive('guestbook')): ?>
       <a class="nav-link <?= navIsActive('guestbook', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/guestbook/index.php" title="Buku Tamu Digital"><i class="bi bi-book-half"></i> <span class="nav-text">Buku Tamu Digital</span></a>
+      <?php endif; ?>
       <a class="nav-link <?= navIsActive('contacts', $currentScript) ? 'active' : '' ?>" href="<?= e(BASE_URL) ?>/admin/contacts/index.php" title="Pesan Masuk"><i class="bi bi-envelope"></i> <span class="nav-text">Pesan Masuk</span></a>
 
       <div class="nav-section-label">Sistem &amp; Akun</div>

@@ -707,11 +707,66 @@ function getGoogleMapsEmbedUrl(?string $input, ?string $fallbackQuery = null): s
 }
 
 /**
+ * Mendapatkan level lisensi jenjang sekolah saat ini ('MULTI', 'SMA', 'SMK', 'SMP', 'SD').
+ */
+function getSchoolLevel(): string
+{
+    if (defined('APP_SCHOOL_LEVEL')) {
+        $lvl = strtoupper(trim(APP_SCHOOL_LEVEL));
+        if (in_array($lvl, ['MULTI', 'SMA', 'SMK', 'SMP', 'SD'], true)) {
+            return $lvl;
+        }
+    }
+    return 'MULTI';
+}
+
+/**
+ * Memeriksa apakah website sedang dalam mode terkunci ke 1 jenjang sekolah tertentu.
+ */
+function isSchoolLevelLocked(): bool
+{
+    return getSchoolLevel() !== 'MULTI';
+}
+
+/**
+ * Memeriksa apakah menu manajemen modul diizinkan untuk diakses.
+ */
+function canManageModules(): bool
+{
+    if (defined('ALLOW_MODULE_MANAGEMENT') && !ALLOW_MODULE_MANAGEMENT) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Mendapatkan daftar modul yang diizinkan untuk setiap level lisensi sekolah.
+ */
+function getAllowedModulesForLevel(string $level): array
+{
+    return match($level) {
+        'SMA'       => ['majors', 'kelulusan', 'downloads', 'agendas', 'ppdb', 'extracurriculars', 'prestasi', 'testimonials', 'news', 'galleries', 'video_profile', 'guestbook', 'statistics'],
+        'SMP', 'SD' => ['downloads', 'agendas', 'ppdb', 'extracurriculars', 'prestasi', 'news', 'galleries', 'video_profile', 'guestbook', 'statistics'],
+        default     => ['bkk', 'partners', 'majors', 'kelulusan', 'downloads', 'agendas', 'ppdb', 'extracurriculars', 'prestasi', 'testimonials', 'news', 'galleries', 'video_profile', 'guestbook', 'statistics'],
+    };
+}
+
+/**
  * Check if a site module / page feature is currently active.
  * Uses in-memory caching to ensure only 1 query per HTTP request.
+ * Automatically enforces developer level lock rules (e.g. BKK/DU-DI disabled on SMA/SMP/SD).
  */
 function isModuleActive(string $moduleKey): bool
 {
+    // 1. Developer Level Lock Override
+    if (isSchoolLevelLocked()) {
+        $allowed = getAllowedModulesForLevel(getSchoolLevel());
+        if (!in_array($moduleKey, $allowed, true)) {
+            return false;
+        }
+    }
+
+    // 2. Normal database cache lookup
     static $moduleCache = null;
     if ($moduleCache === null) {
         $moduleCache = [];

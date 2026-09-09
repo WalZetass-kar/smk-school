@@ -51,3 +51,25 @@ define('MAX_UPLOAD_SIZE', 2 * 1024 * 1024); // 2MB
 // Pagination
 define('NEWS_PER_PAGE', 9);
 define('GALLERY_PER_PAGE', 12);
+
+/**
+ * =========================================================
+ * LISENSI & KUNCI FITUR JENJANG SEKOLAH (DEVELOPER CONTROL)
+ * =========================================================
+ * APP_SCHOOL_LEVEL:
+ * - 'MULTI' : Mode Pengembang / Master (Bebas! Semua preset & modul terbuka).
+ * - 'SMA'   : Terkunci khusus SMA / MA (Peminatan MIPA/IPS). Modul SMK (BKK, DU/DI) terkunci mati.
+ * - 'SMK'   : Terkunci khusus SMK (Kejuruan, BKK, Mitra Industri DU/DI, Jurusan Vokasi).
+ * - 'SMP'   : Terkunci khusus SMP / MTs (Umum, tanpa Jurusan, tanpa BKK, tanpa DU/DI).
+ * - 'SD'    : Terkunci khusus SD / MI (Dasar, tanpa Jurusan, tanpa BKK, tanpa DU/DI).
+ *
+ * ALLOW_MODULE_MANAGEMENT:
+ * - true    : Menu "Kelola Modul (ON/OFF)" dan Switcher Preset muncul di admin.
+ * - false   : Menu "Kelola Modul" disembunyikan total & di-lock dari admin sekolah (pembeli).
+ */
+if (!defined('APP_SCHOOL_LEVEL')) {
+    define('APP_SCHOOL_LEVEL', 'MULTI');
+}
+if (!defined('ALLOW_MODULE_MANAGEMENT')) {
+    define('ALLOW_MODULE_MANAGEMENT', true);
+}

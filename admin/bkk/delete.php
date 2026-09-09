@@ -6,6 +6,11 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
+if (!isModuleActive('bkk')) {
+    setFlash('danger', 'Fitur Bursa Kerja Khusus (BKK) tidak tersedia pada paket lisensi sekolah ini.');
+    redirect(BASE_URL . '/admin/dashboard.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect(BASE_URL . '/admin/bkk/index.php');
 }

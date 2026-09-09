@@ -6,6 +6,11 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
+if (!canManageModules()) {
+    setFlash('danger', 'Akses ke manajemen fitur & modul dinonaktifkan oleh lisensi sistem.');
+    redirect(BASE_URL . '/admin/dashboard.php');
+}
+
 $db = getDB();
 $modules = $db->query("SELECT * FROM site_modules ORDER BY sort_order ASC, id ASC")->fetchAll(PDO::FETCH_ASSOC);
 
@@ -27,6 +32,22 @@ require __DIR__ . '/../includes/topbar.php';
 ?>
 
 <?= flashMessage() ?>
+
+<!-- Developer License Status Card -->
+<div class="alert bg-white border-0 shadow-sm rounded-4 p-3 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
+  <div class="d-flex align-items-center gap-3">
+    <div class="rounded-3 fs-4 flex-shrink-0 d-flex align-items-center justify-content-center" style="width:46px;height:46px;background-color:var(--color-primary-subtle, #e2e8f0);color:var(--color-primary, #0F2C59);">
+      <i class="bi bi-shield-check"></i>
+    </div>
+    <div>
+      <div class="d-flex align-items-center gap-2">
+        <strong class="text-dark">Status Lisensi Sistem:</strong>
+        <span class="badge bg-primary text-white px-2.5 py-1 rounded-pill fw-bold"><?= e(getSchoolLevel()) ?> (<?= isSchoolLevelLocked() ? 'Terkunci Khusus ' . e(getSchoolLevel()) : 'Mode Pengembang / Multi-Jenjang' ?>)</span>
+      </div>
+      <span class="text-muted small" style="font-size:12px;">Untuk mengunci web khusus SMA sebelum dikirim ke pembeli, buka <code>config/constants.php</code> dan ubah <code>APP_SCHOOL_LEVEL = 'SMA'</code> serta <code>ALLOW_MODULE_MANAGEMENT = false</code>.</span>
+    </div>
+  </div>
+</div>
 
 <!-- Top Intro Banner & Status Summary -->
 <div class="row g-3 mb-4">

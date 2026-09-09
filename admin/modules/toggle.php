@@ -6,6 +6,11 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
+if (!canManageModules()) {
+    setFlash('danger', 'Akses ke manajemen fitur & modul dinonaktifkan oleh lisensi sistem.');
+    redirect(BASE_URL . '/admin/dashboard.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrfVerify($_POST['csrf_token'] ?? null)) {
         setFlash('danger', 'Sesi tidak valid, silakan coba lagi.');

@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
+if (!isModuleActive('partners')) {
+    setFlash('danger', 'Fitur Mitra Kerja Sama DU/DI tidak tersedia pada paket lisensi sekolah ini.');
+    redirect(BASE_URL . '/admin/dashboard.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrfVerify($_POST['csrf_token'] ?? null)) {
     setFlash('error', 'Permintaan tidak valid.');
     redirect(BASE_URL . '/admin/partners/index.php');
