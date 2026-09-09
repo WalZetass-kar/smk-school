@@ -309,7 +309,7 @@ require __DIR__ . '/../includes/topbar.php';
                 <span class="badge bg-primary text-white px-2 py-0.5 rounded-pill" style="font-size: 10px;">Direkomendasikan</span>
               </div>
               <div class="text-muted small" style="font-size: 11.5px; line-height: 1.4;">
-                <span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Langsung ada garis border tabel</span> &bull; Angka nol depan NISN tidak hilang.
+                Format Microsoft Excel (.xls) siap isi &bull; Angka nol di depan NISN tidak hilang.
               </div>
             </div>
           </div>

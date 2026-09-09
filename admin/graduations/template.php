@@ -77,10 +77,7 @@ if ($format === 'excel' || $format === 'xls') {
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <style>
-        body { font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 11pt; color: #0f172a; }
-        .title { font-size: 15pt; font-weight: bold; color: #0f2c59; }
-        .sub { font-size: 11pt; font-weight: bold; color: #334155; margin-bottom: 6px; }
-        .notice { font-size: 9.5pt; color: #92400e; background-color: #fef3c7; border: 1.5pt solid #f59e0b; padding: 8px 12px; margin-bottom: 12px; }
+        body { font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 11pt; color: #0f172a; margin: 0; padding: 0; }
         table { border-collapse: collapse; width: 100%; border: 1.5pt solid #000000; }
         th { border: 1.5pt solid #000000; background-color: #0F2C59; color: #ffffff; font-weight: bold; text-align: center; vertical-align: middle; padding: 8px 10px; font-size: 11pt; }
         td { border: 1pt solid #000000; padding: 6px 8px; vertical-align: middle; font-size: 10.5pt; }
@@ -94,18 +91,6 @@ if ($format === 'excel' || $format === 'xls') {
       </style>
     </head>
     <body>
-      <div class="title">TEMPLATE IMPORT DATA KELULUSAN SISWA (SKL ONLINE)</div>
-      <div class="sub"><?= htmlspecialchars($schoolName) ?> &mdash; Format Resmi Lengkap dengan Border Garis Tabel</div>
-      <div class="notice">
-        <strong>PANDUAN PENGISIAN:</strong><br>
-        1. <strong>Garis Border Tabel</strong> sudah terpasang otomatis. Anda bisa langsung mengisi atau menyalin data siswa ke tabel ini.<br>
-        2. Jangan mengubah susunan kolom di baris judul (Baris Tabel 1).<br>
-        3. Kolom <strong>NISN</strong> dan <strong>Nomor Peserta Ujian</strong> wajib unik untuk setiap siswa.<br>
-        4. Format <strong>Tanggal Lahir</strong>: <code>YYYY-MM-DD</code> (contoh: 2008-04-15) atau <code>DD/MM/YYYY</code>.<br>
-        5. Pilihan <strong>Status Kelulusan</strong>: <code>LULUS</code>, <code>TIDAK LULUS</code>, atau <code>DITUNDA</code>.<br>
-        6. Setelah diisi, file ini bisa langsung diunggah di menu Import Data.
-      </div>
-      <br>
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; border: 1.5pt solid #000000; width: 100%;">
         <thead>
           <tr style="background-color: #0F2C59; color: #ffffff;">
