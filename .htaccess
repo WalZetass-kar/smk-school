@@ -16,11 +16,3 @@ RewriteRule ^ - [L]
 
 # Everything else goes through the front controller.
 RewriteRule ^ index.php [L]
-
-# Never allow the uploads folder to execute PHP (defense in depth against
-# a malicious file slipping past the upload validation in functions.php).
-<IfModule mod_php.c>
-    <Directory "assets/uploads">
-        php_flag engine off
-    </Directory>
-</IfModule>

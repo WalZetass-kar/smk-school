@@ -13,9 +13,13 @@
  */
 require_once __DIR__ . '/config/config.php';
 
-$uri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri  = rtrim($uri, '/');
-$uri  = $uri === '' ? '/' : $uri;
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$urlPrefix = parse_url(BASE_URL, PHP_URL_PATH);
+if ($urlPrefix && $urlPrefix !== '/' && str_starts_with($uri, $urlPrefix)) {
+    $uri = substr($uri, strlen($urlPrefix));
+}
+$uri = rtrim($uri, '/');
+$uri = $uri === '' ? '/' : $uri;
 
 // Static route table. Add an entry here each time a new pages/*.php is built.
 $routes = [
