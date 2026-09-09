@@ -59,16 +59,30 @@ require __DIR__ . '/../includes/topbar.php';
     <h1 class="h4 fw-bold text-primary mb-1"><i class="bi bi-mortarboard-fill me-2"></i>Kelulusan Siswa (SKL Online)</h1>
     <p class="text-muted small mb-0">Tahun Ajaran: <strong><?= e($settings['academic_year']) ?></strong> | Rilis: <strong><?= date('d M Y, H:i', strtotime($settings['announcement_date'])) ?> WIB</strong></p>
   </div>
-  <div class="d-flex gap-2 flex-wrap">
+  <div class="d-flex gap-2 flex-wrap align-items-center">
     <a href="<?= e(BASE_URL) ?>/admin/graduations/settings.php" class="btn btn-outline-secondary btn-sm">
       <i class="bi bi-gear me-1"></i>Pengaturan Jadwal
     </a>
     <a href="<?= e(BASE_URL) ?>/admin/graduations/import.php" class="btn btn-outline-success btn-sm">
-      <i class="bi bi-file-earmark-spreadsheet me-1"></i>Import CSV
+      <i class="bi bi-file-earmark-arrow-up me-1"></i>Import CSV / Excel
     </a>
-    <a href="<?= e(BASE_URL) ?>/admin/graduations/export.php" class="btn btn-outline-primary btn-sm">
-      <i class="bi bi-download me-1"></i>Export CSV
-    </a>
+    <div class="btn-group btn-group-sm">
+      <a href="<?= e(BASE_URL) ?>/admin/graduations/export.php?format=csv" class="btn btn-outline-primary">
+        <i class="bi bi-download me-1"></i>Export Data
+      </a>
+      <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="visually-hidden">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+        <li><h6 class="dropdown-header small">Pilihan Ekspor</h6></li>
+        <li><a class="dropdown-item small" href="<?= e(BASE_URL) ?>/admin/graduations/export.php?format=csv"><i class="bi bi-filetype-csv me-2 text-success"></i>Export Format CSV (.csv)</a></li>
+        <li><a class="dropdown-item small" href="<?= e(BASE_URL) ?>/admin/graduations/export.php?format=excel"><i class="bi bi-file-earmark-excel me-2 text-primary"></i>Export Format Excel (.xls)</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header small">Template Kosong</h6></li>
+        <li><a class="dropdown-item small" href="<?= e(BASE_URL) ?>/admin/graduations/template.php?format=csv"><i class="bi bi-file-earmark-arrow-down me-2 text-success"></i>Unduh Template CSV</a></li>
+        <li><a class="dropdown-item small" href="<?= e(BASE_URL) ?>/admin/graduations/template.php?format=excel"><i class="bi bi-file-earmark-excel me-2 text-primary"></i>Unduh Template Excel</a></li>
+      </ul>
+    </div>
     <a href="<?= e(BASE_URL) ?>/admin/graduations/form.php" class="btn btn-accent btn-sm">
       <i class="bi bi-plus-lg me-1"></i>Tambah Siswa
     </a>
