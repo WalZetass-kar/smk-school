@@ -220,12 +220,18 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
                 </div>
 
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                  <div class="badge bg-primary bg-opacity-10 text-primary p-2 px-3 rounded-pill fw-semibold" style="font-size: 12px;">
-                    <i class="bi bi-star-fill me-1 text-warning"></i> Pilihan 1: <strong>[<?= e($result['major1_code'] ?: 'JUR-1') ?>]</strong> <?= e($result['major1_name'] ?: 'Reguler') ?>
-                  </div>
-                  <?php if (!empty($result['major2_name'])): ?>
-                    <div class="badge bg-secondary bg-opacity-10 text-secondary p-2 px-3 rounded-pill fw-semibold" style="font-size: 12px;">
-                      Pilihan 2: <strong>[<?= e($result['major2_code'] ?: 'JUR-2') ?>]</strong> <?= e($result['major2_name']) ?>
+                  <?php if (!empty($result['major1_name'])): ?>
+                    <div class="badge bg-primary bg-opacity-10 text-primary p-2 px-3 rounded-pill fw-semibold" style="font-size: 12px;">
+                      <i class="bi bi-star-fill me-1 text-warning"></i> <?= getSchoolLevel() === 'SMA' ? 'Peminatan' : 'Pilihan' ?> 1: <strong>[<?= e($result['major1_code']) ?>]</strong> <?= e($result['major1_name']) ?>
+                    </div>
+                    <?php if (!empty($result['major2_name'])): ?>
+                      <div class="badge bg-secondary bg-opacity-10 text-secondary p-2 px-3 rounded-pill fw-semibold" style="font-size: 12px;">
+                        <?= getSchoolLevel() === 'SMA' ? 'Peminatan' : 'Pilihan' ?> 2: <strong>[<?= e($result['major2_code']) ?>]</strong> <?= e($result['major2_name']) ?>
+                      </div>
+                    <?php endif; ?>
+                  <?php else: ?>
+                    <div class="badge bg-primary bg-opacity-10 text-primary p-2 px-3 rounded-pill fw-semibold" style="font-size: 12px;">
+                      <i class="bi bi-mortarboard-fill me-1 text-primary"></i> Program: <strong>Siswa Baru Kelas X (Kurikulum Merdeka)</strong>
                     </div>
                   <?php endif; ?>
                 </div>

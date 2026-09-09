@@ -169,14 +169,21 @@ require __DIR__ . '/../includes/topbar.php';
               <th class="bg-light">Nilai Rata-rata</th>
               <td><strong><?= $reg['average_score'] !== null ? number_format($reg['average_score'], 2) : '-' ?></strong></td>
             </tr>
+            <?php if (!empty($reg['major1_name'])): ?>
             <tr>
-              <th class="bg-light">Pilihan Jurusan 1</th>
+              <th class="bg-light"><?= getSchoolLevel() === 'SMA' ? 'Peminatan Utama' : 'Pilihan Jurusan 1' ?></th>
               <td><span class="badge bg-primary fs-7"><?= e($reg['major1_code']) ?></span> <?= e($reg['major1_name']) ?></td>
             </tr>
             <?php if ($reg['major2_name']): ?>
             <tr>
-              <th class="bg-light">Pilihan Jurusan 2</th>
+              <th class="bg-light"><?= getSchoolLevel() === 'SMA' ? 'Peminatan Alternatif' : 'Pilihan Jurusan 2' ?></th>
               <td><span class="badge bg-secondary fs-7"><?= e($reg['major2_code']) ?></span> <?= e($reg['major2_name']) ?></td>
+            </tr>
+            <?php endif; ?>
+            <?php else: ?>
+            <tr>
+              <th class="bg-light">Program / Kelas</th>
+              <td><span class="badge bg-light text-dark border">Reguler</span> Siswa Baru Kelas X (Kurikulum Merdeka)</td>
             </tr>
             <?php endif; ?>
           </tbody>

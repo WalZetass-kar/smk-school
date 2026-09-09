@@ -185,7 +185,7 @@ require __DIR__ . '/../includes/topbar.php';
           <th>No. Registrasi</th>
           <th>Nama Lengkap</th>
           <th>NISN / Asal SMP</th>
-          <th>Pilihan Jurusan</th>
+          <th><?= isModuleActive('majors') ? (getSchoolLevel() === 'SMA' ? 'Peminatan' : 'Pilihan Jurusan') : 'Program / Kelas' ?></th>
           <th>Status</th>
           <th>Tgl Daftar</th>
           <th class="text-end">Aksi</th>
@@ -207,9 +207,13 @@ require __DIR__ . '/../includes/topbar.php';
                 <div class="small text-muted"><?= e($r['school_origin']) ?></div>
               </td>
               <td>
-                <div><span class="badge bg-primary fs-7">P1: <?= e($r['major1_code']) ?></span></div>
-                <?php if ($r['major2_code']): ?>
-                  <div class="mt-1"><span class="badge bg-secondary fs-7">P2: <?= e($r['major2_code']) ?></span></div>
+                <?php if (!empty($r['major1_code'])): ?>
+                  <div><span class="badge bg-primary fs-7"><?= getSchoolLevel() === 'SMA' ? 'Minat 1' : 'P1' ?>: <?= e($r['major1_code']) ?></span></div>
+                  <?php if ($r['major2_code']): ?>
+                    <div class="mt-1"><span class="badge bg-secondary fs-7"><?= getSchoolLevel() === 'SMA' ? 'Minat 2' : 'P2' ?>: <?= e($r['major2_code']) ?></span></div>
+                  <?php endif; ?>
+                <?php else: ?>
+                  <span class="badge bg-light text-dark border">Reguler (Kelas X)</span>
                 <?php endif; ?>
               </td>
               <td>

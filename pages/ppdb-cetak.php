@@ -223,14 +223,21 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=' . 
             <th>Nilai Rata-rata Rapor</th>
             <td><?= $data['average_score'] !== null ? number_format($data['average_score'], 2) : '-' ?></td>
           </tr>
+          <?php if (!empty($data['major1_name'])): ?>
           <tr>
-            <th>Pilihan Jurusan 1</th>
-            <td><strong>[<?= e($data['major1_code'] ?: 'JUR-1') ?>]</strong> <?= e($data['major1_name'] ?: 'Reguler') ?></td>
+            <th><?= getSchoolLevel() === 'SMA' ? 'Peminatan Utama' : 'Pilihan Jurusan 1' ?></th>
+            <td><strong>[<?= e($data['major1_code']) ?>]</strong> <?= e($data['major1_name']) ?></td>
           </tr>
           <?php if (!empty($data['major2_name'])): ?>
           <tr>
-            <th>Pilihan Jurusan 2</th>
-            <td><strong>[<?= e($data['major2_code'] ?: 'JUR-2') ?>]</strong> <?= e($data['major2_name']) ?></td>
+            <th><?= getSchoolLevel() === 'SMA' ? 'Peminatan Alternatif' : 'Pilihan Jurusan 2' ?></th>
+            <td><strong>[<?= e($data['major2_code']) ?>]</strong> <?= e($data['major2_name']) ?></td>
+          </tr>
+          <?php endif; ?>
+          <?php else: ?>
+          <tr>
+            <th>Program / Kelas</th>
+            <td><strong>Siswa Baru Kelas X (Reguler / Kurikulum Merdeka)</strong></td>
           </tr>
           <?php endif; ?>
           <tr>

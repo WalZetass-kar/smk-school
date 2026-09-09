@@ -68,7 +68,7 @@ define('GALLERY_PER_PAGE', 12);
  * - false   : Menu "Kelola Modul" disembunyikan total & di-lock dari admin sekolah (pembeli).
  */
 if (!defined('APP_SCHOOL_LEVEL')) {
-    define('APP_SCHOOL_LEVEL', 'SMA');
+    define('APP_SCHOOL_LEVEL', 'SMK');
 }
 if (!defined('ALLOW_MODULE_MANAGEMENT')) {
     define('ALLOW_MODULE_MANAGEMENT', false);
