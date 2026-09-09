@@ -321,7 +321,7 @@ CREATE TABLE ppdb_registrations (
   parent_name VARCHAR(150) NOT NULL,
   parent_phone VARCHAR(30) NOT NULL,
   parent_job VARCHAR(100) DEFAULT NULL,
-  major_choice_1 INT UNSIGNED NOT NULL,
+  major_choice_1 INT UNSIGNED DEFAULT NULL,
   major_choice_2 INT UNSIGNED DEFAULT NULL,
   average_score DECIMAL(5,2) DEFAULT NULL,
   document_photo VARCHAR(255) DEFAULT NULL,

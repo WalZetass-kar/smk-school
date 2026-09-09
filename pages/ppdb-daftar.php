@@ -5,8 +5,10 @@
  */
 $db       = getDB();
 $profile  = getSchoolProfile();
-$settings = getPpdbSettings();
-$majors   = $db->query("SELECT * FROM majors WHERE status = 1 ORDER BY id ASC")->fetchAll();
+$settings  = getPpdbSettings();
+$hasMajors = isModuleActive('majors');
+$majors    = $hasMajors ? $db->query("SELECT * FROM majors WHERE status = 1 ORDER BY id ASC")->fetchAll() : [];
+$hasMajors = !empty($majors);
 
 if (empty($settings['is_open'])) {
     $pageTitle = 'Pendaftaran PPDB Ditutup';
@@ -54,8 +56,8 @@ $formData = [
     'parent_name'     => '',
     'parent_phone'    => '',
     'parent_job'      => '',
-    'major_choice_1'  => $preselectedMajor ?: ($majors[0]['id'] ?? 0),
-    'major_choice_2'  => '',
+    'major_choice_1'  => $hasMajors ? ($preselectedMajor ?: ($majors[0]['id'] ?? null)) : null,
+    'major_choice_2'  => null,
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -85,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData['parent_name']     = trim($_POST['parent_name'] ?? '');
         $formData['parent_phone']    = trim($_POST['parent_phone'] ?? '');
         $formData['parent_job']      = trim($_POST['parent_job'] ?? '');
-        $formData['major_choice_1']  = (int) ($_POST['major_choice_1'] ?? 0);
-        $formData['major_choice_2']  = (int) ($_POST['major_choice_2'] ?? 0) ?: null;
+        $formData['major_choice_1']  = $hasMajors ? ((int) ($_POST['major_choice_1'] ?? 0) ?: null) : null;
+        $formData['major_choice_2']  = $hasMajors ? ((int) ($_POST['major_choice_2'] ?? 0) ?: null) : null;
 
         // Validasi Wajib & Format Ketat
         if ($formData['full_name'] === '')     { $errors[] = 'Nama lengkap calon siswa wajib diisi.'; }
@@ -103,7 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($formData['school_origin'] === '') { $errors[] = 'Nama SMP / MTs asal wajib diisi.'; }
         if ($formData['parent_name'] === '')   { $errors[] = 'Nama Orang Tua / Wali wajib diisi.'; }
         if ($formData['parent_phone'] === '')  { $errors[] = 'Nomor WhatsApp / HP Orang Tua wajib diisi.'; }
-        if (!$formData['major_choice_1'])      { $errors[] = 'Pilihan Jurusan Utama wajib dipilih.'; }
+        if ($hasMajors && empty($formData['major_choice_1'])) {
+            $errors[] = 'Pilihan Program Keahlian / Peminatan Utama wajib dipilih.';
+        }
 
         if ($formData['email'] !== '' && !filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Format alamat email tidak valid.';
@@ -257,34 +261,59 @@ require BASE_PATH . '/includes/navbar.php';
       <p class="section-subtitle mx-auto">Tahun Ajaran <?= e($settings['academic_year']) ?> — Lengkapi data calon siswa di bawah ini dengan teliti dan benar sesuai dokumen resmi.</p>
     </div>
 
-    <!-- 5 Step Quick Tracker -->
-    <div class="row g-2 mb-4 d-none d-md-flex text-center small fw-semibold">
-      <div class="col">
-        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
-          <span class="badge bg-primary rounded-circle">1</span> Jurusan
+    <!-- Step Quick Tracker -->
+    <?php if ($hasMajors): ?>
+      <div class="row g-2 mb-4 d-none d-md-flex text-center small fw-semibold">
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">1</span> Peminatan
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">2</span> Data Diri
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">3</span> Asal Sekolah
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">4</span> Orang Tua
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">5</span> Berkas
+          </div>
         </div>
       </div>
-      <div class="col">
-        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
-          <span class="badge bg-primary rounded-circle">2</span> Data Diri
+    <?php else: ?>
+      <div class="row g-2 mb-4 d-none d-md-flex text-center small fw-semibold">
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">1</span> Data Diri
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">2</span> Asal Sekolah
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">3</span> Orang Tua
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
+            <span class="badge bg-primary rounded-circle">4</span> Berkas
+          </div>
         </div>
       </div>
-      <div class="col">
-        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
-          <span class="badge bg-primary rounded-circle">3</span> Asal Sekolah
-        </div>
-      </div>
-      <div class="col">
-        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
-          <span class="badge bg-primary rounded-circle">4</span> Orang Tua
-        </div>
-      </div>
-      <div class="col">
-        <div class="p-2.5 rounded-3 bg-white border shadow-xs d-flex align-items-center justify-content-center gap-2 text-primary">
-          <span class="badge bg-primary rounded-circle">5</span> Berkas
-        </div>
-      </div>
-    </div>
+    <?php endif; ?>
 
     <?php if ($errors): ?>
       <div class="alert alert-danger shadow-sm mb-4 rounded-4 border-0">
@@ -311,50 +340,53 @@ require BASE_PATH . '/includes/navbar.php';
       <div class="card-body p-3 p-sm-4 p-md-5">
         <form method="post" enctype="multipart/form-data" id="ppdbForm">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+          <?php $stepCounter = 1; ?>
 
-          <!-- Bagian 1: Pilihan Jurusan -->
+          <?php if ($hasMajors): ?>
+          <!-- Bagian Pilihan Program Keahlian / Peminatan -->
           <div class="mb-5">
             <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-              <i class="bi bi-mortarboard-fill text-accent"></i> 1. Pilihan Program Keahlian (Jurusan)
+              <i class="bi bi-mortarboard-fill text-accent"></i> <?= $stepCounter++ ?>. Pilihan Program Keahlian / Peminatan
             </h3>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">Pilihan Jurusan Utama <span class="text-danger">*</span></label>
+                <label class="form-label small fw-semibold">Pilihan Jurusan / Peminatan Utama <span class="text-danger">*</span></label>
                 <select name="major_choice_1" class="form-select form-select-lg fs-6" required>
-                  <option value="">— Pilih Jurusan Utama —</option>
+                  <option value="">— Pilih Peminatan Utama —</option>
                   <?php foreach ($majors as $m): ?>
-                    <option value="<?= (int) $m['id'] ?>" <?= (int) $formData['major_choice_1'] === (int) $m['id'] ? 'selected' : '' ?>>
+                    <option value="<?= (int) $m['id'] ?>" <?= (int) ($formData['major_choice_1'] ?? 0) === (int) $m['id'] ? 'selected' : '' ?>>
                       <?= e($m['name']) ?> (<?= e($m['code']) ?>)
                     </option>
                   <?php endforeach; ?>
                 </select>
-                <div class="form-text small text-muted">Jurusan prioritas yang paling diminati calon siswa.</div>
+                <div class="form-text small text-muted">Peminatan prioritas yang paling diminati calon siswa.</div>
               </div>
 
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">Pilihan Jurusan Alternatif <span class="text-muted fw-normal">(Opsional)</span></label>
+                <label class="form-label small fw-semibold">Pilihan Alternatif <span class="text-muted fw-normal">(Opsional)</span></label>
                 <select name="major_choice_2" class="form-select form-select-lg fs-6">
                   <option value="">— Tanpa Pilihan Cadangan —</option>
                   <?php foreach ($majors as $m): ?>
-                    <option value="<?= (int) $m['id'] ?>" <?= (int) $formData['major_choice_2'] === (int) $m['id'] ? 'selected' : '' ?>>
+                    <option value="<?= (int) $m['id'] ?>" <?= (int) ($formData['major_choice_2'] ?? 0) === (int) $m['id'] ? 'selected' : '' ?>>
                       <?= e($m['name']) ?> (<?= e($m['code']) ?>)
                     </option>
                   <?php endforeach; ?>
                 </select>
-                <div class="form-text small text-muted">Pilihan kedua jika kuota jurusan utama telah terpenuhi.</div>
+                <div class="form-text small text-muted">Pilihan kedua jika kuota pilihan utama telah terpenuhi.</div>
               </div>
             </div>
           </div>
+          <?php endif; ?>
 
-          <!-- Bagian 2: Data Pribadi Siswa -->
+          <!-- Bagian: Data Pribadi Siswa -->
           <div class="mb-5">
             <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-              <i class="bi bi-person-vcard-fill text-accent"></i> 2. Data Pribadi Calon Siswa
+              <i class="bi bi-person-vcard-fill text-accent"></i> <?= $stepCounter++ ?>. Data Pribadi Calon Siswa
             </h3>
             <div class="row g-3">
               <div class="col-md-12">
                 <label class="form-label small fw-semibold">Nama Lengkap Siswa <span class="text-danger">*</span></label>
-                <input type="text" name="full_name" class="form-control" value="<?= e($formData['full_name']) ?>" required placeholder="Sesuai Akta Kelahiran / Ijazah SMP">
+                <input type="text" name="full_name" class="form-control" value="<?= e($formData['full_name']) ?>" required placeholder="Sesuai Akta Kelahiran / Ijazah">
               </div>
 
               <div class="col-md-6">
@@ -412,15 +444,15 @@ require BASE_PATH . '/includes/navbar.php';
             </div>
           </div>
 
-          <!-- Bagian 3: Asal Sekolah -->
+          <!-- Bagian: Asal Sekolah -->
           <div class="mb-5">
             <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-              <i class="bi bi-buildings text-accent"></i> 3. Asal Sekolah &amp; Nilai Rapor
+              <i class="bi bi-buildings text-accent"></i> <?= $stepCounter++ ?>. Asal Sekolah &amp; Nilai Rapor
             </h3>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label small fw-semibold">Nama SMP / MTs Asal <span class="text-danger">*</span></label>
-                <input type="text" name="school_origin" class="form-control" value="<?= e($formData['school_origin']) ?>" required placeholder="Contoh: SMP Negeri 1 Pekanbaru">
+                <label class="form-label small fw-semibold">Nama Sekolah Asal <span class="text-danger">*</span></label>
+                <input type="text" name="school_origin" class="form-control" value="<?= e($formData['school_origin']) ?>" required placeholder="Contoh: SMP Negeri 1 / MTs Negeri">
               </div>
 
               <div class="col-md-3">
@@ -435,10 +467,10 @@ require BASE_PATH . '/includes/navbar.php';
             </div>
           </div>
 
-          <!-- Bagian 4: Data Orang Tua / Wali -->
+          <!-- Bagian: Data Orang Tua / Wali -->
           <div class="mb-5">
             <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-              <i class="bi bi-people-fill text-accent"></i> 4. Data Orang Tua / Wali
+              <i class="bi bi-people-fill text-accent"></i> <?= $stepCounter++ ?>. Data Orang Tua / Wali
             </h3>
             <div class="row g-3">
               <div class="col-md-4">
@@ -458,10 +490,10 @@ require BASE_PATH . '/includes/navbar.php';
             </div>
           </div>
 
-          <!-- Bagian 5: Upload Dokumen Persyaratan -->
+          <!-- Bagian: Upload Dokumen Persyaratan -->
           <div class="mb-4">
             <h3 class="h6 fw-bold text-primary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-              <i class="bi bi-cloud-arrow-up-fill text-accent"></i> 5. Unggah Berkas Persyaratan
+              <i class="bi bi-cloud-arrow-up-fill text-accent"></i> <?= $stepCounter++ ?>. Unggah Berkas Persyaratan
             </h3>
             <p class="small text-muted mb-3">Format berkas yang didukung: JPG, PNG, WEBP, atau PDF (Maks. 4MB per berkas).</p>
             
