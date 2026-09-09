@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $academicYear      = trim($_POST['academic_year'] ?? '');
         $isOpen            = isset($_POST['is_open']) ? 1 : 0;
+        $hasMajorSelection = isset($_POST['has_major_selection']) ? 1 : 0;
         $startDate         = trim($_POST['start_date'] ?? '') ?: null;
         $endDate           = trim($_POST['end_date'] ?? '') ?: null;
         $announcementDate  = trim($_POST['announcement_date'] ?? '') ?: null;
@@ -31,16 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($settings) {
                 $stmt = $db->prepare("
                     UPDATE ppdb_settings
-                    SET academic_year = ?, is_open = ?, start_date = ?, end_date = ?, announcement_date = ?, information = ?, contact_person = ?
+                    SET academic_year = ?, is_open = ?, has_major_selection = ?, start_date = ?, end_date = ?, announcement_date = ?, information = ?, contact_person = ?
                     WHERE id = ?
                 ");
-                $stmt->execute([$academicYear, $isOpen, $startDate, $endDate, $announcementDate, $information, $contactPerson, $settings['id']]);
+                $stmt->execute([$academicYear, $isOpen, $hasMajorSelection, $startDate, $endDate, $announcementDate, $information, $contactPerson, $settings['id']]);
             } else {
                 $stmt = $db->prepare("
-                    INSERT INTO ppdb_settings (academic_year, is_open, start_date, end_date, announcement_date, information, contact_person)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO ppdb_settings (academic_year, is_open, has_major_selection, start_date, end_date, announcement_date, information, contact_person)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 ");
-                $stmt->execute([$academicYear, $isOpen, $startDate, $endDate, $announcementDate, $information, $contactPerson]);
+                $stmt->execute([$academicYear, $isOpen, $hasMajorSelection, $startDate, $endDate, $announcementDate, $information, $contactPerson]);
             }
 
             logActivity('UPDATE_PPDB_SETTINGS', 'ppdb', "Memperbarui jadwal & pengaturan PPDB online TA $academicYear");
@@ -98,6 +99,23 @@ require __DIR__ . '/../includes/topbar.php';
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" id="isOpenSwitch" name="is_open" value="1" <?= !empty($settings['is_open']) ? 'checked' : '' ?>>
           <label class="form-check-label fw-semibold" for="isOpenSwitch">Buka Pendaftaran Online (PPDB Aktif)</label>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-3 bg-light rounded-3 border d-flex align-items-start justify-content-between gap-3">
+          <div>
+            <label class="form-check-label fw-bold text-dark mb-1" for="hasMajorSelectionSwitch">
+              <i class="bi bi-mortarboard me-1 text-primary"></i> Wajibkan Pilihan Jurusan / Peminatan Saat Pendaftaran
+            </label>
+            <div class="text-muted small" style="line-height: 1.5;">
+              <span class="badge bg-success-subtle text-success me-1">ON (SMK)</span> Aktifkan jika sekolah memiliki penjurusan kejuruan langsung (calon siswa wajib memilih jurusan).<br>
+              <span class="badge bg-primary-subtle text-primary me-1">OFF (SMA / SMP / SD)</span> <strong>Matikan saklar ini untuk SMA (Kurikulum Merdeka Kelas 10 belum ada jurusan)</strong>, SMP, atau SD agar kolom pilihan jurusan tidak muncul di formulir pendaftaran siswa.
+            </div>
+          </div>
+          <div class="form-check form-switch fs-5 mb-0 flex-shrink-0">
+            <input class="form-check-input" type="checkbox" role="switch" id="hasMajorSelectionSwitch" name="has_major_selection" value="1" <?= (!isset($settings['has_major_selection']) || !empty($settings['has_major_selection'])) ? 'checked' : '' ?>>
+          </div>
         </div>
       </div>
 

@@ -292,6 +292,7 @@ CREATE TABLE ppdb_settings (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   academic_year VARCHAR(50) NOT NULL DEFAULT '2027/2028',
   is_open TINYINT(1) NOT NULL DEFAULT 1,
+  has_major_selection TINYINT(1) NOT NULL DEFAULT 1,
   start_date DATE DEFAULT '2027-05-01',
   end_date DATE DEFAULT '2027-07-10',
   announcement_date DATE DEFAULT '2027-07-15',

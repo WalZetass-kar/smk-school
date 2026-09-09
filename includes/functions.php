@@ -369,6 +369,7 @@ function getPpdbSettings(): array
         $settings = $stmt->fetch() ?: [
             'academic_year' => '2027/2028',
             'is_open' => 1,
+            'has_major_selection' => 1,
             'start_date' => '2027-05-01',
             'end_date' => '2027-07-10',
             'announcement_date' => '2027-07-15',

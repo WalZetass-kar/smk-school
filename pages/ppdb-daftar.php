@@ -6,7 +6,7 @@
 $db       = getDB();
 $profile  = getSchoolProfile();
 $settings  = getPpdbSettings();
-$hasMajors = isModuleActive('majors');
+$hasMajors = isModuleActive('majors') && !empty($settings['has_major_selection']);
 $majors    = $hasMajors ? $db->query("SELECT * FROM majors WHERE status = 1 ORDER BY id ASC")->fetchAll() : [];
 $hasMajors = !empty($majors);
 
