@@ -51,6 +51,11 @@ $principalName = !empty($settings['signature_name'])
 $principalNip = !empty($settings['signature_nip']) ? $settings['signature_nip'] : '19750815 200003 1 002';
 
 $profile = getSchoolProfile();
+
+// URL Verifikasi Dokumen Asli untuk QR Code
+$verificationUrl = rtrim(BASE_URL, '/') . '/kelulusan?nisn=' . urlencode($student['nisn']);
+$qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=' . urlencode($verificationUrl);
+$docRef = strtoupper(substr(hash('sha256', $student['nisn'] . $student['exam_number'] . 'SMK_SKL_SECRET'), 0, 10));
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -153,22 +158,89 @@ $profile = getSchoolProfile();
     .ttd-wrapper {
       display: flex;
       justify-content: space-between;
-      margin-top: 30px;
+      align-items: flex-end;
+      margin-top: 25px;
       page-break-inside: avoid;
     }
-    .qr-box {
-      width: 120px;
-      height: 120px;
-      border: 1px dashed #666;
+    .auth-boxes {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+    }
+    .pasfoto-box {
+      width: 30mm;
+      height: 40mm;
+      border: 1.5px dashed #555;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       font-family: Arial, sans-serif;
-      font-size: 7.5pt;
+      font-size: 8pt;
+      color: #555;
       text-align: center;
-      padding: 5px;
       background: #fafafa;
+      border-radius: 4px;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    .pasfoto-box .pasfoto-title {
+      font-weight: bold;
+      font-size: 9pt;
+      color: #222;
+      margin-bottom: 3px;
+    }
+    .pasfoto-box .pasfoto-sub {
+      font-size: 7pt;
+      color: #666;
+      line-height: 1.35;
+    }
+    .qr-verification-box {
+      width: 36mm;
+      min-height: 40mm;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #ffffff;
+      padding: 6px 4px 4px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      box-sizing: border-box;
+    }
+    .qr-verification-box img {
+      width: 76px;
+      height: 76px;
+      display: block;
+      margin: 0 auto;
+    }
+    .qr-label {
+      font-size: 6.8pt;
+      font-weight: bold;
+      color: #091C3A;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .qr-desc {
+      font-size: 5.6pt;
+      color: #555;
+      line-height: 1.25;
+      margin-top: 1px;
+    }
+    .qr-ref {
+      font-size: 5.5pt;
+      color: #777;
+      font-family: monospace;
+      margin-top: 2px;
+    }
+    .qr-fallback-offline {
+      display: none;
+      font-size: 6.5pt;
+      color: #555;
+      padding: 10px 4px;
     }
     .ttd-box {
       text-align: center;
@@ -288,18 +360,34 @@ $profile = getSchoolProfile();
     </p>
   </div>
 
-  <!-- TANDA TANGAN -->
+  <!-- TANDA TANGAN & PENGESAHAN -->
   <div class="ttd-wrapper">
-    <div class="qr-box">
-      <div style="font-size:18px; margin-bottom:4px;">&#10003;</div>
-      <strong>DOKUMEN SAH</strong>
-      <span>Terverifikasi Sistem Digital Sekolah</span>
-      <span style="font-size:6pt; margin-top:4px;">Ref: <?= md5($student['nisn'] . $student['exam_number']) ?></span>
+    <div class="auth-boxes">
+      <!-- 1. KOTAK PASFOTO 3x4 CM -->
+      <div class="pasfoto-box">
+        <div style="font-size: 16px; margin-bottom: 2px; opacity: 0.7;">👤</div>
+        <div class="pasfoto-title">Pasfoto</div>
+        <div class="pasfoto-title" style="margin-top:-3px;">3 × 4 cm</div>
+        <div class="pasfoto-sub">Cap 3 Jari Kiri<br>Menimpa Foto</div>
+      </div>
+
+      <!-- 2. KOTAK QR CODE VERIFIKASI ASLI -->
+      <div class="qr-verification-box">
+        <img src="<?= e($qrCodeUrl) ?>" alt="QR Code Verifikasi" loading="eager" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="qr-fallback-offline">
+          <div style="font-size: 16px;">🛡️</div>
+          <strong>VERIFIKASI SAH</strong>
+        </div>
+        <div class="qr-label">Verifikasi Digital</div>
+        <div class="qr-desc">Pindai QR untuk validasi keaslian dokumen</div>
+        <div class="qr-ref">REF: <?= e($docRef) ?></div>
+      </div>
     </div>
 
+    <!-- 3. TANDA TANGAN KEPALA SEKOLAH -->
     <div class="ttd-box">
       <p><?= e($settings['signature_city'] ?? 'Pekanbaru') ?>, <?= date('d F Y', strtotime($settings['signature_date'] ?? date('Y-m-d'))) ?></p>
-      <p style="margin-bottom: 60px;">Kepala Sekolah,</p>
+      <p style="margin-bottom: 55px;">Kepala Sekolah,</p>
       <p><strong><u><?= e($principalName) ?></u></strong></p>
       <p>NIP. <?= e($principalNip) ?></p>
     </div>
