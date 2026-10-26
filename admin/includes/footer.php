@@ -13,7 +13,10 @@
         <p class="text-muted small mb-4">Apakah Anda yakin ingin mengakhiri sesi dan keluar dari panel admin?</p>
         <div class="d-flex gap-2">
           <button type="button" class="btn btn-light border w-50 py-2 fw-semibold rounded-3" data-bs-dismiss="modal">Batal</button>
-          <a href="<?= e(BASE_URL) ?>/admin/logout.php" class="btn btn-danger w-50 py-2 fw-semibold rounded-3">Ya, Keluar</a>
+          <form method="post" action="<?= e(BASE_URL) ?>/admin/logout.php" class="w-50 m-0">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+            <button type="submit" class="btn btn-danger w-100 py-2 fw-semibold rounded-3">Ya, Keluar</button>
+          </form>
         </div>
       </div>
     </div>

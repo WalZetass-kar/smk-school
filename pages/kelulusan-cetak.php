@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * pages/kelulusan-cetak.php
  * Halaman Cetak Surat Keterangan Lulus (SKL) Resmi
@@ -8,15 +8,31 @@ $db = getDB();
 
 $nisn = trim($_GET['nisn'] ?? '');
 if ($nisn === '') {
-    die('Parameter NISN tidak valid.');
+    setFlash('error', 'Parameter NISN tidak valid.');
+    redirect(BASE_URL . '/kelulusan');
 }
+
+$ip = getClientIP();
+$rateKey = 'skl_print_' . md5($ip);
+$remainingLockout = 0;
+if (!checkRateLimit($rateKey, 20, 60, $remainingLockout)) {
+    setFlash('error', "Terlalu banyak permintaan cetak SKL. Silakan tunggu {$remainingLockout} detik.");
+    redirect(BASE_URL . '/kelulusan');
+}
+recordRateLimitAttempt($rateKey, 60);
 
 $stmt = $db->prepare("SELECT * FROM graduations WHERE nisn = ? LIMIT 1");
 $stmt->execute([$nisn]);
 $student = $stmt->fetch();
 
-if (!$student || $student['status'] !== 'lulus') {
-    die('Data kelulusan siswa tidak ditemukan atau belum berstatus Lulus.');
+if (!$student) {
+    setFlash('error', 'Data siswa tidak ditemukan.');
+    redirect(BASE_URL . '/kelulusan');
+}
+
+if ($student['status'] !== 'lulus') {
+    setFlash('error', 'Dokumen Surat Keterangan Lulus (SKL) hanya dapat dicetak untuk siswa yang telah berstatus LULUS.');
+    redirect(BASE_URL . '/kelulusan');
 }
 
 $settings = $db->query("SELECT * FROM graduation_settings WHERE id = 1")->fetch() ?: [

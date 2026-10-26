@@ -146,18 +146,18 @@ function recordRateLimitAttempt(string $key, int $decaySeconds = 600): void
     try {
         $db = getDB();
         $now = time();
-        $stmt = $db->prepare("SELECT id, attempts, last_attempt FROM rate_limits WHERE rate_key = ? LIMIT 1");
+        $stmt = $db->prepare("SELECT rate_key, attempts, last_attempt FROM rate_limits WHERE rate_key = ? LIMIT 1");
         $stmt->execute([$key]);
         $row = $stmt->fetch();
 
         if ($row) {
             // Check if decayed
             if (($now - (int)$row['last_attempt']) > $decaySeconds) {
-                $upd = $db->prepare("UPDATE rate_limits SET attempts = 1, last_attempt = ?, lockout_until = NULL WHERE id = ?");
-                $upd->execute([$now, $row['id']]);
+                $upd = $db->prepare("UPDATE rate_limits SET attempts = 1, last_attempt = ?, lockout_until = NULL WHERE rate_key = ?");
+                $upd->execute([$now, $row['rate_key']]);
             } else {
-                $upd = $db->prepare("UPDATE rate_limits SET attempts = attempts + 1, last_attempt = ? WHERE id = ?");
-                $upd->execute([$now, $row['id']]);
+                $upd = $db->prepare("UPDATE rate_limits SET attempts = attempts + 1, last_attempt = ? WHERE rate_key = ?");
+                $upd->execute([$now, $row['rate_key']]);
             }
         } else {
             $ins = $db->prepare("INSERT INTO rate_limits (rate_key, attempts, last_attempt) VALUES (?, 1, ?)");
@@ -348,16 +348,62 @@ function cleanHtml(?string $html): string
     if (!$html) {
         return '';
     }
-    // Allow basic safe HTML tags
-    $allowedTags = '<p><br><strong><b><em><i><u><s><strike><h1><h2><h3><h4><h5><h6><ul><ol><li><blockquote><table><thead><tbody><tr><th><td><a><img><iframe><span><div><hr><code><pre>';
-    $cleaned = strip_tags($html, $allowedTags);
+    // Remove entire script and style blocks including their contents
+    $cleaned = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+    $cleaned = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $cleaned);
 
-    // Remove dangerous inline attributes (like onload, onclick, javascript: links)
-    $cleaned = preg_replace('/(\s+on\w+\s*=\s*(["\']).*?\2)/is', '', $cleaned);
-    $cleaned = preg_replace('/href\s*=\s*(["\'])\s*javascript:[^"\']*\1/is', 'href="#"', $cleaned);
-    $cleaned = preg_replace('/src\s*=\s*(["\'])\s*javascript:[^"\']*\1/is', '', $cleaned);
+    // Allow basic safe HTML tags (strictly exclude iframe, script, object, embed, svg)
+    $allowedTags = '<p><br><strong><b><em><i><u><s><strike><h1><h2><h3><h4><h5><h6><ul><ol><li><blockquote><table><thead><tbody><tr><th><td><a><img><span><div><hr><code><pre>';
+    $cleaned = strip_tags($cleaned, $allowedTags);
+
+    // 1. Remove all on* event handlers (both quoted onX="..." and unquoted onX=...)
+    $cleaned = preg_replace('/\s+on[a-z0-9_-]+\s*=\s*(?:["\'][^"\']*["\']|[^\s>]+)/is', '', $cleaned);
+
+    // 2. Remove javascript: or vbscript: or data: pseudo-protocols in href and src
+    $cleaned = preg_replace('/\s*(href|src)\s*=\s*(["\'])\s*(?:javascript|vbscript|data):[^"\']*\2/is', ' $1="#"', $cleaned);
+    $cleaned = preg_replace('/\s*(href|src)\s*=\s*(?:javascript|vbscript|data):[^\s>]*/is', ' $1="#"', $cleaned);
+
+    // 3. Clean CSS expression / behavior in style attributes
+    $cleaned = preg_replace('/style\s*=\s*(["\']).*?(expression|behavior|javascript):.*?\1/is', '', $cleaned);
 
     return $cleaned;
+}
+
+/**
+ * Sanitize CSV cell to prevent CSV Formula Injection (DDE attacks).
+ * If content begins with =, +, -, @, \t, or \r, prefix with a single quote.
+ */
+function sanitizeCsvCell(mixed $value): string
+{
+    $str = (string)($value ?? '');
+    if ($str !== '' && in_array($str[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+        return "'" . $str;
+    }
+    return $str;
+}
+
+/**
+ * Mask sensitive 16-digit NIK for public display (e.g., 147101******0001).
+ */
+function maskNIK(?string $nik): string
+{
+    $nik = trim((string)$nik);
+    if (strlen($nik) < 10) {
+        return '******';
+    }
+    return substr($nik, 0, 6) . str_repeat('*', max(4, strlen($nik) - 10)) . substr($nik, -4);
+}
+
+/**
+ * Mask sensitive phone number for public display (e.g., 0812****7890).
+ */
+function maskPhone(?string $phone): string
+{
+    $clean = preg_replace('/[^0-9\+]/', '', (string)$phone);
+    if (strlen($clean) < 7) {
+        return '****';
+    }
+    return substr($clean, 0, 4) . '****' . substr($clean, -4);
 }
 
 /** Fetch PPDB settings from database. */

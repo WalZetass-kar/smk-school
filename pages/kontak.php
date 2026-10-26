@@ -99,7 +99,7 @@ require BASE_PATH . '/includes/navbar.php';
           <div class="p-3 bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width:60px; height:60px;">
             <i class="bi bi-geo-alt-fill fs-3"></i>
           </div>
-          <h2 class="h6 fw-bold text-primary mb-1">Alamat Kampus</h2>
+          <h2 class="h6 fw-bold text-primary mb-1">Alamat Sekolah</h2>
           <p class="small text-muted mb-0"><?= e($profile['address'] ?? 'Alamat sekolah belum diatur') ?></p>
           <?php if (!empty($profile['npsn'])): ?>
             <span class="badge bg-light text-dark border mt-2 small">NPSN: <?= e($profile['npsn']) ?></span>

@@ -180,7 +180,7 @@ $baseUrl = '/galeri' . ($category ? '?category=' . urlencode($category) : '');
             <div class="col-lg-6">
               <h2 class="h4 fw-bold text-primary mb-2"><?= e($profile['video_title'] ?: 'Video Profil & Fasilitas Sekolah') ?></h2>
               <p class="small text-muted mb-4" style="line-height:1.7;">
-                <?= e($profile['video_description'] ?: 'Saksikan tur visual mengenai sarana pembelajaran, laboratorium kejuruan, dan keseharian aktivitas siswa di kampus kami.') ?>
+                <?= e($profile['video_description'] ?: 'Saksikan tur visual mengenai sarana pembelajaran, laboratorium kejuruan, dan keseharian aktivitas siswa di sekolah kami.') ?>
               </p>
               <?php if (!empty($profile['video_features'])): ?>
                 <div class="small text-muted mb-4">

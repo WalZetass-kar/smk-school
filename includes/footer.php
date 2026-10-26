@@ -49,7 +49,7 @@ foreach ($socials as $s) {
       </div>
       <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
         <span>&copy; <?= date('Y') ?> <?= e($profile['school_name'] ?? '') ?>. Seluruh hak cipta dilindungi.</span>
-        <span>Developer by <a href="https://github.com/WalZetass-kar" target="_blank" rel="noopener noreferrer" class="text-white fw-bold text-decoration-none border-bottom border-warning pb-0.5">WalZetass-Kar</a></span>
+        <span>Developer by <a href="https://www.portfolionyaihwal.my.id/" target="_blank" rel="noopener noreferrer" class="text-white fw-bold text-decoration-none border-bottom border-warning pb-0.5">WalZetass-Kar</a></span>
       </div>
     </div>
   </footer>

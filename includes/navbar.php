@@ -3,9 +3,11 @@ $profile = getSchoolProfile();
 $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 
 /** Small helper so the current page's nav-link gets the "active" class. */
-function navActive(string $path, string $current): string
-{
-    return $current === $path ? ' active' : '';
+if (!function_exists('navActive')) {
+    function navActive(string $path, string $current): string
+    {
+        return $current === $path ? ' active' : '';
+    }
 }
 $hasTicker = !empty($profile['is_running_text_active']) && !empty($profile['running_text']);
 ?>

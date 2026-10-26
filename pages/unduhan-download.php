@@ -3,6 +3,8 @@
  * pages/unduhan-download.php — /unduhan/download/{id}
  * Handler pengunduhan berkas & increment counter download
  */
+require_once __DIR__ . '/../config/config.php';
+
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
     redirect(BASE_URL . '/unduhan');
@@ -23,8 +25,8 @@ $db->prepare("UPDATE downloads SET downloads_count = downloads_count + 1 WHERE i
 
 $filePath = BASE_PATH . '/' . ltrim($doc['file_path'], '/\\');
 
-// Anti Path Traversal Validation
-if (file_exists($filePath) && is_file($filePath) && isSafePath($filePath, BASE_PATH)) {
+// Anti Path Traversal Validation (Base Directory: BASE_PATH, Target: $filePath)
+if (file_exists($filePath) && is_file($filePath) && isSafePath(BASE_PATH, $filePath)) {
     $mime = mime_content_type($filePath) ?: 'application/octet-stream';
 
     header('Content-Description: File Transfer');

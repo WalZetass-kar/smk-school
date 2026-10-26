@@ -1,4 +1,4 @@
-﻿# OS generated files
+# OS generated files
 .DS_Store
 Thumbs.db
 desktop.ini
@@ -8,6 +8,11 @@ desktop.ini
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Environment & Secret Backups
+.env
+backup_*.sql
+*.zip
 
 # Logs & temp
 *.log

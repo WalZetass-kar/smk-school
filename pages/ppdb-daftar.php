@@ -115,10 +115,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Cek apakah NISN sudah pernah terdaftar
         if ($formData['nisn'] !== '' && empty($errors)) {
-            $checkNisn = $db->prepare("SELECT id, registration_no FROM ppdb_registrations WHERE nisn = ?");
+            $checkNisn = $db->prepare("SELECT id FROM ppdb_registrations WHERE nisn = ?");
             $checkNisn->execute([$formData['nisn']]);
             if ($existing = $checkNisn->fetch()) {
-                $errors[] = 'NISN ' . e($formData['nisn']) . ' sudah terdaftar sebelumnya dengan Nomor Registrasi: ' . e($existing['registration_no']) . '. Silakan periksa status pendaftaran Anda di menu Cek Status.';
+                $errors[] = 'NISN ' . e($formData['nisn']) . ' sudah terdaftar sebelumnya. Silakan periksa status pendaftaran Anda di menu Cek Status Pendaftaran.';
             }
         }
 
@@ -144,18 +144,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            // Generate nomor registrasi unik: PPDB-YYYYMM-XXXX
+            // Generate nomor registrasi unik & anti-enumeration: PPDB-YYYYMM-XXXX-HASH
             $prefix = 'PPDB-' . date('Ym') . '-';
             $countStmt = $db->query("SELECT COUNT(*) FROM ppdb_registrations");
             $nextNum = ((int)$countStmt->fetchColumn()) + 1001;
-            $regNo = $prefix . $nextNum;
+            $entropy = strtoupper(bin2hex(random_bytes(2)));
+            $regNo = $prefix . $nextNum . '-' . $entropy;
 
             while (true) {
                 $checkReg = $db->prepare("SELECT id FROM ppdb_registrations WHERE registration_no = ?");
                 $checkReg->execute([$regNo]);
                 if (!$checkReg->fetch()) break;
                 $nextNum++;
-                $regNo = $prefix . $nextNum;
+                $entropy = strtoupper(bin2hex(random_bytes(2)));
+                $regNo = $prefix . $nextNum . '-' . $entropy;
             }
 
             $avgScore = $formData['average_score'] !== '' ? (float)$formData['average_score'] : null;

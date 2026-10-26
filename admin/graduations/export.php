@@ -153,15 +153,15 @@ foreach ($rows as $row) {
     };
 
     fputcsv($output, [
-        $row['nisn'],
-        $row['exam_number'],
-        $row['student_name'],
-        $row['birth_place'],
-        $row['birth_date'],
-        $row['major_name'],
+        sanitizeCsvCell($row['nisn']),
+        sanitizeCsvCell($row['exam_number']),
+        sanitizeCsvCell($row['student_name']),
+        sanitizeCsvCell($row['birth_place']),
+        sanitizeCsvCell($row['birth_date']),
+        sanitizeCsvCell($row['major_name']),
         number_format((float)$row['average_score'], 2, '.', ''),
-        $statusText,
-        $row['remarks']
+        sanitizeCsvCell($statusText),
+        sanitizeCsvCell($row['remarks'])
     ], ';');
 }
 

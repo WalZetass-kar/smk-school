@@ -10,19 +10,30 @@ $settings = getPpdbSettings();
 $keyword  = trim($_GET['keyword'] ?? $_GET['no'] ?? $_GET['reg'] ?? '');
 $result   = null;
 $searched = false;
+$rateLimitError = null;
 
 if ($keyword !== '') {
-    $searched = true;
-    $stmt = $db->prepare("
-        SELECT r.*, m1.name AS major1_name, m1.code AS major1_code, m2.name AS major2_name, m2.code AS major2_code
-        FROM ppdb_registrations r
-        LEFT JOIN majors m1 ON m1.id = r.major_choice_1
-        LEFT JOIN majors m2 ON m2.id = r.major_choice_2
-        WHERE r.registration_no = ? OR r.nisn = ?
-        LIMIT 1
-    ");
-    $stmt->execute([$keyword, $keyword]);
-    $result = $stmt->fetch();
+    $ip = getClientIP();
+    $rateKey = 'ppdb_cek_' . md5($ip);
+    $remainingLockout = 0;
+
+    if (!checkRateLimit($rateKey, 20, 60, $remainingLockout)) {
+        $rateLimitError = "Terlalu banyak permintaan pencarian status. Silakan tunggu {$remainingLockout} detik sebelum mencoba kembali.";
+        $searched = true;
+    } else {
+        recordRateLimitAttempt($rateKey, 60);
+        $searched = true;
+        $stmt = $db->prepare("
+            SELECT r.*, m1.name AS major1_name, m1.code AS major1_code, m2.name AS major2_name, m2.code AS major2_code
+            FROM ppdb_registrations r
+            LEFT JOIN majors m1 ON m1.id = r.major_choice_1
+            LEFT JOIN majors m2 ON m2.id = r.major_choice_2
+            WHERE r.registration_no = ? OR r.nisn = ?
+            LIMIT 1
+        ");
+        $stmt->execute([$keyword, $keyword]);
+        $result = $stmt->fetch();
+    }
 }
 
 $pageTitle       = 'Cek Status Pendaftaran PPDB';
@@ -265,7 +276,7 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
                   <h4 class="small fw-bold text-uppercase text-muted mb-3"><i class="bi bi-person-badge me-1"></i> Rincian Identitas</h4>
                   <table class="table table-sm table-borderless small mb-0">
                     <tr><td class="text-muted" style="width:40%;">No. Registrasi</td><td class="fw-bold font-monospace text-primary"><?= e($result['registration_no']) ?></td></tr>
-                    <tr><td class="text-muted">NISN / NIK</td><td><?= e($result['nisn']) ?> / <?= e($result['nik']) ?></td></tr>
+                    <tr><td class="text-muted">NISN / NIK</td><td><?= e($result['nisn']) ?> / <?= e(maskNIK($result['nik'])) ?></td></tr>
                     <tr><td class="text-muted">Tempat, Tgl Lahir</td><td><?= e($result['birth_place']) ?>, <?= formatTanggalIndo($result['birth_date']) ?></td></tr>
                     <tr><td class="text-muted">Agama</td><td><?= e($result['religion']) ?></td></tr>
                     <tr><td class="text-muted">Nilai Rata-rata</td><td><span class="badge bg-light text-dark border fw-bold"><?= $result['average_score'] !== null ? number_format((float)$result['average_score'], 2) : '-' ?></span></td></tr>
@@ -278,10 +289,10 @@ $waPPDB = !empty($profile['whatsapp_ppdb']) ? preg_replace('/[^0-9]/', '', $prof
                   <h4 class="small fw-bold text-uppercase text-muted mb-3"><i class="bi bi-geo-alt me-1"></i> Kontak &amp; Orang Tua</h4>
                   <table class="table table-sm table-borderless small mb-0">
                     <tr><td class="text-muted" style="width:40%;">Nama Orang Tua</td><td class="fw-semibold"><?= e($result['parent_name']) ?></td></tr>
-                    <tr><td class="text-muted">No. HP Orang Tua</td><td><?= e($result['parent_phone'] ?: '-') ?></td></tr>
-                    <tr><td class="text-muted">No. WhatsApp Siswa</td><td><span class="text-success fw-semibold"><?= e($result['phone']) ?></span></td></tr>
+                    <tr><td class="text-muted">No. HP Orang Tua</td><td><?= e(maskPhone($result['parent_phone'])) ?></td></tr>
+                    <tr><td class="text-muted">No. WhatsApp Siswa</td><td><span class="text-success fw-semibold"><?= e(maskPhone($result['phone'])) ?></span></td></tr>
                     <tr><td class="text-muted">Waktu Mendaftar</td><td><?= date('d M Y, H:i', strtotime($result['created_at'])) ?> WIB</td></tr>
-                    <tr><td class="text-muted">Alamat</td><td class="text-truncate" style="max-width: 160px;" title="<?= e($result['address']) ?>"><?= e($result['address']) ?></td></tr>
+                    <tr><td class="text-muted">Alamat</td><td class="text-truncate" style="max-width: 160px;" title="<?= e($result['address']) ?>"><?= e(mb_strimwidth($result['address'] ?? '', 0, 35, '...')) ?></td></tr>
                   </table>
                 </div>
               </div>

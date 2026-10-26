@@ -47,14 +47,14 @@ foreach ($logs as $l) {
     fputcsv($output, [
         $l['id'],
         $l['created_at'],
-        $l['user_id'] ?: '-',
-        $l['user_name'] ?: 'Guest/Public',
-        $l['user_role'] ?: '-',
-        $l['module'],
-        $l['action'],
-        $l['detail'],
-        $l['ip_address'],
-        $l['user_agent'],
+        sanitizeCsvCell($l['user_id'] ?: '-'),
+        sanitizeCsvCell($l['user_name'] ?: 'Guest/Public'),
+        sanitizeCsvCell($l['user_role'] ?: '-'),
+        sanitizeCsvCell($l['module']),
+        sanitizeCsvCell($l['action']),
+        sanitizeCsvCell($l['detail']),
+        sanitizeCsvCell($l['ip_address']),
+        sanitizeCsvCell($l['user_agent']),
     ]);
 }
 

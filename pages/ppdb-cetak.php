@@ -6,7 +6,16 @@
 $db       = getDB();
 $profile  = getSchoolProfile();
 $settings = getPpdbSettings();
-$regNo    = trim($_GET['no'] ?? $_GET['reg'] ?? '');
+$regNo = trim($_GET['no'] ?? $_GET['reg'] ?? '');
+
+// Rate limiting on print proof
+$ip = getClientIP();
+$rateKey = 'ppdb_print_' . md5($ip);
+$remainingLockout = 0;
+if (!checkRateLimit($rateKey, 25, 60, $remainingLockout)) {
+    die("Terlalu banyak permintaan cetak kartu. Silakan tunggu {$remainingLockout} detik.");
+}
+recordRateLimitAttempt($rateKey, 60);
 
 $stmt = $db->prepare("
     SELECT r.*, m1.name AS major1_name, m1.code AS major1_code, m2.name AS major2_name, m2.code AS major2_code

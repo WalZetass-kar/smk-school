@@ -16,10 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $rateKey  = 'login_admin_' . md5($ip . '_' . $username);
+    $ipRateKey = 'login_ip_' . md5($ip);
+    $ipLockout = 0;
 
-    if (!checkRateLimit($rateKey, 5, 600, $remainingLockout)) {
+    if (!checkRateLimit($ipRateKey, 15, 600, $ipLockout)) {
+        $mins = ceil($ipLockout / 60);
+        $errors[] = "Terlalu banyak percobaan login dari jaringan/IP Anda. Silakan tunggu {$mins} menit.";
+    } elseif (!checkRateLimit($rateKey, 5, 600, $remainingLockout)) {
         $mins = ceil($remainingLockout / 60);
-        $errors[] = "Terlalu banyak percobaan login gagal. Akun/IP terkunci sementara demi keamanan. Silakan tunggu {$mins} menit ({$remainingLockout} detik).";
+        $errors[] = "Terlalu banyak percobaan login gagal untuk akun ini. Silakan tunggu {$mins} menit ({$remainingLockout} detik).";
     } elseif (!csrfVerify($_POST['csrf_token'] ?? null)) {
         $errors[] = 'Sesi form sudah tidak valid atau telah kedaluwarsa. Silakan refresh halaman.';
     } elseif ($username === '' || $password === '') {
@@ -31,11 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$user || !password_verify($password, $user['password'])) {
             recordRateLimitAttempt($rateKey, 600);
+            recordRateLimitAttempt($ipRateKey, 600);
             logActivity('LOGIN_FAILED', 'auth', 'Percobaan login gagal untuk username: ' . substr($username, 0, 50));
             $errors[] = 'Username atau password yang Anda masukkan salah.';
         } else {
             // Reset rate limit on successful authentication
             resetRateLimit($rateKey);
+            resetRateLimit($ipRateKey);
 
             // Prevent session fixation: get a fresh session ID
             session_regenerate_id(true);
