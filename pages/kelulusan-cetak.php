@@ -249,43 +249,148 @@ $docRef = strtoupper(substr(hash('sha256', $student['nisn'] . $student['exam_num
     }
     .no-print-bar {
       width: 210mm;
+      max-width: 100%;
       margin: 0 auto 15px auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
       font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .no-print-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .paper-selector-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #333;
+    }
+    .paper-select {
+      padding: 6px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background-color: #f8f9fa;
+      color: #212529;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s ease-in-out;
+    }
+    .paper-select:focus {
+      border-color: #091C3A;
+      background-color: #fff;
     }
     .btn-print {
       background: #091C3A;
       color: #fff;
       border: none;
-      padding: 10px 20px;
+      padding: 9px 18px;
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s ease;
+    }
+    .btn-print:hover {
+      background: #183E7A;
     }
     .btn-back {
       background: #6c757d;
       color: #fff;
       border: none;
-      padding: 10px 20px;
+      padding: 9px 16px;
       border-radius: 6px;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .btn-back:hover {
+      background: #5a6268;
+    }
+    .paper-hint {
+      font-size: 11px;
+      color: #6c757d;
+      display: inline-block;
+    }
+    @media screen and (max-width: 820px) {
+      body { padding: 10px; }
+      .no-print-bar {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .no-print-left {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .print-sheet {
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 15mm 10mm !important;
+      }
     }
     @media print {
-      body { background: #fff; padding: 0; }
+      html, body {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
       .no-print-bar { display: none !important; }
-      .print-sheet { width: 100%; min-height: auto; box-shadow: none; padding: 0; margin: 0; }
+      .print-sheet {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+  <style id="dynamicPageSizeStyle">
+    @page {
+      size: A4 portrait;
+      margin: 10mm 15mm 10mm 15mm;
     }
   </style>
 </head>
 <body>
 
 <div class="no-print-bar">
-  <a href="<?= e(BASE_URL) ?>/kelulusan" class="btn-back">&larr; Kembali ke Pencarian</a>
+  <div class="no-print-left">
+    <a href="<?= e(BASE_URL) ?>/kelulusan" class="btn-back">&larr; Kembali</a>
+    <div class="paper-selector-wrap">
+      <label for="paperSizeSelect">Ukuran Kertas:</label>
+      <select id="paperSizeSelect" class="paper-select" onchange="changePaperSize(this.value)">
+        <option value="A4" selected>A4 (210 × 297 mm) — Standar</option>
+        <option value="F4">F4 / Folio (215 × 330 mm) — Standar Sekolah</option>
+        <option value="Letter">Letter / Kuarto (216 × 279 mm)</option>
+        <option value="Legal">Legal (216 × 356 mm)</option>
+        <option value="auto">Auto / Ukuran Lainnya (Pas 1 Halaman)</option>
+      </select>
+      <span class="paper-hint">Otomatis pas 1 halaman</span>
+    </div>
+  </div>
   <button onclick="window.print()" class="btn-print">&#128438; Cetak Dokumen SKL (PDF / Printer)</button>
 </div>
 
@@ -394,5 +499,44 @@ $docRef = strtoupper(substr(hash('sha256', $student['nisn'] . $student['exam_num
   </div>
 </div>
 
+<script>
+function changePaperSize(size) {
+  const sheet = document.querySelector('.print-sheet');
+  const styleEl = document.getElementById('dynamicPageSizeStyle');
+  if (!sheet || !styleEl) return;
+
+  let pageCss = '';
+  switch(size) {
+    case 'F4':
+      sheet.style.width = '215mm';
+      sheet.style.minHeight = '330mm';
+      pageCss = '@page { size: 215mm 330mm; margin: 12mm 15mm 12mm 15mm; }';
+      break;
+    case 'Letter':
+      sheet.style.width = '215.9mm';
+      sheet.style.minHeight = '279.4mm';
+      pageCss = '@page { size: letter portrait; margin: 8mm 12mm 8mm 12mm; }';
+      break;
+    case 'Legal':
+      sheet.style.width = '215.9mm';
+      sheet.style.minHeight = '355.6mm';
+      pageCss = '@page { size: legal portrait; margin: 12mm 15mm 12mm 15mm; }';
+      break;
+    case 'auto':
+      sheet.style.width = '100%';
+      sheet.style.maxWidth = '215mm';
+      sheet.style.minHeight = 'auto';
+      pageCss = '@page { size: auto; margin: 10mm 15mm 10mm 15mm; }';
+      break;
+    case 'A4':
+    default:
+      sheet.style.width = '210mm';
+      sheet.style.minHeight = '297mm';
+      pageCss = '@page { size: A4 portrait; margin: 10mm 15mm 10mm 15mm; }';
+      break;
+  }
+  styleEl.innerHTML = pageCss;
+}
+</script>
 </body>
 </html>
