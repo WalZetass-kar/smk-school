@@ -27,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rateKey = 'guestbook_submit_' . md5($ip);
     $remainingLockout = 0;
 
+    // Honeypot check: automated spam bots fill invisible fields
+    if (!empty($_POST['guest_website_hp'])) {
+        setFlash('success', 'Terima kasih, data kunjungan Anda telah berhasil disimpan.');
+        redirect(BASE_URL . '/buku-tamu');
+    }
+
     if (!checkRateLimit($rateKey, 5, 600, $remainingLockout)) {
         $mins = ceil($remainingLockout / 60);
         $errors[] = "Terlalu banyak pengisian buku tamu dari perangkat Anda. Silakan tunggu {$mins} menit sebelum mencoba lagi.";
@@ -106,6 +112,10 @@ require BASE_PATH . '/includes/navbar.php';
         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-5">
           <form method="post" action="<?= e(BASE_URL) ?>/buku-tamu" novalidate>
             <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+            <!-- Honeypot anti-spam trap (hidden from real users) -->
+            <div style="display:none!important;visibility:hidden;position:absolute;left:-9999px;" aria-hidden="true">
+              <input type="text" name="guest_website_hp" tabindex="-1" autocomplete="off">
+            </div>
 
             <div class="row g-3">
               <div class="col-md-6">

@@ -21,6 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rateKey = 'contact_submit_' . md5($ip);
     $remainingLockout = 0;
 
+    // Honeypot check: automated spam bots fill invisible fields
+    if (!empty($_POST['contact_address_hp'])) {
+        setFlash('success', 'Pesan Anda berhasil dikirim! Tim kami akan segera menanggapi.');
+        redirect(BASE_URL . '/kontak');
+    }
+
     $old['name']    = trim($_POST['name'] ?? '');
     $old['email']   = trim($_POST['email'] ?? '');
     $old['phone']   = trim($_POST['phone'] ?? '');
@@ -241,6 +247,10 @@ require BASE_PATH . '/includes/navbar.php';
 
             <form method="post" action="<?= e(BASE_URL) ?>/kontak" novalidate>
               <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+              <!-- Honeypot anti-spam trap (hidden from real users) -->
+              <div style="display:none!important;visibility:hidden;position:absolute;left:-9999px;" aria-hidden="true">
+                <input type="text" name="contact_address_hp" tabindex="-1" autocomplete="off">
+              </div>
               
               <div class="row g-3">
                 <!-- Name -->

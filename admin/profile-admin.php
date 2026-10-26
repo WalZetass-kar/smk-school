@@ -84,17 +84,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newPassword     = $_POST['new_password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
+            $passRateKey = 'pass_change_' . md5((string)$me['id']);
+            $passLockout = 0;
+
             if ($oldPassword === '') { $passErrors[] = 'Password saat ini wajib diisi.'; }
             if ($newPassword === '') { $passErrors[] = 'Password baru wajib diisi.'; }
-            if (strlen($newPassword) < 6) { $passErrors[] = 'Password baru minimal 6 karakter.'; }
+            if (strlen($newPassword) < 8) { 
+                $passErrors[] = 'Password baru minimal 8 karakter demi keamanan.'; 
+            } elseif (!preg_match('/[A-Za-z]/', $newPassword) || !preg_match('/[0-9]/', $newPassword)) {
+                $passErrors[] = 'Password baru wajib mengombinasikan huruf dan angka.';
+            }
             if ($newPassword !== $confirmPassword) { $passErrors[] = 'Konfirmasi password baru tidak cocok.'; }
+
+            if (!checkRateLimit($passRateKey, 5, 600, $passLockout)) {
+                $mins = ceil($passLockout / 60);
+                $passErrors[] = "Terlalu banyak percobaan ganti password gagal. Silakan tunggu {$mins} menit.";
+            }
 
             if (empty($passErrors)) {
                 // Verify old password
                 if (!password_verify($oldPassword, $me['password'])) {
+                    recordRateLimitAttempt($passRateKey, 600);
                     logActivity('FAILED_PASSWORD_CHANGE', 'users', 'Percobaan ganti password gagal (password lama salah)');
                     $passErrors[] = 'Password saat ini salah. Silakan periksa kembali.';
                 } else {
+                    resetRateLimit($passRateKey);
                     $newHash = password_hash($newPassword, PASSWORD_BCRYPT);
                     $db->prepare("UPDATE users SET password = ? WHERE id = ?")->execute([$newHash, $me['id']]);
                     logActivity('CHANGE_PASSWORD', 'users', 'Admin berhasil mengganti password akun.');

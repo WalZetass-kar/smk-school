@@ -77,6 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData['gender']          = in_array($_POST['gender'] ?? '', ['L','P'], true) ? $_POST['gender'] : 'L';
         $formData['birth_place']     = trim($_POST['birth_place'] ?? '');
         $formData['birth_date']      = trim($_POST['birth_date'] ?? '');
+        // Honeypot check: automated spam bots fill invisible fields
+        if (!empty($_POST['ppdb_extra_check'])) {
+            setFlash('success', 'Formulir pendaftaran Anda berhasil dikirim.');
+            redirect(BASE_URL . '/ppdb/sukses');
+        }
+
         $formData['religion']        = trim($_POST['religion'] ?? 'Islam');
         $formData['address']         = trim($_POST['address'] ?? '');
         $formData['phone']           = trim($_POST['phone'] ?? '');
@@ -342,6 +348,10 @@ require BASE_PATH . '/includes/navbar.php';
       <div class="card-body p-3 p-sm-4 p-md-5">
         <form method="post" enctype="multipart/form-data" id="ppdbForm">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+          <!-- Honeypot anti-spam trap (hidden from real users) -->
+          <div style="display:none!important;visibility:hidden;position:absolute;left:-9999px;" aria-hidden="true">
+            <input type="text" name="ppdb_extra_check" tabindex="-1" autocomplete="off">
+          </div>
           <?php $stepCounter = 1; ?>
 
           <?php if ($hasMajors): ?>

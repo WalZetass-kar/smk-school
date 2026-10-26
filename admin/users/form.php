@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$item && $password === '') {
             $errors[] = 'Password wajib diisi untuk akun admin baru.';
         }
-        if ($password !== '' && strlen($password) < 6) {
-            $errors[] = 'Password minimal terdiri dari 6 karakter.';
+        if ($password !== '' && (strlen($password) < 8 || !preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password))) {
+            $errors[] = 'Password minimal 8 karakter dan wajib mengombinasikan huruf dan angka.';
         }
         if ($password !== '' && $password !== $confirmPassword) {
             $errors[] = 'Konfirmasi password tidak cocok dengan password yang dimasukkan.';

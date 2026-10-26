@@ -75,6 +75,22 @@ if ($hour >= 4 && $hour < 11) {
     $greeting = 'Selamat Malam';
 }
 
+// Security & Threat Status Checks
+$userStmt = $db->prepare("SELECT password FROM users WHERE id = ?");
+$userStmt->execute([$_SESSION['admin_id'] ?? 0]);
+$currHash = $userStmt->fetchColumn();
+$isDefaultPass = $currHash && password_verify('admin123', $currHash);
+
+$failedLogins24h = (int) $db->query("
+    SELECT COUNT(*) FROM activity_logs 
+    WHERE action = 'LOGIN_FAILED' AND created_at >= NOW() - INTERVAL 1 DAY
+")->fetchColumn();
+
+$activeLockouts = (int) $db->query("
+    SELECT COUNT(*) FROM rate_limits 
+    WHERE lockout_until > UNIX_TIMESTAMP()
+")->fetchColumn();
+
 $pageTitle = 'Dashboard';
 require __DIR__ . '/includes/header.php';
 require __DIR__ . '/includes/sidebar.php';
@@ -82,6 +98,22 @@ require __DIR__ . '/includes/topbar.php';
 ?>
 
 <?= flashMessage() ?>
+
+<?php if ($isDefaultPass): ?>
+  <!-- High Priority Security Alert: Default Password in Use -->
+  <div class="alert alert-danger d-flex align-items-center gap-3 p-3.5 p-3 rounded-4 shadow-sm mb-4 border-0" role="alert">
+    <div class="p-2.5 bg-danger text-white rounded-circle fs-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px;">
+      <i class="bi bi-shield-exclamation"></i>
+    </div>
+    <div class="flex-grow-1">
+      <div class="fw-bold text-danger mb-0.5">Peringatan Keamanan Akun: Kata Sandi Bawaan Terdeteksi!</div>
+      <div class="small text-dark" style="font-size: 0.85rem;">Akun Anda saat ini masih menggunakan kata sandi bawaan demo (<code>admin123</code>). Segera ubah kata sandi akun Anda melalui menu Profil &amp; Keamanan Akun untuk mencegah pengambilalihan sistem oleh pihak asing.</div>
+    </div>
+    <a href="<?= e(BASE_URL) ?>/admin/profile-admin.php" class="btn btn-sm btn-danger fw-semibold px-3 py-2 rounded-3 text-nowrap">
+      <i class="bi bi-key-fill me-1"></i> Ganti Password
+    </a>
+  </div>
+<?php endif; ?>
 
 <!-- 1. Hero Greeting & Quick Actions Banner -->
 <div class="admin-card p-4 mb-4" style="background: linear-gradient(135deg, #0F2C59 0%, #183E7A 100%); color: #ffffff; border: none; border-radius: var(--radius);">

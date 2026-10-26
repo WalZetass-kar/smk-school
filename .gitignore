@@ -12,6 +12,7 @@ desktop.ini
 # Environment & Secret Backups
 .env
 backup_*.sql
+assets/backups/*.sql
 *.zip
 
 # Logs & temp

@@ -1,19 +1,38 @@
+# ========================================================
+# Apache Server Hardening & URL Routing Configuration
+# ========================================================
+Options -Indexes
 RewriteEngine On
 
-# Deny direct access to internal directories (config, includes, database, pages)
-RewriteRule ^(config|includes|database|pages)/ - [F,L]
+# 1. Block Malicious Query Strings / Injection Scanners
+RewriteCond %{QUERY_STRING} (eval\(|base64_decode|GLOBALS|_REQUEST|mosConfig_) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC]
+RewriteRule ^ - [F,L]
 
-# Deny access to sensitive files and extensions
-RewriteRule \.(sql|env|md|log|git|gitignore|lock|json)$ - [F,L]
+# 2. Deny direct access to internal directories (config, includes, database, pages, scratch)
+RewriteRule ^(config|includes|database|pages|scratch)/ - [F,L]
 
-# Dynamic sitemap: /sitemap.xml -> sitemap.php
+# 3. Deny access to sensitive files and extensions
+RewriteRule \.(sql|env|md|log|git|gitignore|lock|json|bak|swp|dist)$ - [F,L]
+
+# 4. Global Security Headers (Defense in Depth)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header unset X-Powered-By
+</IfModule>
+
+# 5. Dynamic sitemap: /sitemap.xml -> sitemap.php
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 RewriteRule ^robots\.txt$ robots.php [L]
 
-# Let real files/folders (assets, admin/*.php, etc.) pass through untouched.
+# 6. Pass through existing files/directories (assets, admin/*.php)
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Everything else goes through the front controller.
+# 7. Front controller
 RewriteRule ^ index.php [L]
