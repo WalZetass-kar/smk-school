@@ -77,8 +77,13 @@ if (!headers_sent()) {
 <meta name="twitter:image" content="<?= e($ogImage) ?>">
 <meta name="twitter:image:alt" content="<?= e($fullTitle) ?>">
 
-<!-- Favicon -->
+<!-- Favicon & Mobile Icons -->
 <link rel="icon" href="<?= e(BASE_URL . '/' . ($profile['favicon'] ?? 'assets/images/favicon.png')) ?>">
+<link rel="apple-touch-icon" href="<?= e(BASE_URL . '/' . ($profile['logo'] ?? 'assets/images/logo.png')) ?>">
+<link rel="manifest" href="<?= e(BASE_URL) ?>/manifest.json">
+<meta name="theme-color" content="#0d3b66">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <!-- Schema.org: EducationalOrganization -->
 <script type="application/ld+json">

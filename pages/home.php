@@ -72,6 +72,29 @@ require BASE_PATH . '/includes/navbar.php';
     </button>
   </div>
 </section>
+<?php else: ?>
+<!-- Fallback Hero Section when no custom banners are active -->
+<section class="hero-slider <?= !empty($hasTicker) ? 'has-ticker-offset' : '' ?>">
+  <div class="hero-slide d-flex align-items-center" style="background: linear-gradient(135deg, var(--color-primary-dark, #081830) 0%, var(--color-primary, #0F2C59) 60%, var(--color-primary-light, #183E7A) 100%); min-height: 480px;">
+    <div class="container py-5">
+      <div class="row align-items-center">
+        <div class="col-lg-8 text-center text-lg-start">
+          <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-semibold mb-3">Selamat Datang di Website Resmi</span>
+          <h1 class="text-white fw-bold mb-3 display-5"><?= e($profile['school_name'] ?? 'SMK Negeri Contoh Indonesia') ?></h1>
+          <p class="text-white text-opacity-90 lead mb-4"><?= e($profile['description'] ?? 'Mewujudkan Generasi Unggul, Berkarakter, dan Siap Bersaing di Era Global.') ?></p>
+          <div class="hero-btn-group d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start align-items-center gap-3">
+            <a href="<?= e(BASE_URL) ?>/ppdb/daftar" class="btn btn-hero btn-hero-primary">
+              Daftar PPDB Online <i class="bi bi-mortarboard ms-1"></i>
+            </a>
+            <a href="<?= e(BASE_URL) ?>/profil" class="btn btn-hero btn-hero-outline">
+              Profil Sekolah <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <?php endif; ?>
 
 <!-- ================= SAMBUTAN KEPALA SEKOLAH ================= -->

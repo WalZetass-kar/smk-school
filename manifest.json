@@ -1,0 +1,29 @@
+{
+  "name": "SMK Negeri 1 Indonesia",
+  "short_name": "SMK Negeri",
+  "description": "Portal Resmi SMK Negeri - Pusat Keunggulan dan PPDB Online",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d3b66",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/images/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

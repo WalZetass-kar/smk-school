@@ -16,7 +16,12 @@ $settings = $db->query("SELECT * FROM graduation_settings WHERE id = 1")->fetch(
     'header_info'       => 'Pengumuman Resmi Kelulusan Siswa.',
     'signature_city'    => 'Pekanbaru',
     'signature_date'    => date('Y-m-d'),
+    'signature_name'    => null,
+    'signature_nip'     => null,
 ];
+
+// Principal default
+$principalDefault = $db->query("SELECT principal_name FROM principal_message ORDER BY id LIMIT 1")->fetchColumn() ?: 'Kepala Sekolah';
 
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,25 +36,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'header_info'       => trim($_POST['header_info'] ?? ''),
         'signature_city'    => trim($_POST['signature_city'] ?? 'Pekanbaru'),
         'signature_date'    => trim($_POST['signature_date'] ?? date('Y-m-d')),
+        'signature_name'    => trim($_POST['signature_name'] ?? ''),
+        'signature_nip'     => trim($_POST['signature_nip'] ?? ''),
     ];
 
     if (empty($errors)) {
         $stmt = $db->prepare("
             UPDATE graduation_settings 
-            SET academic_year=?, announcement_date=?, is_active=?, header_info=?, signature_city=?, signature_date=?
+            SET academic_year=?, announcement_date=?, is_active=?, header_info=?, signature_city=?, signature_date=?, signature_name=?, signature_nip=?
             WHERE id=1
         ");
         $stmt->execute([
             $data['academic_year'], $data['announcement_date'], $data['is_active'], 
-            $data['header_info'], $data['signature_city'], $data['signature_date']
+            $data['header_info'], $data['signature_city'], $data['signature_date'],
+            $data['signature_name'] !== '' ? $data['signature_name'] : null,
+            $data['signature_nip'] !== '' ? $data['signature_nip'] : null,
         ]);
         logActivity('UPDATE_GRADUATION_SETTINGS', 'graduations', "Memperbarui jadwal & pengaturan kelulusan TA {$data['academic_year']}");
-        setFlash('success', 'Pengaturan kelulusan berhasil disimpan.');
+        setFlash('success', 'Pengaturan kelulusan & pejabat penandatangan SKL berhasil disimpan.');
         redirect(BASE_URL . '/admin/graduations/settings.php');
     }
 }
 
-$pageTitle = 'Pengaturan Jadwal Kelulusan';
+$pageTitle = 'Pengaturan Jadwal Kelulusan & SKL';
 require __DIR__ . '/../includes/header.php';
 require __DIR__ . '/../includes/sidebar.php';
 require __DIR__ . '/../includes/topbar.php';
@@ -88,6 +97,18 @@ require __DIR__ . '/../includes/topbar.php';
       <div class="col-md-6">
         <label class="form-label small fw-semibold">Tanggal Surat Keterangan Lulus (SKL)</label>
         <input type="date" name="signature_date" class="form-control" value="<?= e($settings['signature_date'] ?? date('Y-m-d')) ?>">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label small fw-semibold">Nama Kepala Sekolah Penandatangan SKL</label>
+        <input type="text" name="signature_name" class="form-control" value="<?= e($settings['signature_name'] ?? '') ?>" placeholder="Default otomatis: <?= e($principalDefault) ?>">
+        <div class="form-text small">Kosongkan jika ingin otomatis mengikuti nama di menu <strong>Sambutan Kepala Sekolah</strong> (<?= e($principalDefault) ?>).</div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label small fw-semibold">NIP Kepala Sekolah Penandatangan</label>
+        <input type="text" name="signature_nip" class="form-control" value="<?= e($settings['signature_nip'] ?? '') ?>" placeholder="Contoh: 19750815 200003 1 002">
+        <div class="form-text small">Nomor Induk Pegawai kepala sekolah yang tercetak di bawah tanda tangan SKL.</div>
       </div>
 
       <div class="col-12">

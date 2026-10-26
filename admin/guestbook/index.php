@@ -45,9 +45,14 @@ require __DIR__ . '/../includes/topbar.php';
     <h1 class="h4 fw-bold text-primary mb-1"><i class="bi bi-book-half me-2"></i>Buku Tamu Digital</h1>
     <p class="text-muted small mb-0">Daftar rekaman kehadiran kunjungan tamu ke sekolah.</p>
   </div>
-  <a href="<?= e(BASE_URL) ?>/buku-tamu" target="_blank" class="btn btn-outline-primary btn-sm">
-    <i class="bi bi-box-arrow-up-right me-1"></i>Buka Formulir Tamu
-  </a>
+  <div class="d-flex gap-2">
+    <a href="<?= e(BASE_URL) ?>/admin/guestbook/export.php<?= !empty($_SERVER['QUERY_STRING']) ? '?' . e($_SERVER['QUERY_STRING']) : '' ?>" class="btn btn-outline-success btn-sm">
+      <i class="bi bi-file-earmark-excel me-1"></i>Ekspor Excel / CSV
+    </a>
+    <a href="<?= e(BASE_URL) ?>/buku-tamu" target="_blank" class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-box-arrow-up-right me-1"></i>Buka Formulir Tamu
+    </a>
+  </div>
 </div>
 
 <?= flashMessage() ?>

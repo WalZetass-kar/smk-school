@@ -171,6 +171,11 @@ foreach ($socials as $s) {
     </div>
   </div>
 
+  <!-- Floating Back to Top Button -->
+  <button type="button" class="btn-back-to-top shadow" aria-label="Kembali ke atas" title="Kembali ke atas">
+    <i class="bi bi-arrow-up fs-5"></i>
+  </button>
+
   <script src="<?= e(ASSETS_URL . '/vendor/bootstrap/bootstrap.bundle.min.js') ?>"></script>
   <script src="<?= e(ASSETS_URL . '/js/main.js') ?>"></script>
 </body>

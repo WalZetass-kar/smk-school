@@ -26,6 +26,16 @@ $pageTitle       = 'Pendaftaran Berhasil — ' . e($data['registration_no']);
 $pageDescription = 'Bukti Pendaftaran PPDB ' . e($profile['school_name'] ?? '');
 $canonicalPath   = '/ppdb/sukses';
 
+// Buat tautan berbagi / simpan bukti pendaftaran ke WhatsApp
+$waMsg = "Halo, ini bukti pendaftaran PPDB saya di " . ($profile['school_name'] ?? 'Sekolah') . ":\n\n"
+       . "• *No. Registrasi:* " . $data['registration_no'] . "\n"
+       . "• *Nama:* " . $data['full_name'] . "\n"
+       . "• *Pilihan Jurusan:* " . $data['major1_name'] . "\n"
+       . "• *Tanggal Daftar:* " . formatTanggalIndo($data['created_at']) . "\n\n"
+       . "Cek status pendaftaran online:\n"
+       . BASE_URL . "/ppdb/cek-status?keyword=" . urlencode($data['registration_no']);
+$waUrl = 'https://api.whatsapp.com/send?text=' . urlencode($waMsg);
+
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
 ?>
@@ -111,6 +121,9 @@ require BASE_PATH . '/includes/navbar.php';
       <div class="d-flex justify-content-center gap-3 flex-wrap">
         <a href="<?= e(BASE_URL) ?>/ppdb/cetak?no=<?= urlencode($data['registration_no']) ?>" target="_blank" class="btn btn-accent btn-lg px-4 shadow-sm">
           <i class="bi bi-printer me-2"></i>Cetak Bukti Pendaftaran
+        </a>
+        <a href="<?= e($waUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-lg px-4 shadow-sm">
+          <i class="bi bi-whatsapp me-2"></i>Kirim / Simpan ke WA
         </a>
         <a href="<?= e(BASE_URL) ?>/ppdb/cek-status?keyword=<?= urlencode($data['registration_no']) ?>" class="btn btn-outline-primary-custom btn-lg px-4">
           <i class="bi bi-search me-2"></i>Cek Status Berkas

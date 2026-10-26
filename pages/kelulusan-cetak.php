@@ -39,7 +39,16 @@ $settings = $db->query("SELECT * FROM graduation_settings WHERE id = 1")->fetch(
     'academic_year'     => '2026/2027',
     'signature_city'    => 'Pekanbaru',
     'signature_date'    => date('Y-m-d'),
+    'signature_name'    => null,
+    'signature_nip'     => null,
 ];
+
+// Fallback dynamically to Sambutan Kepala Sekolah if signature_name is not overridden
+$principal = $db->query("SELECT principal_name FROM principal_message ORDER BY id LIMIT 1")->fetch();
+$principalName = !empty($settings['signature_name']) 
+    ? $settings['signature_name'] 
+    : (!empty($principal['principal_name']) ? $principal['principal_name'] : 'Drs. H. Rahmat Hidayat, M.Pd.');
+$principalNip = !empty($settings['signature_nip']) ? $settings['signature_nip'] : '19750815 200003 1 002';
 
 $profile = getSchoolProfile();
 ?>
@@ -291,8 +300,8 @@ $profile = getSchoolProfile();
     <div class="ttd-box">
       <p><?= e($settings['signature_city'] ?? 'Pekanbaru') ?>, <?= date('d F Y', strtotime($settings['signature_date'] ?? date('Y-m-d'))) ?></p>
       <p style="margin-bottom: 60px;">Kepala Sekolah,</p>
-      <p><strong><u>Drs. H. Rahmat Hidayat, M.Pd.</u></strong></p>
-      <p>NIP. 19750815 200003 1 002</p>
+      <p><strong><u><?= e($principalName) ?></u></strong></p>
+      <p>NIP. <?= e($principalNip) ?></p>
     </div>
   </div>
 </div>

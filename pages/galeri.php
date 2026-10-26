@@ -48,7 +48,7 @@ $canonicalPath   = '/galeri';
 require BASE_PATH . '/includes/header.php';
 require BASE_PATH . '/includes/navbar.php';
 
-$baseUrl = '/galeri' . ($category ? '?category=' . urlencode($category) : '');
+$baseUrl = BASE_URL . '/galeri' . ($category ? '?category=' . urlencode($category) : '');
 ?>
 
 <!-- Breadcrumb -->
