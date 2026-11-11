@@ -255,51 +255,51 @@ require BASE_PATH . '/includes/navbar.php';
               <div class="row g-3">
                 <!-- Name -->
                 <div class="col-md-6">
-                  <label class="form-label small fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+                  <label for="contact_name" class="form-label small fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
                   <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-person text-muted"></i></span>
-                    <input type="text" name="name" class="form-control" value="<?= e($old['name']) ?>" required placeholder="Nama Anda">
+                    <input type="text" id="contact_name" name="name" class="form-control" value="<?= e($old['name']) ?>" required placeholder="Nama Anda">
                   </div>
                 </div>
 
                 <!-- Email -->
                 <div class="col-md-6">
-                  <label class="form-label small fw-semibold">Alamat Email Aktif <span class="text-danger">*</span></label>
+                  <label for="contact_email" class="form-label small fw-semibold">Alamat Email Aktif <span class="text-danger">*</span></label>
                   <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-envelope text-muted"></i></span>
-                    <input type="email" name="email" class="form-control" value="<?= e($old['email']) ?>" required placeholder="nama@email.com">
+                    <input type="email" id="contact_email" name="email" class="form-control" value="<?= e($old['email']) ?>" required placeholder="nama@email.com">
                   </div>
                 </div>
 
                 <!-- Phone -->
                 <div class="col-md-6">
-                  <label class="form-label small fw-semibold">Nomor WhatsApp / HP</label>
+                  <label for="contact_phone" class="form-label small fw-semibold">Nomor WhatsApp / HP</label>
                   <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-phone text-muted"></i></span>
-                    <input type="tel" name="phone" class="form-control" value="<?= e($old['phone']) ?>" placeholder="08xxxxxxxxxx">
+                    <input type="tel" id="contact_phone" name="phone" class="form-control" value="<?= e($old['phone']) ?>" placeholder="08xxxxxxxxxx">
                   </div>
                 </div>
 
                 <!-- Subject -->
                 <div class="col-md-6">
-                  <label class="form-label small fw-semibold">Subjek / Keperluan Pesan</label>
+                  <label for="contact_subject" class="form-label small fw-semibold">Subjek / Keperluan Pesan</label>
                   <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-chat-left-text text-muted"></i></span>
-                    <input type="text" name="subject" class="form-control" value="<?= e($old['subject']) ?>" placeholder="Contoh: Pertanyaan PPDB, Legalisir">
+                    <input type="text" id="contact_subject" name="subject" class="form-control" value="<?= e($old['subject']) ?>" placeholder="Contoh: Pertanyaan PPDB, Legalisir">
                   </div>
                 </div>
 
                 <!-- Message -->
                 <div class="col-12">
-                  <label class="form-label small fw-semibold">Isi Pesan / Pertanyaan <span class="text-danger">*</span></label>
-                  <textarea name="message" rows="5" class="form-control" required placeholder="Tuliskan pertanyaan atau pesan Anda secara lengkap di sini..."><?= e($old['message']) ?></textarea>
+                  <label for="contact_message" class="form-label small fw-semibold">Isi Pesan / Pertanyaan <span class="text-danger">*</span></label>
+                  <textarea id="contact_message" name="message" rows="5" class="form-control" required placeholder="Tuliskan pertanyaan atau pesan Anda secara lengkap di sini..."><?= e($old['message']) ?></textarea>
                 </div>
 
                 <!-- Math Captcha Anti-Spam -->
                 <div class="col-12">
                   <div class="p-3 bg-light border rounded-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
                     <div>
-                      <label class="form-label small fw-semibold mb-1 d-block">
+                      <label for="contact_captcha" class="form-label small fw-semibold mb-1 d-block">
                         <i class="bi bi-shield-check text-success me-1"></i>Verifikasi Keamanan (Anti-Spam):
                       </label>
                       <span class="small text-muted">Berapa hasil dari penjumlahan: </span>
@@ -308,7 +308,7 @@ require BASE_PATH . '/includes/navbar.php';
                       </span>
                     </div>
                     <div style="width: 130px;">
-                      <input type="number" name="captcha_answer" class="form-control text-center fw-bold" placeholder="Hasil..." required>
+                      <input type="number" id="contact_captcha" name="captcha_answer" class="form-control text-center fw-bold" placeholder="Hasil..." required>
                     </div>
                   </div>
                 </div>

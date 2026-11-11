@@ -23,7 +23,7 @@ if ($q !== '') {
 }
 
 $whereSql = implode(' AND ', $where);
-$stmt = $db->prepare("SELECT * FROM teachers WHERE $whereSql ORDER BY category ASC, sort_order ASC, name ASC");
+$stmt = $db->prepare("SELECT * FROM teachers WHERE $whereSql ORDER BY category ASC, name ASC");
 $stmt->execute($params);
 $teachers = $stmt->fetchAll();
 

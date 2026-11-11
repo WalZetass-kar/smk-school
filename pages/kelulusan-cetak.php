@@ -55,7 +55,8 @@ $profile = getSchoolProfile();
 // URL Verifikasi Dokumen Asli untuk QR Code
 $verificationUrl = rtrim(BASE_URL, '/') . '/kelulusan?nisn=' . urlencode($student['nisn']);
 $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=' . urlencode($verificationUrl);
-$docRef = strtoupper(substr(hash('sha256', $student['nisn'] . $student['exam_number'] . 'SMK_SKL_SECRET'), 0, 10));
+$sklSecret = getenv('SKL_SECRET_KEY') ?: (getenv('APP_KEY') ?: 'SMK_SKL_SECRET_FALLBACK');
+$docRef = strtoupper(substr(hash('sha256', $student['nisn'] . $student['exam_number'] . $sklSecret), 0, 10));
 ?>
 <!DOCTYPE html>
 <html lang="id">

@@ -9,9 +9,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrfVerify($_POST['csrf_token'] ??
 
 $id = (int) ($_POST['id'] ?? 0);
 if ($id) {
-    $teacherName = getDB()->query("SELECT name FROM teachers WHERE id = " . (int)$id)->fetchColumn() ?: "ID #$id";
-    getDB()->prepare("DELETE FROM teachers WHERE id = ?")->execute([$id]);
-    logActivity('DELETE_TEACHER', 'teachers', "Menghapus data guru/tendik: $teacherName (ID: $id)");
-    setFlash('success', 'Data berhasil dihapus.');
+    $db = getDB();
+    $stmt = $db->prepare("SELECT name, photo FROM teachers WHERE id = ?");
+    $stmt->execute([$id]);
+    $teacher = $stmt->fetch();
+    if ($teacher) {
+        $teacherName = $teacher['name'] ?: "ID #$id";
+        $img = $teacher['photo'];
+        if (!empty($img) && !str_starts_with($img, 'assets/images/')) {
+            $imgPath = BASE_PATH . '/' . ltrim($img, '/\\');
+            if (is_file($imgPath) && str_starts_with(realpath($imgPath) ?: '', realpath(UPLOADS_PATH) ?: '')) {
+                @unlink($imgPath);
+            }
+        }
+        $db->prepare("DELETE FROM teachers WHERE id = ?")->execute([$id]);
+        logActivity('DELETE_TEACHER', 'teachers', "Menghapus data guru/tendik: $teacherName (ID: $id)");
+        setFlash('success', 'Data berhasil dihapus.');
+    }
 }
 redirect(BASE_URL . '/admin/teachers/index.php');

@@ -24,10 +24,12 @@ if (!$doc) {
 $db->prepare("UPDATE downloads SET downloads_count = downloads_count + 1 WHERE id = ?")->execute([$id]);
 
 $filePath = BASE_PATH . '/' . ltrim($doc['file_path'], '/\\');
+$allowedBase = realpath(UPLOADS_PATH);
+$realTarget  = realpath($filePath);
 
-// Anti Path Traversal Validation (Base Directory: BASE_PATH, Target: $filePath)
-if (file_exists($filePath) && is_file($filePath) && isSafePath(BASE_PATH, $filePath)) {
-    $mime = mime_content_type($filePath) ?: 'application/octet-stream';
+// Anti Path Traversal Validation: file must reside strictly inside UPLOADS_PATH
+if ($realTarget !== false && $allowedBase !== false && str_starts_with($realTarget, $allowedBase) && is_file($realTarget)) {
+    $mime = mime_content_type($realTarget) ?: 'application/octet-stream';
 
     header('Content-Description: File Transfer');
     header('Content-Type: ' . $mime);

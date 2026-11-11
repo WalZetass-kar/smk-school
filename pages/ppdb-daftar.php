@@ -238,6 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log('PPDB WA Notification Error: ' . $e->getMessage());
             }
 
+            $_SESSION['ppdb_owner_' . $regNo] = true;
             setFlash('success', 'Selamat! Formulir pendaftaran Anda berhasil terkirim.');
             redirect(BASE_URL . '/ppdb/sukses?no=' . urlencode($regNo));
         }

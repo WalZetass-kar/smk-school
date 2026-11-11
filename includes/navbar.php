@@ -1,6 +1,11 @@
 <?php
 $profile = getSchoolProfile();
-$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$urlPrefix = parse_url(BASE_URL, PHP_URL_PATH);
+if ($urlPrefix && $urlPrefix !== '/' && str_starts_with($currentPath, $urlPrefix)) {
+    $currentPath = substr($currentPath, strlen($urlPrefix));
+}
+$currentPath = rtrim($currentPath, '/') ?: '/';
 
 /** Small helper so the current page's nav-link gets the "active" class. */
 if (!function_exists('navActive')) {

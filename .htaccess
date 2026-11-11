@@ -25,6 +25,18 @@ RewriteRule \.(sql|env|md|log|git|gitignore|lock|json|bak|swp|dist)$ - [F,L]
     Header unset X-Powered-By
 </IfModule>
 
+# 4b. Static Asset Browser Caching (Performance)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
 # 5. Dynamic sitemap: /sitemap.xml -> sitemap.php
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 RewriteRule ^robots\.txt$ robots.php [L]

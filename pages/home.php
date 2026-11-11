@@ -31,7 +31,7 @@ require BASE_PATH . '/includes/navbar.php';
 
 <!-- ================= HERO / BANNER SLIDER ================= -->
 <?php if (!empty($banners)): ?>
-<section class="hero-slider <?= !empty($hasTicker) ? 'has-ticker-offset' : '' ?>">
+<section id="main-content" class="hero-slider <?= !empty($hasTicker) ? 'has-ticker-offset' : '' ?>">
   <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
     <div class="carousel-indicators">
       <?php foreach ($banners as $i => $b): ?>
@@ -48,8 +48,13 @@ require BASE_PATH . '/includes/navbar.php';
                   <h1><?= e($b['title']) ?></h1>
                   <p><?= e($b['description']) ?></p>
                   <div class="hero-btn-group d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start align-items-center gap-3 mt-4">
-                    <?php if (!empty($b['button_text'])): ?>
-                      <a href="<?= e(BASE_URL . $b['button_url']) ?>" class="btn btn-hero btn-hero-primary">
+                    <?php if (!empty($b['button_text'])): 
+                      $btnUrl = trim($b['button_url'] ?? '');
+                      $targetHref = (str_starts_with($btnUrl, 'http://') || str_starts_with($btnUrl, 'https://') || str_starts_with($btnUrl, '//'))
+                          ? $btnUrl
+                          : BASE_URL . '/' . ltrim($btnUrl, '/');
+                    ?>
+                      <a href="<?= e($targetHref) ?>" class="btn btn-hero btn-hero-primary">
                         <?= e($b['button_text']) ?> <i class="bi bi-arrow-right ms-1"></i>
                       </a>
                     <?php endif; ?>
@@ -105,7 +110,7 @@ require BASE_PATH . '/includes/navbar.php';
       <div class="row align-items-center g-4 g-lg-5 text-center text-md-start">
         <div class="col-lg-4 col-md-5 reveal-left">
           <div class="sambutan-photo-frame mx-auto">
-            <img src="<?= e(BASE_URL . '/' . $principal['photo']) ?>" alt="<?= e($principal['principal_name']) ?>">
+            <img src="<?= e(BASE_URL . '/' . $principal['photo']) ?>" alt="<?= e($principal['principal_name']) ?>" loading="lazy">
           </div>
         </div>
         <div class="col-lg-8 col-md-7 reveal-right">
@@ -199,7 +204,7 @@ require BASE_PATH . '/includes/navbar.php';
           <div class="jurusan-card hover-lift d-flex flex-column">
             <div class="jurusan-card-img-wrap">
               <div class="jurusan-code-tag"><?= e($m['code']) ?></div>
-              <img src="<?= e(BASE_URL . '/' . $m['image']) ?>" alt="<?= e($m['name']) ?>" class="jurusan-card-img">
+              <img src="<?= e(BASE_URL . '/' . $m['image']) ?>" alt="<?= e($m['name']) ?>" class="jurusan-card-img" loading="lazy">
             </div>
             <div class="jurusan-card-body d-flex flex-column flex-grow-1">
               <h3 class="jurusan-card-title"><?= e($m['name']) ?></h3>
@@ -315,7 +320,7 @@ require BASE_PATH . '/includes/navbar.php';
         <div class="col-lg-4 col-md-6">
           <div class="berita-card hover-lift d-flex flex-column text-start">
             <div class="berita-card-img-wrap">
-              <img src="<?= e(BASE_URL . '/' . $n['featured_image']) ?>" alt="<?= e($n['title']) ?>" class="berita-card-img">
+              <img src="<?= e(BASE_URL . '/' . $n['featured_image']) ?>" alt="<?= e($n['title']) ?>" class="berita-card-img" loading="lazy">
             </div>
             <div class="berita-card-body d-flex flex-column flex-grow-1">
               <?php if ($n['category_name']): ?>
@@ -351,7 +356,7 @@ require BASE_PATH . '/includes/navbar.php';
         <div class="col-lg-4 col-md-6">
           <div class="testimoni-card hover-lift text-start">
             <div class="d-flex align-items-center gap-3">
-              <img src="<?= e(BASE_URL . '/' . $t['photo']) ?>" alt="<?= e($t['name']) ?>" class="testimoni-photo">
+              <img src="<?= e(BASE_URL . '/' . $t['photo']) ?>" alt="<?= e($t['name']) ?>" class="testimoni-photo" loading="lazy">
               <div>
                 <h6 class="testimoni-name"><?= e($t['name']) ?></h6>
                 <div class="testimoni-role"><?= e($t['job']) ?> &middot; Angkatan <?= e($t['graduation_year']) ?></div>

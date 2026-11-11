@@ -7,8 +7,9 @@
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Block direct access to sensitive folders (matching .htaccess rules)
-if (str_starts_with($uri, '/config/') || str_starts_with($uri, '/includes/')) {
+// Block direct access to internal directories & sensitive files (matching .htaccess rules)
+if (preg_match('#^/(config|includes|database|pages|scratch|assets/backups)(/|$)#i', $uri) ||
+    preg_match('/\.(sql|env|md|log|git|gitignore|lock|bak|swp|dist)$/i', $uri)) {
     http_response_code(403);
     echo 'Access forbidden';
     exit;

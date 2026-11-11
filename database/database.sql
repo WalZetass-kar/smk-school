@@ -335,7 +335,8 @@ CREATE TABLE ppdb_registrations (
   FOREIGN KEY (major_choice_1) REFERENCES majors(id) ON DELETE CASCADE,
   FOREIGN KEY (major_choice_2) REFERENCES majors(id) ON DELETE SET NULL,
   INDEX idx_ppdb_status (status),
-  INDEX idx_ppdb_reg_no (registration_no)
+  INDEX idx_ppdb_reg_no (registration_no),
+  INDEX idx_ppdb_nisn (nisn)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------
@@ -677,6 +678,65 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   last_attempt INT UNSIGNED NOT NULL,
   lockout_until INT UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- site_modules (Pengaturan Fitur & Modul Multi-Jenjang)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS site_modules (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  module_key VARCHAR(50) NOT NULL UNIQUE,
+  name VARCHAR(100) NOT NULL,
+  category VARCHAR(50) NOT NULL DEFAULT 'Fitur Utama',
+  description VARCHAR(255) DEFAULT NULL,
+  target_levels VARCHAR(100) DEFAULT 'SMK,SMA,SMP,SD',
+  is_active TINYINT(1) DEFAULT 1,
+  sort_order INT DEFAULT 0,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+INSERT INTO site_modules (id, module_key, name, category, description, target_levels, is_active, sort_order) VALUES
+(1, 'majors', 'Jurusan / Kompetensi Keahlian', 'Akademik & Kejuruan', 'Halaman informasi program studi/jurusan keahlian sekolah.', 'SMK,SMA', 1, 1),
+(2, 'partners', 'Mitra DU/DI & Kerjasama Industri', 'Kemitraan Vokasi', 'Seksi logo & info perusahaan mitra kerjasama prakerin/magang (Khusus SMK).', 'SMK', 1, 2),
+(3, 'bkk', 'Bursa Kerja Khusus (BKK) & Karir', 'Kemitraan Vokasi', 'Penyaluran kerja alumni, loker mitra industri, info karir.', 'SMK', 1, 3),
+(4, 'ppdb', 'PPDB Online (Pendaftaran Siswa Baru)', 'Layanan Digital', 'Sistem pendaftaran peserta didik baru, cetak formulir & verifikasi.', 'SMK,SMA,SMP,SD', 1, 4),
+(5, 'graduations', 'Kelulusan & SKL Online', 'Layanan Digital', 'Portal pengumuman kelulusan digital siswa & validasi QR Code.', 'SMK,SMA,SMP,SD', 1, 5),
+(6, 'news', 'Berita & Artikel Sekolah', 'Konten Publikasi', 'Kabar terkini, kegiatan sekolah, prestasi, dan pengumuman.', 'SMK,SMA,SMP,SD', 1, 6),
+(7, 'agendas', 'Agenda Kegiatan Sekolah', 'Konten Publikasi', 'Kalender agenda akademik & kegiatan penting sekolah.', 'SMK,SMA,SMP,SD', 1, 7),
+(8, 'galleries', 'Galeri Foto & Dokumentasi', 'Konten Publikasi', 'Dokumentasi visual sarana prasarana dan aktivitas siswa.', 'SMK,SMA,SMP,SD', 1, 8),
+(9, 'extracurriculars', 'Ekstrakurikuler', 'Kesiswaan', 'Wadah bakat minat: Pramuka, OSIS, Olahraga, Seni, Rohis, dll.', 'SMK,SMA,SMP,SD', 1, 9),
+(10, 'achievements', 'Prestasi Siswa & Sekolah', 'Kesiswaan', 'Daftar penghargaan akademik/non-akademik tingkat kota hingga nasional.', 'SMK,SMA,SMP,SD', 1, 10),
+(11, 'teachers', 'Direktori Guru & Tenaga Kependidikan', 'Profil Sekolah', 'Daftar profil tenaga pendidik & staf tata usaha.', 'SMK,SMA,SMP,SD', 1, 11),
+(12, 'organization', 'Struktur Organisasi Sekolah', 'Profil Sekolah', 'Bagan kepemimpinan, komite sekolah, dan unit kerja.', 'SMK,SMA,SMP,SD', 1, 12),
+(13, 'history', 'Sejarah Singkat Sekolah', 'Profil Sekolah', 'Latar belakang pendirian dan rekam jejak sekolah.', 'SMK,SMA,SMP,SD', 1, 13),
+(14, 'downloads', 'Pusat Unduhan (Silabus/Brosur/Materi)', 'Layanan Digital', 'Dokumen publik sekolah yang dapat diunduh gratis oleh siswa/wali.', 'SMK,SMA,SMP,SD', 1, 14),
+(15, 'guestbook', 'Buku Tamu Digital & Saran', 'Interaksi Publik', 'Formulir kunjungan & masukan publik untuk sekolah.', 'SMK,SMA,SMP,SD', 1, 15)
+ON DUPLICATE KEY UPDATE name=VALUES(name);
+
+-- ---------------------------------------------------------
+-- wa_gateway_settings (Integrasi WhatsApp Notifikasi)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS wa_gateway_settings (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  provider VARCHAR(50) DEFAULT 'fonnte',
+  api_token VARCHAR(255) DEFAULT '',
+  api_endpoint VARCHAR(255) DEFAULT 'https://api.fonnte.com/send',
+  is_active TINYINT(1) DEFAULT 0,
+  ppdb_success_template TEXT DEFAULT NULL,
+  ppdb_status_template TEXT DEFAULT NULL,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+INSERT INTO wa_gateway_settings (id, provider, api_token, api_endpoint, is_active, ppdb_success_template, ppdb_status_template)
+VALUES (
+  1,
+  'fonnte',
+  '',
+  'https://api.fonnte.com/send',
+  0,
+  '🎓 *KONFIRMASI PENDAFTARAN PPDB ONLINE*\n*{nama_sekolah}*\n━━━━━━━━━━━━━━━━━━━━━━━\n\nHalo, *{nama_siswa}*! 👋\nTerima kasih telah mendaftar di *{nama_sekolah}*.\n\n📌 *RINCIAN PENDAFTARAN:*\n• *No. Registrasi* : `{no_registrasi}`\n• *Nama Calon Siswa*: *{nama_siswa}*\n• *Pilihan Jurusan*: *{pilihan_jurusan}*\n\n📄 *KARTU BUKTI:*\n🔗 {link_cetak}\n\n🔍 *CEK STATUS:*\n🔗 {link_cek}\n\n_Pesan otomatis notifikasi PPDB {nama_sekolah}._',
+  '📢 *PEMBARUAN STATUS PPDB*\n*{nama_sekolah}*\n━━━━━━━━━━━━━━━━━━━━━━━\n\nYth. *{nama_siswa}* (No. Reg: `{no_registrasi}`),\n\nStatus berkas PPDB Anda:\n👉 *【 {status_baru} 】*\n\n💬 *CATATAN PANITIA:*\n_{catatan}_\n\n🔗 *INFORMASI LENGKAP:*\n👉 {link_cek}'
+)
+ON DUPLICATE KEY UPDATE provider=VALUES(provider);
 
 
 

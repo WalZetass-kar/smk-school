@@ -31,6 +31,9 @@ if (!$data) {
     die('Data pendaftaran tidak ditemukan. Silakan periksa kembali nomor registrasi Anda.');
 }
 
+$isOwner = !empty($_SESSION['ppdb_owner_' . $data['registration_no']]) || !empty($_SESSION['admin_id']);
+$displayNik = $isOwner ? $data['nik'] : maskNIK($data['nik']);
+
 $verifyUrl = BASE_URL . '/ppdb/cek-status?reg=' . urlencode($data['registration_no']);
 $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=' . urlencode($verifyUrl);
 ?>
@@ -214,7 +217,7 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=' . 
           </tr>
           <tr>
             <th>NISN / NIK</th>
-            <td><?= e($data['nisn']) ?> / <?= e($data['nik']) ?></td>
+            <td><?= e($data['nisn']) ?> / <?= e($displayNik) ?></td>
           </tr>
           <tr>
             <th>Tempat, Tgl Lahir</th>
